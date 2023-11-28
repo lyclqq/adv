@@ -43,4 +43,13 @@ class Groups(Basecls):
     notes = db.Column(db.Strign(250))
     flag=db.Column(db.Float,default=0)
 
+#日志
+class Logs(Basecls):
+    __tablename__ = 'logs'
+    user_id = db.Column(db.Integer, default=0)
+    type = db.Column(db.Strign(20))
+    ip = db.Column(db.Strign(20))
+    notes = db.Column(db.Strign(250))
+
+
 
