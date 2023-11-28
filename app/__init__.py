@@ -8,7 +8,7 @@ from config import Config,config_dict
 import random
 import string
 from PIL import Image,ImageFont,ImageDraw
-
+import click
 
 redis_store = None
 db=SQLAlchemy()
@@ -35,7 +35,7 @@ def create_app(config_name):
     # 使用CSRFProtect保护app
     CSRFProtect(app)
 
-
+    #register_commands(app)
     #app.register_blueprint(indexView,url_prefix='/index')
     return app
 
@@ -65,3 +65,4 @@ def getKey():
 
 def rndColor():
     return (random.randint(16,128),random.randint(16,128),random.randint(16,128))
+

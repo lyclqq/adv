@@ -4,13 +4,13 @@ from app.models import Basecls
 from werkzeug.security import generate_password_hash, check_password_hash
 
 #用户表
-class Users(Basecls):
+class Users(db.Model,Basecls):
     __tablename__ = 'users'
-
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(20), nullable=False)
-    type = db.Column(db.Strign(20))
+    type = db.Column(db.String(20))
     status = db.Column(db.String(10))
-    notes = db.Column(db.Strign(250))
+    notes = db.Column(db.String(250))
     group_id=db.Column(db.Integer, default=0)
     passwd=db.Column(db.String(128), nullable=False)
     updatetime= db.Column(db.DateTime, default=func.now())
@@ -34,22 +34,23 @@ class Users(Basecls):
 
 
 #用户表
-class Groups(Basecls):
+class Groups(db.Model):
     __tablename__ = 'groups'
-
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     groupname = db.Column(db.String(20), nullable=False)
-    type = db.Column(db.Strign(20))
+    type = db.Column(db.String(20))
     status = db.Column(db.String(10))
-    notes = db.Column(db.Strign(250))
+    notes = db.Column(db.String(250))
     flag=db.Column(db.Float,default=0)
 
 #日志
-class Logs(Basecls):
+class Logs(db.Model,Basecls):
     __tablename__ = 'logs'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, default=0)
-    type = db.Column(db.Strign(20))
-    ip = db.Column(db.Strign(20))
-    notes = db.Column(db.Strign(250))
+    type = db.Column(db.String(20))
+    ip = db.Column(db.String(20))
+    notes = db.Column(db.String(250))
 
 
 

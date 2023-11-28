@@ -4,12 +4,16 @@ from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from io import BytesIO
 from config import Config
-from app import create_app
+from app import create_app,db
 import datetime
 import os
 from io import BytesIO
 from app.common import is_login
-
+from flask_ckeditor import upload_fail, upload_success
+from app.models.other import Reports,Files
+from app.models.bill import Fee1,Fee2,Fee3,Fee4,Fee5,Wordnumbers
+from app.models.system import Users,Logs,Groups
+from app.models.contract import Orders,Customers
 app=create_app('develop')
 
 
@@ -21,6 +25,8 @@ def page_not_found(e):
 
 @app.route('/temp')
 def temp():
+    db.drop_all()
+    db.create_all()
     return render_template('temp.html',temp='Hello')
 
 @app.route('/files/<int:dirname>/<filename>')
