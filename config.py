@@ -1,6 +1,13 @@
+# -*- coding: utf-8 -*-
+import os
+from flask import Flask
+from flask_session import Session
+from flask_wtf.csrf import CSRFProtect
+from flask_sqlalchemy import SQLAlchemy
 import logging
 from datetime import timedelta
-
+import redis
+#from redis import StrictRedis
 
 class Config(object):
 
@@ -19,13 +26,13 @@ class Config(object):
     CKEDITOR_ENABLE_CSRF = True
 
 
-    #redis配置信息
-    #REDIS_HOST = "127.0.0.1"
-    #REDIS_PORT = 6379
-
-    #session配置信息
-    #SESSION_TYPE = "redis" #设置session存储类型
-    #SESSION_REDIS = StrictRedis(host=REDIS_HOST,port=REDIS_PORT) #指定session存储的redis服务器
+    # redis配置信息
+    REDIS_HOST = "127.0.0.1"
+    REDIS_PORT = 6379
+    REDIS_DB = 2
+    # session配置信息
+    SESSION_TYPE = "redis"  # 设置session存储类型
+    SESSION_REDIS = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)  # 指定session存储的redis服务器
     SESSION_USE_SIGNER = True #设置签名存储
     PERMANENT_SESSION_LIFETIME = timedelta(days=1) #设置session有效期,两天时间
 

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>江报广告管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css') }}">
+    <script type="text/javascript" src="{{ url_for('static',filename='js/jquery-3.4.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/admin.css') }}">
+    <script>
+            $(function () {
+
+                $(".panel-heading").click(function (e) {
+                    /*切换折叠指示图标*/
+                    $(this).find("span").toggleClass("glyphicon-chevron-down");
+                    $(this).find("span").toggleClass("glyphicon-chevron-up");
+                });
+            });
+            function jump(str) {
+                window.location.href = str;
+                return false;
+            }
+
+
+    </script>
+</head>
+<body>
+
+    <!--抬头-->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <!--header section -->
+            <div class="container">
+                <div class="navbar-header col-md-3">
+                    <div class="text-center">
+                        <a class="navbar-brand" href="#">江报广告管理系统</a>
+                    </div>
+                </div>
+                <!-- menu section -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/index">Home</a></li>
+                        <li><a href="# ">About</a></li>
+                        <li><a href="{{ url_for('admin.editpwd') }}">Password</a></li>
+
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <div class="row">
+
+            <!--左侧菜单 -->
+            <div class="col-md-2">
+                <div class="panel-group table-responsive" role="tablist">
+                    <div class="panel panel-primary leftMenu">
+                        <div class="leftMenu user" id="colltitle">
+                            <h2 class="panel-title">
+                                <span class="glyphicon glyphicon-user left "></span>
+                                {{ g.username }}
+                            </h2>
+                        </div>
+                    </div>
+                    {%for item in g.menu:%}
+                    <!--菜单开始-->
+                    <span id="Labelmenu1"><div class='panel panel-primary leftMenu'><!-- 利用data-target指定要折叠的分组列表 --><div
+                            class='panel-heading' id='collapseListGroupHeading{{item.id}}}' data-toggle='collapse'
+                            data-target='#collapseListGroup{{item.id}}' role='tab'><h4 class='panel-title'>{{item.menuname}}<span
+                            class='glyphicon glyphicon-chevron-up right'></span></h4></div>
+                        <!-- .panel-collapse和.collapse标明折叠.in表示要显示出来 --><div id='collapseListGroup{{item.id}}'
+                                                                             class='panel-collapse collapse'
+                                                                             role='tabpanel'
+                                                                             aria-labelledby='collapseListGroupHeading1'>
+                            <ul class='list-group'>
+                                {% for subitem in item.sublist %}
+                                <li class='list-group-item'><button class='menu-item-left' onclick="window.location.href ='{{ subitem.sublink }}';return false;">{{ subitem.subname }}</button></li>
+                                {% endfor %}
+                            </ul></div></div></span>
+                    {% endfor %}
+                    <!--panel end-->
+                </div>
+            </div>
+
+            <!--内容区 -->
+            <div class="col-md-10">
+                <div class="panel-group table-responsive" role="tablist">
+                    {% for message in get_flashed_messages() %}
+                        <div class="alert">{{ message }}</div>
+                    {% endfor %}
+                    {% block content%}
+                    {% endblock%}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

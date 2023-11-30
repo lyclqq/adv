@@ -1,8 +1,8 @@
+# -*- coding: utf-8 -*-
+from flask import Blueprint,render_template,current_app,url_for,redirect,session,request,flash,g
 import json
+import os
 from functools import wraps
-
-from flask import current_app, url_for, redirect, session, g
-
 
 #登陆验证
 def is_login(view_func):
@@ -16,7 +16,6 @@ def is_login(view_func):
             return redirect(url_for('login'))
         return view_func(*args,**kwargs)
     return wrapper
-
 
 def getmenu(usermenu='00000000'):
     #从menu.json文件读取所有菜单
