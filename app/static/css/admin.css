@@ -1,0 +1,68 @@
+
+  .panel-group{
+
+          overflow:-Scroll;
+    overflow-x:hidden;
+  }
+            .leftMenu{margin:10px;margin-top:5px;}
+            .leftMenu .panel-heading{font-size:14px;padding-left:20px;height:36px;line-height:36px;color:white;position:relative;cursor:pointer;}/*转成手形图标*/
+            .leftMenu .panel-heading span{position:absolute;right:10px;top:12px;}
+            .leftMenu .menu-item-left{padding: 2px; background: transparent; border:1px solid transparent;border-radius: 6px;}
+            .leftMenu .menu-item-left:hover{background:#2FA4E7;border:1px solid #1E90FF;}
+    .navbar {
+     background-image: linear-gradient(#54B4EB, #2FA4E7 60%, #1D9CE5);
+     background-repeat: no-repeat;
+     border-bottom: 1px solid #178ACC;
+     box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
+     border-radius: 0px;
+    }
+
+    .navbar-default {
+         background-color: #2FA4E7;
+         border-color: #1995DC;
+    }
+
+    .navbar-default .navbar-brand,
+    .navbar-default .navbar-brand:hover,
+    .navbar-default .navbar-brand:focus ,
+    .navbar-default .navbar-nav > li > a {
+         color: #FFF;
+    }
+
+    .navbar-default .navbar-nav > li > a:hover,
+    .navbar-default .navbar-nav > li > a:focus {
+         color: #FFF;
+         background-color: #178ACC;
+    }
+
+    .navbar-default .navbar-toggle:hover,
+    .navbar-default .navbar-toggle:focus {
+        background-color: #178ACC;
+    }
+
+    .navbar-default .navbar-toggle {
+        border-color: #178ACC;
+    }
+
+    .navbar-default .navbar-toggle .icon-bar {
+        background-color: #FFF;
+    }
+.leftMenu .user {
+    margin:12px;
+    border-color: #178ACC;
+    color:#999;
+}
+.mainpanel{
+    margin:5px;
+}
+.div_row{
+    margin-top:8px;
+    margin-bottom:30px;
+}
+.top_row{
+    margin-top:10px;
+}
+.badge{
+    background:#CCC;
+}
+

@@ -12,7 +12,7 @@ class Users(db.Model,Basecls):
     status = db.Column(db.String(10))
     notes = db.Column(db.String(250))
     group_id=db.Column(db.Integer, default=0)
-    passwd=db.Column(db.String(128), nullable=False)
+    passwd=db.Column(db.String(128))
     updatetime= db.Column(db.DateTime, default=func.now())
 
     #校验密码,返回的是True或者False
@@ -21,7 +21,7 @@ class Users(db.Model,Basecls):
 
     #使用的是sha256算法加密
     def set_password(self, value):
-        self.password_hash = generate_password_hash(value)
+        self.passwd = generate_password_hash(value)
 
     def to_dict(self):
         resp_dict = {
