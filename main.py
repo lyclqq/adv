@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from flask import Flask,render_template,url_for,redirect,make_response,session,request,flash,send_from_directory,g,current_app
 from flask_session import Session
 from flask_wtf.csrf import CSRFProtect

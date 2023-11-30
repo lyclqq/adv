@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask
 from flask_session import Session
 from flask_wtf.csrf import CSRFProtect
@@ -35,9 +36,9 @@ def create_app(config_name):
     # 使用CSRFProtect保护app
     CSRFProtect(app)
 
-    #register_commands(app)
-    from app.view.system import adminView
-    #app.register_blueprint(indexView,url_prefix='/index')
+
+    from app.view.system import systemView
+    app.register_blueprint(systemView,url_prefix='/system')
     return app
 
 #日志文件
