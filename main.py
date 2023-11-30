@@ -27,8 +27,7 @@ def page_not_found(e):
 
 @app.route('/temp')
 def temp():
-    db.drop_all()
-    db.create_all()
+
     return render_template('temp.html',temp='Hello')
 
 @app.route('/files/<int:dirname>/<filename>')

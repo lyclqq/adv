@@ -36,6 +36,7 @@ def create_app(config_name):
     CSRFProtect(app)
 
     #register_commands(app)
+    from app.view.system import adminView
     #app.register_blueprint(indexView,url_prefix='/index')
     return app
 
