@@ -32,7 +32,7 @@ class Config(object):
     REDIS_DB = 2
     # session配置信息
     SESSION_TYPE = "redis"  # 设置session存储类型
-    SESSION_REDIS = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)  # 指定session存储的redis服务器
+    SESSION_REDIS = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)  # 指定session存储的redis服务器
     SESSION_USE_SIGNER = True #设置签名存储
     PERMANENT_SESSION_LIFETIME = timedelta(days=1) #设置session有效期,两天时间
 
