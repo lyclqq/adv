@@ -29,7 +29,11 @@ def page_not_found(e):
 
 @app.route('/temp')
 def temp():
-
+    user=Users()
+    user.username='admin'
+    user.set_password('11111111')
+    db.session.add(user)
+    db.session.commit()
     return render_template('temp.html',temp='Hello')
 
 @app.route('/files/<int:dirname>/<filename>')
@@ -63,6 +67,7 @@ def upload():
     url = url_for('uploaded_files', filename=datetime.datetime.now().strftime("%Y")+'/'+newfilename+'.'+extension)
     return upload_success(url=url)
 
+#登陆
 @app.route('/login',methods=["GET","POST"])
 def login():
     form=LoginForm()
@@ -102,6 +107,7 @@ def login():
     # 7.重定向到首页展示
     return redirect("/admin/index")
 
+#首页
 @app.route('/index',endpoint='index')
 @is_login
 def index():
