@@ -101,6 +101,11 @@ def login():
     # 7.重定向到首页展示
     return redirect("/admin/index")
 
+@app.route('/index',endpoint='index')
+@is_login
+def index():
+    return render_template('index.html')
+
 
 if __name__=='__main__':
     app.run('0.0.0.0', port=80, debug=True)
