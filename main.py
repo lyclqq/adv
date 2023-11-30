@@ -6,7 +6,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from io import BytesIO
 from config import Config
-from app import create_app,db
+from app import create_app,db,getKey,getVerifyCode
 import datetime
 import os
 from io import BytesIO
@@ -26,6 +26,27 @@ app=create_app('develop')
 def page_not_found(e):
     return '页面没找到'
 
+#生成验证码
+@app.route('/imgCode')
+def imgcode():
+    imgKey=getKey()
+    image=getVerifyCode(imgKey)
+    buf=BytesIO()
+    image.save(buf,'jpeg')
+    buf_str=buf.getvalue()
+    response=make_response(buf_str)
+    response.headers['Content-Type']='image/gif'
+    session['imageCode']=imgKey
+    return response
+
+#登出
+@app.route('/logout')
+@is_login
+def logout():
+    session.pop("user_id")
+    session.pop("username")
+    session.pop("usermenu")
+    return redirect(url_for('homepage.home'))
 
 @app.route('/temp')
 def temp():

@@ -18,7 +18,7 @@ class Users(db.Model,Basecls):
 
     #校验密码,返回的是True或者False
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.passwd, password)
 
     #使用的是sha256算法加密
     def set_password(self, value):
