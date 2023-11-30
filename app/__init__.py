@@ -36,6 +36,12 @@ def create_app(config_name):
 
     #register_commands(app)
     #app.register_blueprint(indexView,url_prefix='/index')
+    from app.view.publish import publish_bp
+    from app.view.paid import paid_bp
+    from app.view.performance import performance_bp
+    app.register_blueprint(publish_bp, url_prefix='/')
+    app.register_blueprint(paid_bp, url_prefix='/')
+    app.register_blueprint(performance_bp, url_prefix='/')
     return app
 
 
