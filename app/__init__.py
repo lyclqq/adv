@@ -4,14 +4,14 @@ from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from logging.handlers import RotatingFileHandler
-from config import Config,config_dict
+from config import config_dict
 import random
 import string
-from PIL import Image,ImageFont,ImageDraw
-import click
+from PIL import Image, ImageFont, ImageDraw
 
 redis_store = None
 db=SQLAlchemy()
+
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -28,7 +28,6 @@ def create_app(config_name):
     # 创建SQLAlchemy对象,关联app
     db.init_app(app)
 
-
     # 创建Session对象,读取APP中session配置信息
     Session(app)
 
@@ -38,6 +37,7 @@ def create_app(config_name):
     #register_commands(app)
     #app.register_blueprint(indexView,url_prefix='/index')
     return app
+
 
 #日志文件
 def log_file(LEVEL_NAME):
@@ -51,6 +51,7 @@ def log_file(LEVEL_NAME):
     # 为全局的日志工具对象（flask app使用的）添加日志记录器
     logging.getLogger().addHandler(file_log_handler)
 
+
 def getVerifyCode(imgKey):
     width,height=120,50
     im=Image.new('RGB',(width,height),'white')
@@ -60,9 +61,10 @@ def getVerifyCode(imgKey):
         draw.text((5+random.randint(-3,3)+23*item,5+random.randint(-3,3)),text=imgKey[item],fill=rndColor(),font=font)
     return im
 
+
 def getKey():
     return ''.join(random.sample(string.digits,4))
 
+
 def rndColor():
     return (random.randint(16,128),random.randint(16,128),random.randint(16,128))
-

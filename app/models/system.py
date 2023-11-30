@@ -3,6 +3,7 @@ from app import db
 from app.models import Basecls
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 #用户表
 class Users(db.Model,Basecls):
     __tablename__ = 'users'
@@ -43,6 +44,7 @@ class Groups(db.Model):
     notes = db.Column(db.String(250))
     flag=db.Column(db.Float,default=0)
 
+
 #日志
 class Logs(db.Model,Basecls):
     __tablename__ = 'logs'
@@ -51,6 +53,3 @@ class Logs(db.Model,Basecls):
     type = db.Column(db.String(20))
     ip = db.Column(db.String(20))
     notes = db.Column(db.String(250))
-
-
-

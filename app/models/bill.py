@@ -2,6 +2,7 @@ from sqlalchemy.sql import func
 from app import db
 from app.models import Basecls
 
+
 #合同金额
 class Fee1(db.Model,Basecls):
     __tablename__ = 'fee1'
@@ -13,6 +14,7 @@ class Fee1(db.Model,Basecls):
     order_id=db.Column(db.Integer, default=0)
     iuser_id=db.Column(db.Integer, default=0)
     cuser_id=db.Column(db.Integer, default=0)
+
 
 #己刊登金额
 class Fee2(db.Model,Basecls):
@@ -30,6 +32,7 @@ class Fee2(db.Model,Basecls):
     iuser_id=db.Column(db.Integer, default=0)
     cuser_id=db.Column(db.Integer, default=0)
 
+
 #己开发票金额
 class Fee3(db.Model,Basecls):
     __tablename__ = 'fee3'
@@ -43,6 +46,7 @@ class Fee3(db.Model,Basecls):
     order_id=db.Column(db.Integer, default=0)
     iuser_id=db.Column(db.Integer, default=0)
     cuser_id=db.Column(db.Integer, default=0)
+
 
 #己到帐金额
 class Fee4(db.Model,Basecls):
@@ -58,6 +62,7 @@ class Fee4(db.Model,Basecls):
     iuser_id=db.Column(db.Integer, default=0)
     cuser_id=db.Column(db.Integer, default=0)
 
+
 #己发绩效金额
 class Fee5(db.Model,Basecls):
     __tablename__ = 'fee5'
@@ -70,6 +75,7 @@ class Fee5(db.Model,Basecls):
     order_id=db.Column(db.Integer, default=0)
     iuser_id=db.Column(db.Integer, default=0)
     cuser_id=db.Column(db.Integer, default=0)
+
 
 #字数
 class Wordnumbers(db.Model,Basecls):

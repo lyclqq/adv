@@ -1,11 +1,6 @@
-import os
-from flask import Flask
-from flask_session import Session
-from flask_wtf.csrf import CSRFProtect
-from flask_sqlalchemy import SQLAlchemy
 import logging
 from datetime import timedelta
-#from redis import StrictRedis
+
 
 class Config(object):
 

@@ -1,6 +1,6 @@
-from sqlalchemy.sql import func
 from app import db
 from app.models import Basecls
+
 
 #客户表
 class Customers(db.Model,Basecls):
@@ -9,6 +9,7 @@ class Customers(db.Model,Basecls):
     name = db.Column(db.String(200), nullable=False)
     notes = db.Column(db.String(250))
     status = db.Column(db.String(10))
+
 
 #合同表
 class Orders(db.Model,Basecls):

@@ -1,19 +1,10 @@
-from flask import Flask,render_template,url_for,redirect,make_response,session,request,flash,send_from_directory,g
-from flask_session import Session
-from flask_wtf.csrf import CSRFProtect
-from flask_sqlalchemy import SQLAlchemy
-from io import BytesIO
-from config import Config
-from app import create_app,db
 import datetime
 import os
-from io import BytesIO
-from app.common import is_login
+from flask import render_template, url_for, session, request, send_from_directory
 from flask_ckeditor import upload_fail, upload_success
-from app.models.other import Reports,Files
-from app.models.bill import Fee1,Fee2,Fee3,Fee4,Fee5,Wordnumbers
-from app.models.system import Users,Logs,Groups
-from app.models.contract import Orders,Customers
+from app import create_app, db
+from app.common import is_login
+
 app=create_app('develop')
 
 
@@ -28,6 +19,7 @@ def temp():
     db.drop_all()
     db.create_all()
     return render_template('temp.html',temp='Hello')
+
 
 @app.route('/files/<int:dirname>/<filename>')
 @app.route('/Files/<int:dirname>/<filename>')
