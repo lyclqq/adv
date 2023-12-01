@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>江报广告管理系统</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap5.2.2.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css') }}">
     <script type="text/javascript" src="{{ url_for('static',filename='js/jquery-3.4.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
@@ -43,7 +43,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="/index">Home</a></li>
                         <li><a href="# ">About</a></li>
-                        <li><a href="{{ url_for('admin.editpwd') }}">Password</a></li>
+                        <li><a href="{{ url_for('user.editpwd') }}">Password</a></li>
 
                         <li><a href="{{ url_for('logout') }}">Logout</a></li>
                     </ul>

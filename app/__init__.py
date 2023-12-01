@@ -38,7 +38,9 @@ def create_app(config_name):
 
 
     from app.view.system import systemView
-    app.register_blueprint(systemView,url_prefix='/system')
+    app.register_blueprint(systemView,url_prefix='/system') #系统管理菜单
+    from app.view.user import userView #个人相关
+    app.register_blueprint(userView,url_prefix='/user')
     return app
 
 #日志文件
