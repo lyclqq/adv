@@ -50,6 +50,8 @@ def logout():
 
 @app.route('/temp')
 def temp():
+    db.drop_all()
+    db.create_all()
     user=Users()
     user.username='admin'
     user.set_password('11111111')
@@ -123,10 +125,10 @@ def login():
     # 6.管理的session信息记录
     session["user_id"] = admin.id
     session["username"] = admin.username
-    session["usermenu"]=admin.usermenu
+    session["usermenu"]="111111111111"
 
     # 7.重定向到首页展示
-    return redirect("/admin/index")
+    return redirect("/index")
 
 #首页
 @app.route('/index',endpoint='index')

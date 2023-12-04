@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask
 from flask_session import Session
 from flask_wtf.csrf import CSRFProtect
@@ -37,15 +38,9 @@ def create_app(config_name):
 
 
     from app.view.system import systemView
-    app.register_blueprint(systemView,url_prefix='/system')
-    #register_commands(app)
-    #app.register_blueprint(indexView,url_prefix='/index')
-    from app.view.publish import publish_bp
-    from app.view.paid import paid_bp
-    from app.view.performance import performance_bp
-    app.register_blueprint(publish_bp, url_prefix='/')
-    app.register_blueprint(paid_bp, url_prefix='/')
-    app.register_blueprint(performance_bp, url_prefix='/')
+    app.register_blueprint(systemView,url_prefix='/system') #系统管理菜单
+    from app.view.user import userView #个人相关
+    app.register_blueprint(userView,url_prefix='/user')
     return app
 
 #日志文件
