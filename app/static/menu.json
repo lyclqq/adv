@@ -1,120 +1,120 @@
 [{
-		"menuname": "ÏµÍ³¹ÜÀí",
+		"menuname": "ç³»ç»Ÿç®¡ç†",
 		"id": 1,
 		"sublist": [{
-			"subname": "ÓÃ»§¹ÜÀí",
+			"subname": "ç”¨æˆ·ç®¡ç†",
 			"sublink": "/system/groupadmin"
 		}, {
-			"subname": "²¿ÃÅ¹ÜÀí",
+			"subname": "éƒ¨é—¨ç®¡ç†",
 			"sublink": "/system/usercreate"
 		}, {
-			"subname": "ÈÕÖ¾¹ÜÀí",
+			"subname": "æ—¥å¿—ç®¡ç†",
 			"sublink": "/system/usercreate"
 		}]
 	},
 	{
-		"menuname": "ºÏÍ¬¹ÜÀí",
+		"menuname": "åˆåŒç®¡ç†",
 		"id": 2,
 		"sublist": [{
-			"subname": "ºÏÍ¬²éÑ¯",
+			"subname": "åˆåŒæŸ¥è¯¢",
 			"sublink": "/bill/type1admin"
 		}, {
-			"subname": "¿Í»§¹ÜÀí",
+			"subname": "å®¢æˆ·ç®¡ç†",
 			"sublink": "/bill/typecreate"
 		}, {
-			"subname": "ºÏÍ¬ĞÂÔö",
+			"subname": "åˆåŒæ–°å¢",
 			"sublink": "/bill/typecreate"
 		}]
 	},
 	{
-		"menuname": "ÊÕ¸¶¿î¹ÜÀí",
+		"menuname": "æ”¶ä»˜æ¬¾ç®¡ç†",
 		"id": 3,
 		"sublist": [{
-			"subname": "ºÏÍ¬²éÑ¯",
+			"subname": "åˆåŒæŸ¥è¯¢",
 			"sublink": "/article/articleadmin"
 		}, {
-			"subname": "¼¨Ğ§²éÑ¯",
+			"subname": "ç»©æ•ˆæŸ¥è¯¢",
 			"sublink": "/article/articlecreate_select"
 		}, {
-			"subname": "µ½ÕÊ²éÑ¯",
+			"subname": "åˆ°å¸æŸ¥è¯¢",
 			"sublink": "/article/articlecreate_select"
 		}, {
-			"subname": "·¢Æ±²éÑ¯",
+			"subname": "å‘ç¥¨æŸ¥è¯¢",
 			"sublink": "/article/articlecreate_select"
 		}]
 	},
 	{
-		"menuname": "×ÖÊı¹ÜÀí",
+		"menuname": "å­—æ•°ç®¡ç†",
 		"id": 4,
 		"sublist": [{
-			"subname": "ºÏÍ¬²éÑ¯",
+			"subname": "åˆåŒæŸ¥è¯¢",
 			"sublink": "/other/fileadmin"
 		}, {
-			"subname": "×ÖÊı²éÑ¯",
+			"subname": "å­—æ•°æŸ¥è¯¢",
 			"sublink": "/other/upfiles"
 		}]
 	},
 	{
-		"menuname": "ºÏÍ¬ÉóºË",
+		"menuname": "åˆåŒå®¡æ ¸",
 		"id": 5,
 		"sublist": [{
-			"subname": "ºÏÍ¬²éÑ¯",
+			"subname": "åˆåŒæŸ¥è¯¢",
 			"sublink": "/other/ftypesadmin"
 		}, {
-			"subname": "¿Í»§²éÑ¯",
+			"subname": "å®¢æˆ·æŸ¥è¯¢",
 			"sublink": "/other/ftypescreate"
 		}, {
-			"subname": "ºÏÍ¬½ğ¶î",
+			"subname": "åˆåŒé‡‘é¢",
 			"sublink": "/other/ftypescreate"
 		}]
 	},
 	{
-		"menuname": "×ÖÊıÉóºË",
+		"menuname": "å­—æ•°å®¡æ ¸",
 		"id": 6,
 		"sublist": [{
-			"subname": "ºÏÍ¬²éÑ¯",
+			"subname": "åˆåŒæŸ¥è¯¢",
 			"sublink": "/other/fileadmin"
 		}, {
-			"subname": "×ÖÊı²éÑ¯",
+			"subname": "å­—æ•°æŸ¥è¯¢",
 			"sublink": "/other/upfiles"
 		}]
 	},
 	{
-		"menuname": "¿¯µÇ½ğ¶î¹ÜÀí",
+		"menuname": "åˆŠç™»é‡‘é¢ç®¡ç†",
 		"id": 7,
 		"sublist": [{
-			"subname": "ºÏÍ¬²éÑ¯",
+			"subname": "åˆåŒæŸ¥è¯¢",
 			"sublink": "/other/linkadmin"
 		}, {
-			"subname": "¿¯µÇ½ğ¶î²éÑ¯",
+			"subname": "åˆŠç™»é‡‘é¢æŸ¥è¯¢",
 			"sublink": "/other/linkcreate"
 		}]
 	},
 	{
-		"menuname": "¿¯µÇ½ğ¶îÉóºË",
+		"menuname": "åˆŠç™»é‡‘é¢å®¡æ ¸",
 		"id": 8,
 		"sublist": [{
-			"subname": "ºÏÍ¬²éÑ¯",
+			"subname": "åˆåŒæŸ¥è¯¢",
 			"sublink": "/other/linkadmin"
 		}, {
-			"subname": "¿¯µÇ½ğ¶î²éÑ¯",
+			"subname": "åˆŠç™»é‡‘é¢æŸ¥è¯¢",
 			"sublink": "/other/linkcreate"
 		}]
 	},
 	{
-		"menuname": "ÊÕ¸¶¿îÉóºË",
+		"menuname": "æ”¶ä»˜æ¬¾å®¡æ ¸",
 		"id": 9,
 		"sublist": [{
-			"subname": "ºÏÍ¬²éÑ¯",
+			"subname": "åˆåŒæŸ¥è¯¢",
 			"sublink": "/article/articleadmin"
 		}, {
-			"subname": "¼¨Ğ§²éÑ¯",
+			"subname": "ç»©æ•ˆæŸ¥è¯¢",
 			"sublink": "/article/articlecreate_select"
 		}, {
-			"subname": "µ½ÕÊ²éÑ¯",
+			"subname": "åˆ°å¸æŸ¥è¯¢",
 			"sublink": "/article/articlecreate_select"
 		}, {
-			"subname": "·¢Æ±²éÑ¯",
+			"subname": "å‘ç¥¨æŸ¥è¯¢",
 			"sublink": "/article/articlecreate_select"
 		}]
 	}
