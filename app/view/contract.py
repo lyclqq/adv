@@ -16,7 +16,11 @@ contractView=Blueprint('contract',__name__)
 @contractView.route('/customer_admin',endpoint='customer_admin')
 @is_login
 def customer_admin():
-    user=Users.query.get(1)
-    result=user.search_articles('社务',page=1)
-    #current_app.logger.error('pages is '+str(result['pages']))
-    return render_template('admin/index.html')
+    uid = session.get('user_id')
+    customers=Customers()
+    page = request.args.get('page', 1, type=int)
+    pagination = customers.query.filter_by(Customers.status!='del').order_by(Customers.create_time.desc()).paginate(
+        page, per_page=current_app.config['PAGEROWS'])
+
+    result = pagination.items
+    return render_template('contract/contract_admin.html', page=page, pagination=pagination, posts=result)

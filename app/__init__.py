@@ -41,7 +41,7 @@ def create_app(config_name):
     app.register_blueprint(systemView,url_prefix='/system') #系统管理菜单
     from app.view.user import userView #个人相关
     app.register_blueprint(userView,url_prefix='/user')
-    from app.view.user import contractView #个人相关
+    from app.view.contract import contractView #合同
     app.register_blueprint(contractView,url_prefix='/contract')
     return app
 
