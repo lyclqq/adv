@@ -3,8 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/static/autocomplete/autoComplete.min.css">
 </head>
 <body>
-ddddd
+<div class="autoComplete_wrapper">
+    <input id="autoComplete" type="search" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" class="input-border-radius">
+    <input id="iphone"/>
+</div>
+<input />
+<script src="/static/bootstrap-5.3.0/bootstrap.bundle.min.js"></script>
+<script src="/static/autocomplete/autoComplete.min.js"></script>
+<script>
+    const input_auto = 'autoComplete'
+    const input_hidden = 'iphone'
+    const tip = '请输入。。。'
+    const auto_url = ''
+    const data_src = ["Sauce - Thousand Island", "Wild Boar - Tenderloin", "Goat - Whole Cut"]
+    const idx = ["id00", "id01", "id02"]
+
+    const autoCompleteJS = new autoComplete({
+        selector: "#"+input_auto,
+        placeHolder: tip,
+        data: {
+            src: data_src,
+            cache: false,
+        },
+        idx: idx,
+        resultsList: {
+            element: (list, data) => {
+                if (!data.results.length) {
+                    const message = document.createElement("div");
+                    message.setAttribute("class", "no_result");
+                    message.innerHTML = `<span>Found No Results for "${data.query}"</span>`;
+                    list.prepend(message);
+                }
+            },
+            noResults: true,
+        },
+        resultItem: {
+            highlight: true
+        },
+        events: {
+            input: {
+                selection: (event) => {
+                    const selection = event.detail.selection.value;
+                    autoCompleteJS.input.value = selection;
+                    document.getElementById(input_hidden).value = autoCompleteJS.idx[autoCompleteJS.data.src.indexOf(selection)]
+                }
+            }
+        }
+    });
+</script>
+
 </body>
 </html>
