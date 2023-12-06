@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="{{ url_for('static',filename='bootstrap-5.3.2-dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static',filename='bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/axios.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/jquery-3.7.1.min.js') }}"></script>
+    <title>Title</title>
+</head>
+<body>
+<div style="width: 99%">
+    <div class="row">
+        <div class="col-1 text-center pe-0">
+            <ul class="nav navbar-nav bg-primary-subtle h-100">
+                <a href="#" style="font-size: 18px;" class="mt-3">
+                    <img src="{{ url_for('static',filename='img/contract.svg') }}" alt="" height="60"/>
+                    <br>
+                    <span>广告合同管理</span>
+                </a>
+                <li class="nav-item">
+                    <hr>
+                </li>
+                <li class="nav-item">
+                    <div class="btn-group dropend w-100">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            系统管理
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">部门管理</a></li>
+                            <li><a class="dropdown-item" href="#">用户管理</a></li>
+                            <li><a class="dropdown-item" href="#">日志管理</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">月初始化</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item mt-1">
+                    <div class="btn-group dropend w-100">
+                        <button type="button" class="btn btn-light w-100 dropdown-toggle" data-bs-toggle="dropdown">合同管理</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">合同查询</a></li>
+                            <li><a class="dropdown-item" href="#">客户管理</a></li>
+                            <li><a class="dropdown-item" href="#">合同新增</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item mt-1">
+                    <div class="btn-group dropend w-100">
+                        <button type="button" class="btn btn-light w-100 dropdown-toggle" data-bs-toggle="dropdown">收付款管理</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">合同查询</a></li>
+                            <li><a class="dropdown-item" href="#">绩效查询</a></li>
+                            <li><a class="dropdown-item" href="#">到帐查询</a></li>
+                            <li><a class="dropdown-item" href="#">发票查询</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item mt-1">
+                    <div class="btn-group dropend w-100">
+                        <button type="button" class="btn btn-light w-100 dropdown-toggle" data-bs-toggle="dropdown">字数管理</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">合同查询</a></li>
+                            <li><a class="dropdown-item" href="#">字数查询</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item mt-1">
+                    <div class="btn-group dropend w-100">
+                        <button type="button" class="btn btn-light w-100 dropdown-toggle" data-bs-toggle="dropdown">合同审核</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">合同查询</a></li>
+                            <li><a class="dropdown-item" href="#">客户查询</a></li>
+                            <li><a class="dropdown-item" href="#">合同金额</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item mt-1">
+                    <div class="btn-group dropend w-100">
+                        <button type="button" class="btn btn-light w-100 dropdown-toggle" data-bs-toggle="dropdown">刊登金额管理</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">合同查询</a></li>
+                            <li><a class="dropdown-item" href="#">刊登金额查询</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item mt-1">
+                    <div class="btn-group dropend w-100">
+                        <button type="button" class="btn btn-light w-100 dropdown-toggle" data-bs-toggle="dropdown">刊登金额审核</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">合同查询</a></li>
+                            <li><a class="dropdown-item" href="#">刊登金额查询</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item mt-1">
+                    <div class="btn-group dropend w-100">
+                        <button type="button" class="btn btn-light w-100 dropdown-toggle" data-bs-toggle="dropdown">收付款审核</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">合同查询</a></li>
+                            <li><a class="dropdown-item" href="#">绩效查询</a></li>
+                            <li><a class="dropdown-item" href="#">到帐查询</a></li>
+                            <li><a class="dropdown-item" href="#">发票查询</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!--modal-->
+        <div class="modal fade" id="editPwdModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editPwdModalTitle" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="editPwdModalTitle">修改密码</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="off_add" method="post">
+                            <input type="hidden" id="csrf_token" value="{{ csrf_token() }}"/>
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        <label>输入密码：&nbsp;
+                                            <input id="new_pwd" type="password" required placeholder="不少于6位"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>确认密码：&nbsp;
+                                            <input id="new_pwd2" type="password" placeholder="与上面输入的一致"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </table>
+                            <span id="async-info" style="text-align: center;color: red;"></span>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="pwd_edit();">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            const config = {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Access-Control-Allow-Origin': '*'
+                }
+            }
+
+            function pwd_edit() {
+                const new_pwd = $("#new_pwd")
+                const new_pwd2 = $("#new_pwd2")
+                if (new_pwd2.val() !== new_pwd.val()) {
+                    document.getElementById("async-info").innerText = '两次输入的密码不一样'
+                    new_pwd2.val('')
+                    //new_pwd.val('')
+                    return
+                }
+                if (new_pwd2.val().length < 6) {
+                    document.getElementById("async-info").innerText = '密码长度不足8位'
+                    new_pwd2.val('')
+                    return
+                }
+                const data = {
+                    "csrf_token": $("#csrf_token").val(),
+                    "new_pwd2": new_pwd2.val(),
+                }
+                axios.post('/user/edit_pwd', data, config)
+                    .then(function (response) {
+                        if (response.data.result === 'ok') {
+                            document.getElementById("async-info").innerText = '修改成功'
+                            setTimeout(modal_hide, 1000)
+                        } else if (response.data.result === 'out_of_date') {
+                            document.getElementById("async-info").innerText = '会话已过期'
+                            setTimeout(modal_hide, 1000)
+                            location.reload()
+                        } else {
+                            document.getElementById("async-info").innerText = '修改失败'
+                        }
+                    })
+            }
+            function modal_hide() {
+                $("#editPwdModal").modal("hide")
+            }
+        </script>
+        <!--modal-->
+
+        <div class="col" style="height: 960px;">
+            <div class="row">
+                <ul class="nav justify-content-end shadow " style="height: 50px;">
+                    <li class="nav-item">
+                        <div class="btn-group dropdown w-100">
+                            <a class="nav-link " aria-disabled="true" data-bs-toggle="dropdown" aria-expanded="false">
+                                管理员&nbsp;&nbsp;&nbsp;&nbsp;<img src="{{ url_for('static',filename='img/account.svg') }}" alt="" height="32"/>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editPwdModal"><img src="{{ url_for('static',filename='img/key.svg') }}" alt="" height="22"/>&nbsp;&nbsp;修改密码</a></li>
+                                <li><a class="dropdown-item" href="#"><img src="{{ url_for('static',filename='img/log.svg') }}" alt="" height="20"/>&nbsp;&nbsp;日志查看</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{{ url_for('logout') }}"><img src="{{ url_for('static',filename='img/logout.svg') }}" alt="" height="20"/>&nbsp;&nbsp;退出登录</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="row p-2">
+                默认报表
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

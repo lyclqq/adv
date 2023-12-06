@@ -14,6 +14,7 @@ import click
 redis_store = None
 db=SQLAlchemy()
 
+
 def create_app(config_name):
     app = Flask(__name__)
 
@@ -29,18 +30,22 @@ def create_app(config_name):
     # 创建SQLAlchemy对象,关联app
     db.init_app(app)
 
-
     # 创建Session对象,读取APP中session配置信息
     Session(app)
 
     # 使用CSRFProtect保护app
     CSRFProtect(app)
 
-
     from app.view.system import systemView
     app.register_blueprint(systemView,url_prefix='/system') #系统管理菜单
     from app.view.user import userView #个人相关
     app.register_blueprint(userView,url_prefix='/user')
+    from app.view.publish import publish_bp
+    from app.view.paid import paid_bp
+    from app.view.performance import performance_bp
+    app.register_blueprint(publish_bp, url_prefix='/')
+    app.register_blueprint(paid_bp, url_prefix='/')
+    app.register_blueprint(performance_bp, url_prefix='/')
     return app
 
 #日志文件
@@ -55,6 +60,7 @@ def log_file(LEVEL_NAME):
     # 为全局的日志工具对象（flask app使用的）添加日志记录器
     logging.getLogger().addHandler(file_log_handler)
 
+
 def getVerifyCode(imgKey):
     width,height=120,50
     im=Image.new('RGB',(width,height),'white')
@@ -64,8 +70,10 @@ def getVerifyCode(imgKey):
         draw.text((5+random.randint(-3,3)+23*item,5+random.randint(-3,3)),text=imgKey[item],fill=rndColor(),font=font)
     return im
 
+
 def getKey():
     return ''.join(random.sample(string.digits,4))
+
 
 def rndColor():
     return (random.randint(16,128),random.randint(16,128),random.randint(16,128))

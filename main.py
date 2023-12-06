@@ -46,7 +46,7 @@ def logout():
     session.pop("user_id")
     session.pop("username")
     session.pop("usermenu")
-    return redirect(url_for('homepage.home'))
+    return redirect(url_for('login'))
 
 @app.route('/temp')
 def temp():
@@ -134,7 +134,7 @@ def login():
 @app.route('/index',endpoint='index')
 @is_login
 def index():
-    return render_template('index.html')
+    return render_template('index24.html')
 
 
 if __name__=='__main__':
