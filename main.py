@@ -50,13 +50,6 @@ def logout():
 
 @app.route('/temp')
 def temp():
-    db.drop_all()
-    db.create_all()
-    user=Users()
-    user.username='admin'
-    user.set_password('11111111')
-    db.session.add(user)
-    db.session.commit()
     return render_template('temp.html',temp='Hello')
 
 @app.route('/files/<int:dirname>/<filename>')
