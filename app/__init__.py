@@ -43,9 +43,11 @@ def create_app(config_name):
     from app.view.publish import publish_bp
     from app.view.paid import paid_bp
     from app.view.performance import performance_bp
-    app.register_blueprint(publish_bp, url_prefix='/')
-    app.register_blueprint(paid_bp, url_prefix='/')
-    app.register_blueprint(performance_bp, url_prefix='/')
+    app.register_blueprint(publish_bp, url_prefix='/')  # 刊登
+    app.register_blueprint(paid_bp, url_prefix='/')  # 收付款
+    app.register_blueprint(performance_bp, url_prefix='/')  # 绩效
+    from app.view.logs import log_bp
+    app.register_blueprint(log_bp, url_prefix='/')  # 日志
     return app
 
 #日志文件
