@@ -36,6 +36,8 @@ class Config(object):
     SESSION_USE_SIGNER = True #设置签名存储
     PERMANENT_SESSION_LIFETIME = timedelta(days=1) #设置session有效期,两天时间
 
+    PAGEROWS=15
+
     #默认日志级别
     LEVEL_NAME = logging.DEBUG
 

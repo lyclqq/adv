@@ -1,0 +1,37 @@
+{% extends '/adminbase.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+<ol class="breadcrumb top_row">
+    <li><a href="{{ url_for('admin.index') }}">Home</a></li>
+    <li class="active">客户管理</li>
+</ol>
+<div>
+    {% if data != None %}
+    <div class="row">
+        <ul class="list-group">
+            {% for post in posts %}
+            <li class="list-group-item">
+                {{ post.id }}
+                <strong>{{ post.name}}</strong>【{{ post.create_datetime}}】
+                <span class="badge"><a href="{{ url_for('contract.customer_delete',cuid=post.id) }}" onclick="return confirm('Are you sure?');">
+                    删除
+                </a></span>
+                <span class="badge"><a href="{{ url_for('contract.customer_edit',cuid=post.id) }}">
+                    修改
+                </a></span>
+                <span class="badge"><a href="{{ url_for('contract.customer_status',cuid=post.id) }}">
+                    状态
+                </a></span>
+
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="page-footer">{{ render_pagination(pagination) }}</div>
+    {% else %}
+    没有数据
+    {% endif %}
+
+</div>
+{{ temp }}
+{% endblock %}
