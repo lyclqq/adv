@@ -10,6 +10,7 @@ import random
 import string
 from PIL import Image,ImageFont,ImageDraw
 import click
+from flask_bootstrap import Bootstrap
 
 redis_store = None
 db=SQLAlchemy()
@@ -27,6 +28,9 @@ def create_app(config_name):
     # 加载配置类
     app.config.from_object(config)
 
+    bootstrap = Bootstrap()
+    bootstrap.init_app(app)
+
     # 创建SQLAlchemy对象,关联app
     db.init_app(app)
 
@@ -41,7 +45,7 @@ def create_app(config_name):
     from app.view.user import userView #个人相关
     app.register_blueprint(userView,url_prefix='/user')
     from app.view.contract import contractView #个人相关
-    app.register_blueprint(contractView,url_prefix='/contract_admin')
+    app.register_blueprint(contractView,url_prefix='/contract')
     from app.view.publish import publish_bp
     from app.view.paid import paid_bp
     from app.view.performance import performance_bp

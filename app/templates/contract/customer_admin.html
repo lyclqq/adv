@@ -1,12 +1,12 @@
-{% extends '/adminbase.html' %}
+{% extends '/base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
 <ol class="breadcrumb top_row">
-    <li><a href="{{ url_for('admin.index') }}">Home</a></li>
+    <li><a href="#">Home</a></li>
     <li class="active">客户管理</li>
 </ol>
 <div>
-    {% if data != None %}
+    {% if posts  %}
     <div class="row">
         <ul class="list-group">
             {% for post in posts %}
@@ -29,7 +29,8 @@
     </div>
     <div class="page-footer">{{ render_pagination(pagination) }}</div>
     {% else %}
-    没有数据
+    <div class="page-footer">没有数据<a href="{{ url_for('contract.customer_status',cuid=post.id) }}">新增</a></div>
+
     {% endif %}
 
 </div>
