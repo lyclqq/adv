@@ -1,5 +1,6 @@
 from flask import Blueprint
 
+# 收付款
 paid_bp = Blueprint('paid', __name__)
 
 

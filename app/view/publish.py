@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request
 
 from app.models.bill import Fee2
 
+# 刊登
 publish_bp = Blueprint('publish', __name__)
 
 
