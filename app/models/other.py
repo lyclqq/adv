@@ -1,6 +1,6 @@
-from sqlalchemy.sql import func
 from app import db
 from app.models import Basecls
+
 
 #附件
 class Files(db.Model,Basecls):
@@ -13,6 +13,7 @@ class Files(db.Model,Basecls):
     order_id=db.Column(db.Integer, default=0)
     iuser_id=db.Column(db.Integer, default=0)
     cuser_id=db.Column(db.Integer, default=0)
+
 
 #报表
 class Reports(db.Model,Basecls):

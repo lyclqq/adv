@@ -21,7 +21,7 @@ def is_login(view_func):
 def getmenu(usermenu='00000000'):
     #从menu.json文件读取所有菜单
     strpath=os.getcwd()+"\\app\\static\\menu.json"
-    with open(strpath, 'r') as f:
+    with open(strpath, 'r', encoding='utf-8') as f:
         allmenu = json.load(f)
     menu = []
     #按照菜单权限生成用户菜单
