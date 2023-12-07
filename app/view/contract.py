@@ -10,7 +10,7 @@ from sqlalchemy import or_, and_, not_
 from app.models.contract import Customers,Orders
 
 
-contractView=Blueprint('contract',__name__)
+contractView=Blueprint('contract_admin',__name__)
 
 
 #客户管理

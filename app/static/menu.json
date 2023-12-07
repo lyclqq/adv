@@ -17,13 +17,13 @@
 		"id": 2,
 		"sublist": [{
 			"subname": "合同查询",
-			"sublink": "/bill/type1admin"
+			"sublink": "/contract/order_admin"
 		}, {
 			"subname": "客户管理",
-			"sublink": "/bill/typecreate"
+			"sublink": "/contract/customer_admin"
 		}, {
 			"subname": "合同新增",
-			"sublink": "/bill/typecreate"
+			"sublink": "/contract/order_create"
 		}]
 	},
 	{
