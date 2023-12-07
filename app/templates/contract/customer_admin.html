@@ -13,13 +13,13 @@
             <li class="list-group-item">
                 {{ post.id }}
                 <strong>{{ post.name}}</strong>【{{ post.create_datetime}}】
-                <span class="badge"><a href="{{ url_for('contract.customer_delete',cuid=post.id) }}" onclick="return confirm('Are you sure?');">
+                <span class="badge"><a href="{{ url_for('contract_admin.customer_delete',cuid=post.id) }}" onclick="return confirm('Are you sure?');">
                     删除
                 </a></span>
-                <span class="badge"><a href="{{ url_for('contract.customer_edit',cuid=post.id) }}">
+                <span class="badge"><a href="{{ url_for('contract_admin.customer_edit',cuid=post.id) }}">
                     修改
                 </a></span>
-                <span class="badge"><a href="{{ url_for('contract.customer_status',cuid=post.id) }}">
+                <span class="badge"><a href="{{ url_for('contract_admin.customer_status',cuid=post.id) }}">
                     状态
                 </a></span>
 
@@ -27,9 +27,9 @@
             {% endfor %}
         </ul>
     </div>
-    <div class="page-footer">{{ render_pagination(pagination) }}</div>
+    <div class="page-footer">{{ render_pagination(pagination) }} <a href="{{ url_for('contract_admin.customer_create') }}">新增客户</a></div>
     {% else %}
-    <div class="page-footer">没有数据<a href="{{ url_for('contract.customer_status',cuid=post.id) }}">新增</a></div>
+    <div class="page-footer">没有数据<a href="{{ url_for('contract_admin.customer_create') }}">新增客户</a></div>
 
     {% endif %}
 
