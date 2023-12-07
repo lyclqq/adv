@@ -20,7 +20,7 @@ def customer_admin():
     uid = session.get('user_id')
     customers=Customers()
     page = request.args.get('page', 1, type=int)
-    pagination = customers.query.filter(Customers.status!='del').order_by(Customers.create_datetime.desc()).paginate(
+    pagination = customers.query.filter(Customers.status!='delete').order_by(Customers.create_datetime.desc()).paginate(
         page, per_page=current_app.config['PAGEROWS'])
 
     result = pagination.items
@@ -34,14 +34,14 @@ def customer_delete(cuid):
     uid=session.get('user_id')
     try:
         customer = Customers.query.filter_by(id=cuid).first()
-        db.session.delete(customer)
+        customer.status='delete'
         db.session.commit()
         flash('删除成功.', 'success')
-        ins_logs(uid,'删除客户'+str(cuid),type='contract')
+        ins_logs(uid,'删除客户,id='+str(cuid),type='contract')
     except Exception as e:
         current_app.logger.error(e)
         flash('删除失败')
-    return redirect(url_for('contract/customer_admin'))
+    return redirect(url_for('contract_admin.customer_admin'))
 
 #客户状态
 @contractView.route('/customer_status/<int:cuid>')
@@ -50,14 +50,19 @@ def customer_status(cuid):
     uid=session.get('user_id')
     try:
         customer = Customers.query.filter_by(id=cuid).first()
-        db.session.delete(customer)
+        if customer.status=='stay':
+            customer.status='on'
+        elif customer.status=='on':
+            customer.status='off'
+        else:
+            customer.status='stay'
         db.session.commit()
-        flash('删除成功.', 'success')
-        ins_logs(uid,'删除客户'+str(cuid),type='contract')
+        flash('修改成功.', 'success')
+        ins_logs(uid,'修改客户状态,id='+str(cuid),type='contract')
     except Exception as e:
         current_app.logger.error(e)
-        flash('删除失败')
-    return redirect(url_for('contract/customer_admin'))
+        flash('修改失败')
+    return redirect(url_for('contract_admin.customer_admin'))
 
 #客户修改
 @contractView.route('/customer_edit/<int:cuid>')
@@ -73,4 +78,12 @@ def customer_edit(cuid):
     except Exception as e:
         current_app.logger.error(e)
         flash('删除失败')
+    return redirect(url_for('contract_admin.customer_admin'))
+
+#客户新增
+@contractView.route('/customer_create/')
+@is_login
+def customer_create():
+    uid=session.get('user_id')
+
     return redirect(url_for('contract/customer_admin'))
