@@ -3,7 +3,8 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-
+from app.models.system import Logs
+from app import db
 #登陆验证
 def is_login(view_func):
     @wraps(view_func)
@@ -22,15 +23,27 @@ def getmenu(usermenu='00000000'):
     strpath=os.getcwd()+"\\app\\static\\menu.json"
     with open(strpath, 'r', encoding='utf-8') as f:
         allmenu = json.load(f)
-    #f = open(strpath, 'r')
-    #allmenu = json.loads(f.readline())
-    print(allmenu)
     menu = []
     #按照菜单权限生成用户菜单
     for item in allmenu:
         ii = item.get('id')
-        print(ii)
         if usermenu[ii] == '1':
             menu.append(item)
-    print(menu)
     return menu
+
+#写日志
+def ins_logs(userid,notes,type='system'):
+    tf=False
+    logs=Logs()
+    ip=request.remote_addr
+    logs.user_id=userid
+    logs.ip=ip
+    logs.notes=notes
+    logs.type=type
+    try:
+        db.session.add(logs)
+        db.session.commit()
+        tf=True
+    except Exception as e:
+        current_app.logger.error(e)
+    return tf
