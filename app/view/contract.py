@@ -26,6 +26,19 @@ def customer_admin():
     result = pagination.items
     return render_template('contract/customer_admin.html', page=page, pagination=pagination, posts=result)
 
+#合同管理
+@contractView.route('/order_admin',methods=["GET","POST"])
+@is_login
+def order_admin():
+    uid = session.get('user_id')
+    orders=Orders()
+    page = request.args.get('page', 1, type=int)
+    pagination = orders.query.filter(Customers.status!='delete').order_by(Customers.create_datetime.desc()).paginate(
+        page, per_page=current_app.config['PAGEROWS'])
+
+    result = pagination.items
+    return render_template('contract/order_admin.html', page=page, pagination=pagination, posts=result)
+
 
 #客户删除
 @contractView.route('/customer_delete/<int:cuid>')
@@ -69,15 +82,20 @@ def customer_status(cuid):
 @is_login
 def customer_edit(cuid):
     uid=session.get('user_id')
-    try:
-        customer = Customers.query.filter_by(id=cuid).first()
-        db.session.delete(customer)
-        db.session.commit()
-        flash('删除成功.', 'success')
-        ins_logs(uid,'删除客户'+str(cuid),type='contract')
-    except Exception as e:
-        current_app.logger.error(e)
-        flash('删除失败')
+    customer = Customers.query.get(id == cuid)
+    form=CustomerForm()
+    if form.validate_on_submit():
+        try:
+
+            customer.name=form.typename.data
+            customer.notes=form.typecontent.data
+
+            db.session.commit()
+            flash('删除成功.', 'success')
+            ins_logs(uid,'删除客户'+str(cuid),type='contract')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('删除失败')
     return redirect(url_for('contract_admin.customer_admin'))
 
 #客户新增
@@ -90,6 +108,7 @@ def customer_create():
         customer=Customers()
         customer.name=form.name.data
         customer.notes=form.notes.data
+        customer.status='stay'
         try:
             db.session.add(customer)
             db.session.commit()

@@ -9,7 +9,7 @@ class CustomerForm(FlaskForm):
     name = StringField(label='客户名称:',
         validators=[
             DataRequired(message='客户名称不能为空'),
-            Length(min=1, max=5, message='客户名称长度必须大于%(min)d且小于%(max)d')
+            Length(min=2, max=40, message='客户名称长度必须大于%(min)d且小于%(max)d')
         ],
         widget=widgets.TextInput(),
         render_kw={'class': 'form-control',
@@ -24,3 +24,11 @@ class CustomerForm(FlaskForm):
                    "placeholder":"输入客户说明"})
     submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
 
+class OrderSearchForm(FlaskForm):
+    title = StringField(label='合同标题:',
+        render_kw={'class': 'form-control',
+                   "placeholder":"输入合同标题"}
+    )
+    status=SelectField(label='合同状态：',render_kw={'class': 'form-control'},
+                           choices=[('己审','己审' ), ('未审','未审' ),( '待审','待审'), ('完成', '完成'),('作废', '作废')])
+    submit = SubmitField('提交', render_kw={'class': 'btn btn-block btn-info'})

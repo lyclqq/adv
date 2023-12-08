@@ -1,0 +1,75 @@
+{% extends '/adminbase.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+<ol class="breadcrumb top_row">
+    <li><a href="{{ url_for('admin.index') }}">Home</a></li>
+    <li class="active">文章管理</li>
+</ol>
+<div class="container">
+    <div class="row">
+    </div>
+        <div class="col-md-6">
+            <form action="" role="form" method="post">
+                {{ form.csrf_token }}
+                <fieldset>
+                    <legend>查询条件</legend>
+                    <div class="form-group">
+                        {{ form.status.label }}
+                        {{ form.status() }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.title.label }}
+                        {{ form.title() }}
+                    </div>
+                </fieldset>
+                {{ form.submit }}
+            </form>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+{% if posts %}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th style="width:60px">ID</th>
+        <th >标题</th>
+        <th style="width:120px">二级栏目</th>
+        <th style="width:120px">作者</th>
+        <th style="width:150px">最后更新日期</th>
+        <th style="width:150px">操作</th>
+    </tr>
+    </thead>
+
+    {% for post in posts %}
+    <tr>
+        <td>{{ post.id }}</td>
+        <td><a href="{{ url_for('homepage.article_detail',aid=post.id) }}" target="_blank">{{ post.title }}{% if post.titlejpg != None: %}</a><span class="badge">Jpg</span> {% endif %}</td>
+        <td>{{ post.type2name }}</td>
+        <td>{{ post.author }}</td>
+        <td>{{ post.update_time }}</td>
+        <td>
+                <span class="badge"><a href="{{ url_for('article.adel',tid=post.id) }}" onclick="return confirm('Are you sure?');">
+                    删除
+                </a></span>
+                <span class="badge"><a href="{{ url_for('article.articleedit',aid=post.id) }}">
+                    修改
+                </a></span>
+            <span class="badge"><a href="{{ url_for('article.astatus',tid=post.id) }}">
+                    {{ post.astatus }}
+                </a></span>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+        </div> </div>
+        <div class="row">
+        <div class="page-footer">{{ render_pagination(pagination) }}</div></div>
+
+{% else %}
+<div class="tip"><h5>没有数据.</h5></div>
+{% endif %}
+
+       </div>
+{% endblock %}
