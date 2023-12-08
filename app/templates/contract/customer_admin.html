@@ -2,7 +2,7 @@
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
 <ol class="breadcrumb top_row">
-    <li><a href="#">Home</a></li>
+    <li><a href="{{ url_for('index') }}">Home</a></li>
     <li class="active">客户管理</li>
 </ol>
 <div>
@@ -12,7 +12,7 @@
             {% for post in posts %}
             <li class="list-group-item">
                 {{ post.id }}
-                <strong>{{ post.name}}</strong>【{{ post.create_datetime}}】
+                <strong>{{ post.name}}</strong>【{{ post.create_datetime}}】({{ post.status }})
                 <span class="badge"><a href="{{ url_for('contract_admin.customer_delete',cuid=post.id) }}" onclick="return confirm('Are you sure?');">
                     删除
                 </a></span>

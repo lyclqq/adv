@@ -8,7 +8,7 @@ from app.common import is_login,ins_logs
 from app import db
 from sqlalchemy import or_, and_, not_
 from app.models.contract import Customers,Orders
-
+from app.forms.customer import CustomerForm
 
 contractView=Blueprint('contract_admin',__name__)
 
@@ -65,7 +65,7 @@ def customer_status(cuid):
     return redirect(url_for('contract_admin.customer_admin'))
 
 #客户修改
-@contractView.route('/customer_edit/<int:cuid>')
+@contractView.route('/customer_edit/<int:cuid>',methods=["GET","POST"])
 @is_login
 def customer_edit(cuid):
     uid=session.get('user_id')
@@ -81,9 +81,22 @@ def customer_edit(cuid):
     return redirect(url_for('contract_admin.customer_admin'))
 
 #客户新增
-@contractView.route('/customer_create/')
+@contractView.route('/customer_create/',methods=["GET","POST"])
 @is_login
 def customer_create():
     uid=session.get('user_id')
-
-    return redirect(url_for('contract/customer_admin'))
+    form=CustomerForm()
+    if form.validate_on_submit():
+        customer=Customers()
+        customer.name=form.name.data
+        customer.notes=form.notes.data
+        try:
+            db.session.add(customer)
+            db.session.commit()
+            ins_logs(uid, '新增客户' , type='contract')
+            flash('新增成功')
+            return redirect(url_for('contract_admin.customer_admin'))
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('新增失败')
+    return render_template('contract/customer_create.html',form=form)
