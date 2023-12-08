@@ -1,59 +1,192 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/static/autocomplete/autoComplete.min.css">
-</head>
-<body>
-<div class="autoComplete_wrapper">
-    <input id="autoComplete" type="search" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" class="input-border-radius">
-    <input id="iphone"/>
-</div>
-<input />
-<script src="/static/bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js"></script>
-<script src="/static/autocomplete/autoComplete.min.js"></script>
-<script>
-    const input_auto = 'autoComplete'
-    const input_hidden = 'iphone'
-    const tip = '请输入。。。'
-    const auto_url = ''
-    const data_src = ["Sauce - Thousand Island", "Wild Boar - Tenderloin", "Goat - Whole Cut"]
-    const idx = ["id00", "id01", "id02"]
+{% extends 'base.html' %}
+{% block content %}
+    <div class="m-2 p-3 ">
+        <link rel="stylesheet" href="{{ url_for('static',filename='autocomplete/autoComplete.min.css') }}">
+        <script src=" {{ url_for('static',filename='autocomplete/autoComplete.min.js') }}"></script>
 
-    const autoCompleteJS = new autoComplete({
-        selector: "#"+input_auto,
-        placeHolder: tip,
-        data: {
-            src: data_src,
-            cache: false,
-        },
-        idx: idx,
-        resultsList: {
-            element: (list, data) => {
-                if (!data.results.length) {
-                    const message = document.createElement("div");
-                    message.setAttribute("class", "no_result");
-                    message.innerHTML = `<span>Found No Results for "${data.query}"</span>`;
-                    list.prepend(message);
-                }
-            },
-            noResults: true,
-        },
-        resultItem: {
-            highlight: true
-        },
-        events: {
-            input: {
-                selection: (event) => {
-                    const selection = event.detail.selection.value;
-                    autoCompleteJS.input.value = selection;
-                    document.getElementById(input_hidden).value = autoCompleteJS.idx[autoCompleteJS.data.src.indexOf(selection)]
+
+        <h3>刊登数据</h3>
+        <div class="modal fade" id="fee2Modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="fee2ModalTitle" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="fee2ModalTitle">登记</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="publish_form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <input type="hidden" id="hidden_names" value='{{ names }}'/>
+                            <input type="hidden" id="hidden_ids" value='{{ ids }}'/>
+                            <table class="table align-middle">
+                                <tr>
+                                    <td><strong class="text-danger">合同</strong></td>
+                                    <td colspan="">
+                                        <div class="autoComplete_wrapper">
+                                            <input id="autoComplete" type="search" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" class="input-border-radius" required>
+                                            <input id="order_id" name="order_id" type="hidden"/>
+                                        </div>
+                                        <script>
+
+                                            const input_auto = 'autoComplete'
+                                            const input_hidden = 'order_id'
+                                            const tip = ''
+                                            const auto_url = ''
+                                            //const data_src = ["Sauce - Thousand Island", "Wild Boar - Tenderloin", "Goat - Whole Cut"]
+                                            //const idx = ["01", "02", "03"]
+
+                                            const data_src = $('#hidden_names').val().substring(1).split(',')
+                                            const idx = $('#hidden_ids').val().substring(1).split(',')
+
+                                            const autoCompleteJS = new autoComplete({
+                                                selector: "#" + input_auto,
+                                                placeHolder: tip,
+                                                data: {
+                                                    src: data_src,
+                                                    cache: false,
+                                                },
+                                                idx: idx,
+                                                resultsList: {
+                                                    element: (list, data) => {
+                                                        if (!data.results.length) {
+                                                            const message = document.createElement("div");
+                                                            message.setAttribute("class", "no_result");
+                                                            message.innerHTML = `<span>没找到包含 "${data.query} 的相关数据"</span>`;
+                                                            list.prepend(message);
+                                                        }
+                                                    },
+                                                    noResults: true,
+                                                },
+                                                resultItem: {
+                                                    highlight: true
+                                                },
+                                                events: {
+                                                    input: {
+                                                        selection: (event) => {
+                                                            const selection = event.detail.selection.value;
+                                                            autoCompleteJS.input.value = selection;
+                                                            document.getElementById(input_hidden).value = autoCompleteJS.idx[autoCompleteJS.data.src.indexOf(selection)]
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        </script>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-danger">金额</strong></td>
+                                    <td>
+                                        <input class="form-control" type="number" name="fee" step="0.05" required/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-danger">面积</strong></td>
+                                    <td>
+                                        <input class="form-control" type="number" name="area" step="0.05" required/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-danger">日期</strong></td>
+                                    <td>
+                                        <input class="form-control" type="date" name="feedate" pattern="\d{4}-\d{2}-\d{2}" required/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-danger">版次</strong></td>
+                                    <td>
+                                        <input class="form-control" type="text" name="pagename" required/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>附件</td>
+                                    <td>
+                                        <input class="form-control" type="file" name="filename" accept=".doc, .docx, .pdf"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>绩效</td>
+                                    <td>
+                                        <input class="form-control" type="number" name="money"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>备注</td>
+                                    <td>
+                                        <input class="form-control" type="text" name="notes"/>
+                                    </td>
+                                </tr>
+
+                            </table>
+                            <span id="async-info2" style="text-align: center;color: red;"></span>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="publish_add();">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function publish_add() {
+                document.getElementById('async-info2').innerText = ''
+                const publish_form = document.getElementById('publish_form')
+                if (!publish_form.checkValidity()) {
+                    document.getElementById('async-info2').innerText = '有必填项未填'
+                } else {
+                    const data = new FormData(publish_form);
+                    axios.post('/publish/add', data)
+                        .then(function (response) {
+                            if (response.data.result === 'ok') {
+                                document.getElementById('async-info2').innerText = '提交成功'
+                                setTimeout(pub_modal_hide, 1000)
+                                //publish_form.reset()
+                                location.reload()
+                            } else {
+                                document.getElementById('async-info2').innerText = '提交失败'
+                            }
+                        })
                 }
             }
-        }
-    });
-</script>
 
-</body>
-</html>
+            function pub_modal_hide() {
+                $("#fee2Modal").modal("hide")
+            }
+        </script>
+        <div style="text-align:right;">
+            <button type="button" id="off_add_btn" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#fee2Modal">
+                新增
+            </button>
+        </div>
+        <br>
+        <table class="table table-hover shadow table-bordered ">
+            <thead>
+            <tr>
+                <td class="text-bg-secondary">序号</td>
+                <td class="text-bg-secondary">合同ID</td>
+                <td class="text-bg-secondary">刊登金额</td>
+                <td class="text-bg-secondary">刊登面积</td>
+                <td class="text-bg-secondary">版次</td>
+                <td class="text-bg-secondary">审核状态</td>
+                <td class="text-bg-secondary">发生日期</td>
+                <td class="text-bg-secondary">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for f in fee2 %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ f.order_id }}</td>
+                    <td>{{ f.fee }}</td>
+                    <td>{{ f.area }}</td>
+                    <td>{{ f.pagename }}</td>
+                    <td>{{ f.status }}</td>
+                    <td>{{ f.feedate }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary">审核</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
