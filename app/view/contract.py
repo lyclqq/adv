@@ -6,9 +6,9 @@ import os
 from functools import wraps
 from app.common import is_login,ins_logs
 from app import db
-from sqlalchemy import or_, and_, not_
 from app.models.contract import Customers,Orders
 from app.forms.customer import CustomerForm
+from app.forms.order import OrderForm
 
 contractView=Blueprint('contract_admin',__name__)
 
@@ -33,9 +33,7 @@ def order_admin():
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
     orders=Orders()
-    rs=orders.search_orders('aa',page=page)
-
-    pagination = rs['pagination']
+    pagination=orders.search_orders('aa',page=page)
     result=pagination.items
     return render_template('contract/order_admin.html', page=page, pagination=pagination, posts=result)
 
@@ -99,9 +97,9 @@ def customer_edit(cuid):
     return redirect(url_for('contract_admin.customer_admin'))
 
 #客户新增
-@contractView.route('/order_create/',methods=["GET","POST"])
+@contractView.route('/customer_create/',methods=["GET","POST"])
 @is_login
-def order_create():
+def customer_create():
     uid=session.get('user_id')
     form=CustomerForm()
     if form.validate_on_submit():
@@ -119,3 +117,27 @@ def order_create():
             current_app.logger.error(e)
             flash('新增失败')
     return render_template('contract/customer_create.html',form=form)
+
+#合同新增
+@contractView.route('/order_create/',methods=["GET","POST"])
+@is_login
+def order_create():
+    uid=session.get('user_id')
+    form=OrderForm()
+    if form.validate_on_submit():
+
+        order=Orders()
+        order.name=form.name.data
+        order.title=form.title.data
+        order.notes=form.notes.data
+        order.status='未审'
+        try:
+            db.session.add(order)
+            db.session.commit()
+            ins_logs(uid, '新增合同' , type='contract')
+            flash('新增成功')
+            return redirect(url_for('contract_admin.order_admin'))
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('新增失败')
+    return render_template('contract/order_create.html',form=form)

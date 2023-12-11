@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from wtforms import StringField,PasswordField,SubmitField,Form,widgets,SelectField,FileField,TextAreaField,DateField,IntegerField
+from wtforms import StringField,PasswordField,SubmitField,Form,widgets,SelectField,FileField,TextAreaField,DateField,IntegerField,FloatField
 from flask_wtf import FlaskForm
-from wtforms.validators import DataRequired,Length
+from wtforms.validators import DataRequired,Length,NumberRange
 
 class OrderForm(FlaskForm):
     #username = StringField( validators=[DataRequired(), Length(1, 20)])
@@ -14,21 +14,23 @@ class OrderForm(FlaskForm):
         render_kw={'class': 'form-control',
                    "placeholder":"输入合同名称"}
     )
+    ordernumber = StringField(label='合同号:',
+        widget=widgets.TextInput(),
+        render_kw={'class': 'form-control',
+                   "placeholder":"输入合同号"}
+    )
     name = StringField(label='经办人:',
         widget=widgets.TextInput(),
         render_kw={'class': 'form-control',
                    "placeholder":"输入经办人"}
     )
-    fee1 = StringField(label='合同金额:',
-        widget=widgets.TextInput(),
-        render_kw={'class': 'form-control',
-                   "placeholder":"输入合同金额"}
-    )
-    words=StringField(label='合同字数:',
-        widget=widgets.TextInput(),
-        render_kw={'class': 'form-control',
-                   "placeholder":"输入合同字数"}
-    )
+    fee1 =FloatField('合同金额',validators=[DataRequired(message='金额不能为空'),
+                                             NumberRange(min=0, max=1000000, message='字数只能为0-1000000')],
+                         render_kw={'class': 'form-control', 'placeholder': '字数只能为0-1000000'})
+    words = IntegerField(label='合同字数:', validators=[DataRequired(message='字数不能为空'),
+                                             NumberRange(min=0, max=100000, message='字数只能为0-100000')],
+                         render_kw={'class': 'form-control', 'placeholder': '字数只能为0-100000'})
+
     notes=TextAreaField(label='合同说明:',
         widget=widgets.TextInput(),
         render_kw={'class': 'form-control',
