@@ -51,14 +51,20 @@ class Orders(db.Model,Basecls):
 
     #分页查询，支持多关键字
     def search_orders(self,keywords,status=None,page=1):
+        pagerows=current_app.config['PAGEROWS']
+
         if keywords is None:
-            return None
+            if status is None:
+                pagination = Orders.query.order_by(Orders.id.desc()).paginate(page,per_page=pagerows)
+            else:
+                pagination = Orders.query.filter( Orders.status == status).order_by(
+                    Orders.id.desc()).paginate(page, per_page=pagerows)
+            return pagination
         keys=keywords.split(',')
 
         if status is None:
-            pagination = Orders.query.filter(Orders.name.in_(keys)).order_by(Orders.id.desc()).paginate(page,per_page=current_app.config['PAGEROWS'])
+            pagination = Orders.query.filter(Orders.name.in_(keys)).order_by(Orders.id.desc()).paginate(page,per_page=pagerows)
         else:
-            pagination = Orders.query.filter(Orders.name.in_(keys),Orders.status==status).order_by(Orders.id.desc()).paginate(page, per_page=
-            current_app.config['PAGEROWS'])
+            pagination = Orders.query.filter(Orders.name.in_(keys),Orders.status==status).order_by(Orders.id.desc()).paginate(page, per_page=pagerows)
 
         return pagination

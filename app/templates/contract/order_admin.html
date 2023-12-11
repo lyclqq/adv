@@ -1,4 +1,4 @@
-{% extends '/adminbase.html' %}
+{% extends '/base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
 <ol class="breadcrumb top_row">
@@ -35,9 +35,10 @@
     <tr>
         <th style="width:60px">ID</th>
         <th >合同名称</th>
+        <th style="width:150px">合同编号</th>
         <th style="width:120px">状态</th>
         <th style="width:120px">经办人</th>
-        <th style="width:150px">最后更新日期</th>
+        <th style="width:150px">合同日期</th>
         <th style="width:150px">操作</th>
     </tr>
     </thead>
@@ -45,20 +46,20 @@
     {% for post in posts %}
     <tr>
         <td>{{ post.id }}</td>
-        <td><a href="{{ url_for('homepage.article_detail',aid=post.id) }}" target="_blank">{{ post.title }}{% if post.titlejpg != None: %}</a><span class="badge">Jpg</span> {% endif %}</td>
-        <td>{{ post.type2name }}</td>
-        <td>{{ post.author }}</td>
+        <td><a href="{{ url_for('homepage.article_detail',aid=post.id) }}" target="_blank">{{ post.title }}</td>
+        <td>{{ post.status }}</td>
+        <td>{{ post.name }}</td>
         <td>{{ post.update_time }}</td>
         <td>
-                <span class="badge"><a href="{{ url_for('article.adel',tid=post.id) }}" onclick="return confirm('Are you sure?');">
-                    删除
-                </a></span>
-                <span class="badge"><a href="{{ url_for('article.articleedit',aid=post.id) }}">
+        {% if isorderpower(post.i_user_id) == True: %}
+            <span class="badge"><a href="{{ url_for('article.articleedit',aid=post.id) }}">
                     修改
                 </a></span>
-            <span class="badge"><a href="{{ url_for('article.astatus',tid=post.id) }}">
-                    {{ post.astatus }}
-                </a></span>
+            {% else :%}
+            <span class="badge">
+                    修改
+            </span>
+        {% endif %}
         </td>
     </tr>
     {% endfor %}

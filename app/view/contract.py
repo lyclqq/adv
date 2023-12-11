@@ -8,7 +8,7 @@ from app.common import is_login,ins_logs
 from app import db
 from app.models.contract import Customers,Orders
 from app.forms.customer import CustomerForm
-from app.forms.order import OrderForm
+from app.forms.order import OrderForm,OrderSearchForm
 
 contractView=Blueprint('contract_admin',__name__)
 
@@ -20,6 +20,7 @@ def customer_admin():
     uid = session.get('user_id')
     customers=Customers()
     page = request.args.get('page', 1, type=int)
+
     pagination = customers.query.filter(Customers.status!='delete').order_by(Customers.create_datetime.desc()).paginate(
         page, per_page=current_app.config['PAGEROWS'])
 
@@ -31,11 +32,19 @@ def customer_admin():
 @is_login
 def order_admin():
     uid = session.get('user_id')
+    form=OrderSearchForm()
     page = request.args.get('page', 1, type=int)
     orders=Orders()
-    pagination=orders.search_orders('aa',page=page)
+    if form.validate_on_submit():
+        title=form.title.data
+        status=form.status.data
+        pagination=orders.search_orders( keywords=title,status=status,page=1)
+    else:
+        pagination=orders.search_orders(None,page=page)
+
+    pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
     result=pagination.items
-    return render_template('contract/order_admin.html', page=page, pagination=pagination, posts=result)
+    return render_template('contract/order_admin.html', page=page, pagination=pagination, posts=result,form=form)
 
 
 #客户删除
