@@ -31,12 +31,12 @@ def customer_admin():
 @is_login
 def order_admin():
     uid = session.get('user_id')
-    orders=Orders()
     page = request.args.get('page', 1, type=int)
-    pagination = orders.query.filter(Customers.status!='delete').order_by(Customers.create_datetime.desc()).paginate(
-        page, per_page=current_app.config['PAGEROWS'])
+    orders=Orders()
+    rs=orders.search_orders('aa',page=page)
 
-    result = pagination.items
+    pagination = rs['pagination']
+    result=pagination.items
     return render_template('contract/order_admin.html', page=page, pagination=pagination, posts=result)
 
 
@@ -99,9 +99,9 @@ def customer_edit(cuid):
     return redirect(url_for('contract_admin.customer_admin'))
 
 #客户新增
-@contractView.route('/customer_create/',methods=["GET","POST"])
+@contractView.route('/order_create/',methods=["GET","POST"])
 @is_login
-def customer_create():
+def order_create():
     uid=session.get('user_id')
     form=CustomerForm()
     if form.validate_on_submit():
