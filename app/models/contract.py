@@ -1,6 +1,7 @@
 from app import db
 from app.models import Basecls
-
+from sqlalchemy import or_, and_, not_
+from flask import current_app
 
 #客户表
 class Customers(db.Model,Basecls):
@@ -10,6 +11,18 @@ class Customers(db.Model,Basecls):
     notes = db.Column(db.String(250))
     status = db.Column(db.String(10))
 
+ #分页查询，支持多关键字
+    def search_customers(self,keywords,page=1):
+        result={}
+        result['status'] = 'error'
+        result['data'] = None
+        if keywords is None:
+            return result
+        keys=keywords.split(',')
+        pagination = Customers.query.filter(Customers.name.in_(keys)).order_by(Customers.id.desc()).paginate(page,per_page=current_app.config['PAGEROWS'])
+        result['data'] =pagination
+        result['status'] = 'success'
+        return result
 
 #合同表
 class Orders(db.Model,Basecls):
@@ -39,3 +52,21 @@ class Orders(db.Model,Basecls):
     iuser_id=db.Column(db.Integer, default=0)
     cuser_id=db.Column(db.Integer, default=0)
     contract_date=db.Column(db.Date)
+
+    #分页查询，支持多关键字
+    def search_orders(self,keywords,status=None,page=1):
+        result={}
+        result['status'] = 'error'
+        result['data'] = None
+        if keywords is None:
+            return result
+        keys=keywords.split(',')
+
+        if status is None:
+            pagination = Orders.query.filter(Orders.name.in_(keys)).order_by(Orders.id.desc()).paginate(page,per_page=current_app.config['PAGEROWS'])
+        else:
+            pagination = Orders.query.filter(Orders.name.in_(keys),Orders.status==status).order_by(Orders.id.desc()).paginate(page, per_page=
+            current_app.config['PAGEROWS'])
+        result['data'] =pagination
+        result['status'] = 'success'
+        return result

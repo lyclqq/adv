@@ -17,6 +17,7 @@ from app.models.bill import Fee1,Fee2,Fee3,Fee4,Fee5,Wordnumbers
 from app.models.system import Users,Logs,Groups
 from app.models.contract import Orders,Customers
 from app.forms.user import LoginForm
+from sqlalchemy import or_, and_, not_
 
 app=create_app('develop')
 
@@ -50,6 +51,10 @@ def logout():
 
 @app.route('/temp')
 def temp():
+    keywords='ab,bc,dsf,bb'
+    keys=keywords.split(',')
+    result=Orders.query.filter(Orders.name.in_(keys)).all()
+    print(result)
     return render_template('temp.html',temp='Hello')
 
 @app.route('/files/<int:dirname>/<filename>')
