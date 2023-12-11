@@ -87,7 +87,7 @@
 			"sublink": "/other/linkadmin"
 		}, {
 			"subname": "刊登金额查询",
-			"sublink": "/other/linkcreate"
+			"sublink": "/publish/list"
 		}]
 	},
 	{
