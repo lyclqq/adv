@@ -26,89 +26,24 @@
                 <li class="nav-item">
                     <hr>
                 </li>
-                <li class="nav-item">
-                    <div class="btn-group dropend w-100">
-                        <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">系统管理</span>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">部门管理</a></li>
-                            <li><a class="dropdown-item" href="#">用户管理</a></li>
-                            <li><a class="dropdown-item" href="/log/list">日志管理</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">月初始化</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item mt-1">
-                    <div class="btn-group dropend w-100">
-                        <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">合同管理</span>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">合同查询</a></li>
-                            <li><a class="dropdown-item" href="#">客户管理</a></li>
-                            <li><a class="dropdown-item" href="#">合同新增</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item mt-1">
-                    <div class="btn-group dropend w-100">
-                        <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">收付款管理</span>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">合同查询</a></li>
-                            <li><a class="dropdown-item" href="#">绩效查询</a></li>
-                            <li><a class="dropdown-item" href="#">到帐查询</a></li>
-                            <li><a class="dropdown-item" href="#">发票查询</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item mt-1">
-                    <div class="btn-group dropend w-100">
-                        <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">字数管理</span>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">合同查询</a></li>
-                            <li><a class="dropdown-item" href="#">字数查询</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item mt-1">
-                    <div class="btn-group dropend w-100">
-                        <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">合同审核</span>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">合同查询</a></li>
-                            <li><a class="dropdown-item" href="#">客户查询</a></li>
-                            <li><a class="dropdown-item" href="#">合同金额</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item mt-1">
-                    <div class="btn-group dropend w-100">
-                        <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">刊登金额管理</span>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">合同查询</a></li>
-                            <li><a class="dropdown-item" href="/publish/list">刊登金额查询</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item mt-1">
-                    <div class="btn-group dropend w-100">
-                        <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">刊登金额审核</span>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">合同查询</a></li>
-                            <li><a class="dropdown-item" href="#">刊登金额查询</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item mt-1">
-                    <div class="btn-group dropend w-100">
-                        <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">收付款审核</span>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">合同查询</a></li>
-                            <li><a class="dropdown-item" href="#">绩效查询</a></li>
-                            <li><a class="dropdown-item" href="#">到帐查询</a></li>
-                            <li><a class="dropdown-item" href="#">发票查询</a></li>
-                        </ul>
-                    </div>
-                </li>
+
+                {% for m in session['menu'] %}
+                    {% if session['usermenu'][loop.index0]=='1' %}
+                        <li class="nav-item">
+                            <div class="btn-group dropend w-100">
+                                <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">{{ m.menuname }}</span>
+                                {% if m.sublist %}
+                                    <ul class="dropdown-menu">
+                                        {% for l in m.sublist %}
+                                            <li><a class="dropdown-item" href="{{ l.sublink }}">{{ l.subname }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
             </ul>
         </div>
 
