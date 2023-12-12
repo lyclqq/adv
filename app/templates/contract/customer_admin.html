@@ -22,6 +22,9 @@
                 <span class="badge"><a href="{{ url_for('contract_admin.customer_status',cuid=post.id) }}">
                     状态
                 </a></span>
+                <span class="badge"><a href="{{ url_for('contract_admin.order_create',cuid=post.id) }}">
+                    新增合同
+                </a></span>
 
             </li>
             {% endfor %}

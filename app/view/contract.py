@@ -33,6 +33,7 @@ def customer_admin():
 def order_admin():
     uid = session.get('user_id')
     form=OrderSearchForm()
+
     page = request.args.get('page', 1, type=int)
     orders=Orders()
     if form.validate_on_submit():
@@ -128,17 +129,23 @@ def customer_create():
     return render_template('contract/customer_create.html',form=form)
 
 #合同新增
-@contractView.route('/order_create/',methods=["GET","POST"])
+@contractView.route('/order_create/?cuid=<int:cuid>',methods=["GET","POST"])
 @is_login
-def order_create():
+def order_create(cuid):
     uid=session.get('user_id')
+    customer=Customers.query.get(cuid)
     form=OrderForm()
+    form.customername.readonly=True
+    form.customername.data=customer.name
     if form.validate_on_submit():
 
         order=Orders()
         order.name=form.name.data
         order.title=form.title.data
         order.notes=form.notes.data
+        order.Fee11=form.fee1.data
+        order.iuser_id=uid
+        order.contract_date=form.contract_date.data
         order.status='未审'
         try:
             db.session.add(order)
