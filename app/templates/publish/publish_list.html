@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
     <div class="m-2 p-3 ">
         <link rel="stylesheet" href="{{ url_for('static',filename='autocomplete/autoComplete.min.css') }}">
@@ -6,6 +7,7 @@
 
 
         <h3>刊登数据</h3>
+        <!---新增窗口--->
         <div class="modal fade" id="fee2Modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="fee2ModalTitle" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -26,75 +28,31 @@
                                             <input id="autoComplete" type="search" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" class="input-border-radius" required>
                                             <input id="order_id" name="order_id" type="hidden"/>
                                         </div>
-                                        <script>
-
-                                            const input_auto = 'autoComplete'
-                                            const input_hidden = 'order_id'
-                                            const tip = ''
-                                            const auto_url = ''
-                                            //const data_src = ["Sauce - Thousand Island", "Wild Boar - Tenderloin", "Goat - Whole Cut"]
-                                            //const idx = ["01", "02", "03"]
-
-                                            const data_src = $('#hidden_names').val().substring(1).split(',')
-                                            const idx = $('#hidden_ids').val().substring(1).split(',')
-
-                                            const autoCompleteJS = new autoComplete({
-                                                selector: "#" + input_auto,
-                                                placeHolder: tip,
-                                                data: {
-                                                    src: data_src,
-                                                    cache: false,
-                                                },
-                                                idx: idx,
-                                                resultsList: {
-                                                    element: (list, data) => {
-                                                        if (!data.results.length) {
-                                                            const message = document.createElement("div");
-                                                            message.setAttribute("class", "no_result");
-                                                            message.innerHTML = `<span>没找到包含 "${data.query} 的相关数据"</span>`;
-                                                            list.prepend(message);
-                                                        }
-                                                    },
-                                                    noResults: true,
-                                                },
-                                                resultItem: {
-                                                    highlight: true
-                                                },
-                                                events: {
-                                                    input: {
-                                                        selection: (event) => {
-                                                            const selection = event.detail.selection.value;
-                                                            autoCompleteJS.input.value = selection;
-                                                            document.getElementById(input_hidden).value = autoCompleteJS.idx[autoCompleteJS.data.src.indexOf(selection)]
-                                                        }
-                                                    }
-                                                }
-                                            });
-                                        </script>
+                                        <script src=" {{ url_for('static',filename='js/publish.js') }}"></script>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><strong class="text-danger">金额</strong></td>
                                     <td>
-                                        <input class="form-control" type="number" name="fee" step="0.05" required/>
+                                        <input class="form-control" type="number" name="fee" id="fee" step="0.05" required onchange="perf_calc(this.value)"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><strong class="text-danger">面积</strong></td>
                                     <td>
-                                        <input class="form-control" type="number" name="area" step="0.05" required/>
+                                        <input class="form-control" type="number" name="area" id="area" step="0.05" required/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><strong class="text-danger">日期</strong></td>
                                     <td>
-                                        <input class="form-control" type="date" name="feedate" pattern="\d{4}-\d{2}-\d{2}" required/>
+                                        <input class="form-control" type="date" name="feedate" id="feedate" pattern="\d{4}-\d{2}-\d{2}" required/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><strong class="text-danger">版次</strong></td>
                                     <td>
-                                        <input class="form-control" type="text" name="pagename" required/>
+                                        <input class="form-control" type="text" name="pagename" id="pagename" required/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -106,7 +64,7 @@
                                 <tr>
                                     <td>绩效</td>
                                     <td>
-                                        <input class="form-control" type="number" name="money"/>
+                                        <input class="form-control" type="number" name="money" id="money"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -126,45 +84,99 @@
                 </div>
             </div>
         </div>
-        <script>
-            function publish_add() {
-                document.getElementById('async-info2').innerText = ''
-                const publish_form = document.getElementById('publish_form')
-                if (!publish_form.checkValidity()) {
-                    document.getElementById('async-info2').innerText = '有必填项未填'
-                } else {
-                    const data = new FormData(publish_form);
-                    axios.post('/publish/add', data)
-                        .then(function (response) {
-                            if (response.data.result === 'ok') {
-                                document.getElementById('async-info2').innerText = '提交成功'
-                                setTimeout(pub_modal_hide, 1000)
-                                //publish_form.reset()
-                                location.reload()
-                            } else {
-                                document.getElementById('async-info2').innerText = '提交失败'
-                            }
-                        })
-                }
-            }
+        <!---审核窗口--->
+        <div class="modal fade" id="fee2AuditModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="fee2AuditModalTitle" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="fee2AuditModalTitle">审核</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="publish_form_audit">
+                            <input type="hidden" id="pid"/>
+                            <table class="table align-middle">
+                                <tr>
+                                    <td>金额</td>
+                                    <td>
+                                        <span class="form-control" id="sp_fee"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>绩效</td>
+                                    <td>
+                                        <span class="form-control" id="sp_money"></span>
+                                    </td>
+                                </tr>
+                                <tr id="file_tr">
+                                    <td>附件</td>
+                                    <td>
+                                        <span class="form-control text-break" id="sp_link">
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>审核意见</td>
+                                    <td>
+                                        <select class="form-control" id="status">
+                                            <option value="1">同意</option>
+                                            <option value="2">作废</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                            <span id="async-info3" style="text-align: center;color: red;"></span>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="publish_audit();">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--搜索框--->
+        <div class="align-items-start">
+            <form name="qr_publish" action="#">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <table class="">
+                    <tr>
+                        <td class="p-2">
+                            <label>
+                                <input type="text" class="form-control" placeholder="请输入合同名称" id="qr_order" name="qr_order" {% if qr_order %}value="{{ qr_order }}"{% endif %}>
+                            </label>
+                        </td>
+                        <td class="p-2">
+                            <label>
+                                <select class="form-control" name="qr_status" id="qr_status">
+                                    <option value="-1">请选择状态</option>
+                                    {% for k,v in stat_dict.items() %}
+                                        <option value="{{ k }}" {% if qr_status==k %}selected{% endif %}>{{ v }}</option>
+                                    {% endfor %}
 
-            function pub_modal_hide() {
-                $("#fee2Modal").modal("hide")
-            }
-        </script>
+                                </select>
+                            </label>
+                        </td>
+                        <td class="p-2">
+                            <button class="form-control" onclick="publish_query()">查询</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <br>
         <div style="text-align:right;">
             <button type="button" id="off_add_btn" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#fee2Modal">
                 新增
             </button>
         </div>
         <br>
-        <table class="table table-hover shadow table-bordered ">
+        <table class="table table-hover shadow table-bordered align-middle">
             <thead>
             <tr>
                 <td class="text-bg-secondary">序号</td>
                 <td class="text-bg-secondary">合同ID</td>
-                <td class="text-bg-secondary">刊登金额</td>
-                <td class="text-bg-secondary">刊登面积</td>
+                <td class="text-bg-secondary">刊登金额（元）</td>
+                <td class="text-bg-secondary">刊登面积（㎡）</td>
                 <td class="text-bg-secondary">版次</td>
                 <td class="text-bg-secondary">审核状态</td>
                 <td class="text-bg-secondary">发生日期</td>
@@ -172,21 +184,23 @@
             </tr>
             </thead>
             <tbody>
-            {% for f in fee2 %}
+            {% for f in pagination.items %}
                 <tr>
                     <td>{{ loop.index }}</td>
                     <td>{{ f.order_id }}</td>
                     <td>{{ f.fee }}</td>
                     <td>{{ f.area }}</td>
                     <td>{{ f.pagename }}</td>
-                    <td>{{ f.status }}</td>
+                    <td>{{ stat_dict.get(f.status) }}</td>
                     <td>{{ f.feedate }}</td>
                     <td>
-                        <button class="btn btn-sm btn-outline-secondary">审核</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="fee2_to_audit('{{ f.id }}','{{ f.fee }}','{{ f.money }}','{{ f.path }}'.replace('\\','|'),'{{ f.filename }}')">审核</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="publish_cancel({{ f.id }})">作废</button>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+        <div>{{ render_pagination(pagination,align='center') }}</div>
     </div>
 {% endblock %}
