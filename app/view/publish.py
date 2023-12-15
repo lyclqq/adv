@@ -1,10 +1,11 @@
 import datetime
 import os
 from nanoid import generate
-from flask import Blueprint, render_template, request, current_app, send_from_directory, make_response
+from flask import Blueprint, render_template, request, current_app, send_from_directory, make_response, session
 from sqlalchemy import and_
 
 from app import db
+from app.common import ins_logs
 from app.models.bill import Fee2
 from app.models.contract import Orders
 
@@ -19,12 +20,6 @@ stat_dict = {"0": "未审", "1": "已审", "2": "作废"}
 @publish_bp.route('/publish/list/<int:page>', defaults={"qr_status": "-1", "qr_order": ""}, methods=["GET", "POST"])
 @publish_bp.route('/publish/list/<int:page>/', methods=["GET", "POST"])
 def publish_list(page):
-    ids = ''
-    names = ''
-    orders = Orders.query.all()
-    for o in orders:
-        names = names + ',' + o.title
-        ids = ids + ',' + str(o.id)
     q = Fee2.query
     qr_status = request.args.get('qr_status')
     qr_order = request.args.get('qr_order')
@@ -32,23 +27,44 @@ def publish_list(page):
         q = q.filter(Fee2.status == qr_status)
     if qr_order is not None and qr_order != '':
         q = q.filter(Fee2.order_id == qr_order)
-    pagination = q.paginate(page=page, per_page=pagesize, error_out=False)
-    return render_template('publish/publish_list.html', pagination=pagination, names=names, ids=ids,
-                           stat_dict=stat_dict, qr_status=qr_status, qr_order=qr_order)
+    pagination = q.order_by(Fee2.create_datetime.desc()).paginate(page=page, per_page=pagesize, error_out=False)
+    return render_template('publish/publish_list.html', pagination=pagination,
+                           stat_dict=stat_dict, qr_status=qr_status)
+
+
+@publish_bp.route('/publish/to_add', defaults={"fid": -1}, methods=["GET"])
+@publish_bp.route('/publish/to_add/<int:fid>', methods=["GET"])
+def publish_to_add(fid):
+    t = get_order_list()
+    ids = t[1]
+    names = t[0]
+    if fid != -1:
+        f2 = Fee2.query.filter(Fee2.id == fid).first()
+        o = Orders.query.filter(Orders.id == f2.order_id).first()
+    else:
+        f2 = None
+        o = None
+    return render_template('publish/publish_add.html', names=names, ids=ids,
+                           stat_dict=stat_dict, f2=f2, o=o)
 
 
 @publish_bp.route('/publish/add', methods=["POST"])
 def publish_add():
     order_id = request.form.get('order_id')
-    f = Fee2(
-    )
+    fid = request.form.get('fid')
+    if fid != '':
+        f = Fee2.query.filter(Fee2.id == fid).first()
+    else:
+        f = Fee2(
+        )
+        f.order_id = int(order_id)
     file = request.files.get('filename')
+    #
     if file:
         t = handle_file(file)
         f.filename = t[0]
         f.path = t[1]
     #
-    f.order_id = int(order_id)
     f.fee = float(request.form.get('fee'))
     f.area = float(request.form.get('area'))
     f.feedate = request.form.get('feedate')
@@ -56,22 +72,27 @@ def publish_add():
     f.status = '0'
     f.money = request.form.get('money')
     f.notes = request.form.get('notes')
+    f.iuser_id = session.get("user_id")
     #
     db.session.add(f)
     db.session.commit()
     re = '{"result":"ok"}'
+    if fid != '':
+        ins_logs(session.get("user_id"), '刊登数据修改', 'fee2')
+    else:
+        ins_logs(session.get("user_id"), '刊登数据新增', 'fee2')
     return re
 
 
 def get_order_list():
+    ids = ''
+    names = ''
     orders = Orders.query.all()
-    names = []
-    ids = []
     for o in orders:
-        ids.append(o.id)
-        names.append(o.title)
-    re = '[{"names":' + str(names) + '},{"ids":' + str(ids) + '}]'
-    return re
+        ids = ids + ',' + str(o.id)
+        names = names + ',' + o.title
+    t = (names, ids)
+    return t
 
 
 @publish_bp.route('/publish/cancel', methods=["POST"])
@@ -96,6 +117,7 @@ def publish_audit():
     if f2:
         if f2.status != status:
             f2.status = status
+            f2.cuser_id = session.get("user_id")
             db.session.add(f2)
             db.session.commit()
         re = '{"result":"ok"}'
@@ -108,7 +130,7 @@ def publish_audit():
 def download():
     pid = request.args.get('pid')
     f2 = Fee2.query.filter(Fee2.id == pid).first()
-    return down(f2.path)
+    return down(f2.filename, f2.path)
 
 
 def handle_file(file):
@@ -123,12 +145,13 @@ def handle_file(file):
     return [old_name, new_path]
 
 
-def down(path):
+def down(name, path):
     is_file = os.path.isfile(os.path.join(current_app.root_path, path))
     if is_file:
         # 路径
         # print(f2.path[0:str(f2.path).rindex('\\')])
         # 名字
         # print(f2.path[str(f2.path).rindex('\\') + 1:])
-        response = make_response(send_from_directory(os.path.join(current_app.root_path, path[0:str(path).rindex('\\')]), path[str(path).rindex('\\') + 1:], as_attachment=True))
+        # print(path[str(path).rindex('.'):])
+        response = make_response(send_from_directory(os.path.join(current_app.root_path, path[0:str(path).rindex('\\')]), path[str(path).rindex('\\') + 1:], download_name=name + path[str(path).rindex('.'):], as_attachment=True))
         return response
