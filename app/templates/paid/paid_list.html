@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    <div class="m-2 p-3 ">
+        <link rel="stylesheet" href="{{ url_for('static',filename='autocomplete/autoComplete.min.css') }}">
+        <script src=" {{ url_for('static',filename='autocomplete/autoComplete.min.js') }}"></script>
+        <script src=" {{ url_for('static',filename='js/paid.js') }}"></script>
+
+        <h3>收款数据</h3>
+
+        <!---审核窗口--->
+        <div class="modal fade" id="fee4AuditModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="fee4AuditModalTitle" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="fee4AuditModalTitle">审核</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="paid_form_audit">
+                            <input type="hidden" id="pid"/>
+                            <table class="table align-middle">
+                                <tr>
+                                    <td>金额</td>
+                                    <td>
+                                        <span class="form-control" id="sp_fee"></span>
+                                    </td>
+                                </tr>
+
+                                <tr id="file_tr">
+                                    <td>附件</td>
+                                    <td>
+                                        <span class="form-control text-break" id="sp_link">
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>审核意见</td>
+                                    <td>
+                                        <select class="form-control" id="status">
+                                            <option value="1">同意</option>
+                                            <option value="2">作废</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                            <span id="info41" style="text-align: center;color: red;"></span>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="paid_audit();">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--搜索框--->
+        <div class="align-items-start">
+            <form name="qr_publish" action="#">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <table class="">
+                    <tr>
+                        <td>
+                            合同ID:
+                        </td>
+                        <td class="p-2">
+                            <label for="qr_order"><input id="qr_order" name="qr_order" type="search" class="form-control"></label>
+                        </td>
+                        <td class="p-2">
+                            <label>
+                                <select class="form-control" name="qr_status" id="qr_status">
+                                    <option value="-1">请选择状态</option>
+                                    {% for k,v in stat_dict.items() %}
+                                        <option value="{{ k }}" {% if qr_status==k %}selected{% endif %}>{{ v }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </td>
+                        <td class="p-2">
+                            <button class="form-control" onclick="paid_query()">查询</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <br>
+        <div style="text-align:right;">
+            <a class="btn btn-outline-secondary " href="/paid/to_add" role="button">新增</a>
+        </div>
+        <br>
+        <table class="table table-hover shadow table-bordered align-middle">
+            <thead>
+            <tr>
+                <td class="text-bg-secondary">序号</td>
+                <td class="text-bg-secondary">合同ID</td>
+                <td class="text-bg-secondary">金额（元）</td>
+                <td class="text-bg-secondary">审核状态</td>
+                <td class="text-bg-secondary">发生日期</td>
+                <td class="text-bg-secondary">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for f4 in pagination.items %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ f4.order_id }}</td>
+                    <td>{{ f4.fee }}</td>
+                    <td>{{ stat_dict.get(f4.status) }}</td>
+                    <td>{{ f4.feedate }}</td>
+                    <td>
+                        {% if f4.status in ('0','2') %}
+                            <button class="btn btn-sm btn-outline-secondary" onclick="fee4_to_audit('{{ f4.id }}','{{ f4.fee }}','{{ f4.filename }}')">审核</button>
+                        {% endif %}
+                        {% if f4.status=='0' %}
+                            <button class="btn btn-sm btn-outline-secondary" onclick="paid_cancel('{{ f4.id }}')">作废</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="paid_mod({{ f4.id }})">修改</button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div>{{ render_pagination(pagination,align='center') }}</div>
+    </div>
+{% endblock %}
