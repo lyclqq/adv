@@ -2,19 +2,19 @@
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
     <div class="m-2 p-3 ">
-        <script src=" {{ url_for('static',filename='js/publish.js') }}"></script>
+        <script src=" {{ url_for('static',filename='js/performance.js') }}"></script>
 
-        <h3>刊登数据</h3>
+        <h3>绩效数据</h3>
         <!---审核窗口--->
-        <div class="modal fade" id="fee2AuditModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="fee2AuditModalTitle" style="display: none;" aria-hidden="true">
+        <div class="modal fade" id="fee5AuditModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="fee5AuditModalTitle" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="fee2AuditModalTitle">审核</h1>
+                        <h1 class="modal-title fs-5" id="fee5AuditModalTitle">审核</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="publish_form_audit">
+                        <form id="perf_form_audit">
                             <input type="hidden" id="pid"/>
                             <table class="table align-middle">
                                 <tr>
@@ -24,16 +24,9 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>绩效</td>
+                                    <td>奖金</td>
                                     <td>
-                                        <span class="form-control" id="sp_money"></span>
-                                    </td>
-                                </tr>
-                                <tr id="file_tr">
-                                    <td>附件</td>
-                                    <td>
-                                        <span class="form-control text-break" id="sp_link">
-                                        </span>
+                                        <span class="form-control" id="sp_prize"></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -46,18 +39,18 @@
                                     </td>
                                 </tr>
                             </table>
-                            <span id="async-info3" style="text-align: center;color: red;"></span>
+                            <span id="info50" style="text-align: center;color: red;"></span>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="publish_audit();">保存</button>
+                        <button type="button" class="btn btn-primary" onclick="perf_audit();">保存</button>
                     </div>
                 </div>
             </div>
         </div>
         <!--搜索框--->
         <div class="align-items-start">
-            <form name="qr_publish" action="#">
+            <form name="qr_perf" action="#">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <table class="">
                     <tr>
@@ -78,15 +71,14 @@
                             </label>
                         </td>
                         <td class="p-2">
-                            <button class="form-control" onclick="publish_query()">查询</button>
+                            <button class="form-control" onclick="perf_query()">查询</button>
                         </td>
                     </tr>
                 </table>
             </form>
         </div>
-        <br>
         <div style="text-align:right;">
-            <a class="btn btn-outline-secondary " href="/publish/to_add" role="button">新增</a>
+            <a class="btn btn-outline-secondary " href="/perf/to_add" role="button">新增</a>
         </div>
         <br>
         <table class="table table-hover shadow table-bordered align-middle">
@@ -94,31 +86,29 @@
             <tr>
                 <td class="text-bg-secondary">序号</td>
                 <td class="text-bg-secondary">合同ID</td>
-                <td class="text-bg-secondary">刊登金额（元）</td>
-                <td class="text-bg-secondary">刊登面积（㎡）</td>
-                <td class="text-bg-secondary">版次</td>
+                <td class="text-bg-secondary">金额（元）</td>
+                <td class="text-bg-secondary">奖金（元）</td>
                 <td class="text-bg-secondary">审核状态</td>
                 <td class="text-bg-secondary">发生日期</td>
                 <td class="text-bg-secondary">操作</td>
             </tr>
             </thead>
             <tbody>
-            {% for f in pagination.items %}
+            {% for f5 in pagination.items %}
                 <tr>
                     <td>{{ loop.index }}</td>
-                    <td>{{ f.order_id }}</td>
-                    <td>{{ f.fee }}</td>
-                    <td>{{ f.area }}</td>
-                    <td>{{ f.pagename }}</td>
-                    <td>{{ stat_dict.get(f.status) }}</td>
-                    <td>{{ f.feedate }}</td>
+                    <td>{{ f5.order_id }}</td>
+                    <td>{{ f5.fee }}</td>
+                    <td>{{ f5.prize }}</td>
+                    <td>{{ stat_dict.get(f5.status) }}</td>
+                    <td>{{ f5.feedate }}</td>
                     <td>
-                        {% if f.status in ('0','2') %}
-                            <button class="btn btn-sm btn-outline-secondary" onclick="fee2_to_audit('{{ f.id }}','{{ f.fee }}','{{ f.money }}','{{ f.path }}'.replace('\\','|'),'{{ f.filename }}')">审核</button>
+                        {% if f5.status in ('0','2') %}
+                            <button class="btn btn-sm btn-outline-secondary" onclick="fee5_to_audit('{{ f5.id }}','{{ f5.fee }}','{{ f5.prize }}')">审核</button>
                         {% endif %}
-                        {% if f.status=='0' %}
-                            <button class="btn btn-sm btn-outline-secondary" onclick="publish_cancel({{ f.id }})">作废</button>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="publish_mod({{ f.id }})">修改</button>
+                        {% if f5.status=='0' %}
+                            <button class="btn btn-sm btn-outline-secondary" onclick="perf_cancel('{{ f5.id }}')">作废</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="perf_mod({{ f5.id }})">修改</button>
                         {% endif %}
                     </td>
                 </tr>

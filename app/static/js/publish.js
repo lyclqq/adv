@@ -50,7 +50,7 @@ function pub_audit_hide() {
 }
 
 function publish_query() {
-    window.location.href = '/publish/list/1/' + $("#qr_status").val() + '/' + $("#qr_order").val()
+    window.location.href = '/publish/list/1/'
 }
 
 function publish_mod(fid) {
