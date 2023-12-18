@@ -56,7 +56,7 @@ class Fee3(db.Model,Basecls):
 class Fee4(db.Model,Basecls):
     __tablename__ = 'fee4'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    feedate = db.Column(db.DateTime, default=func.now())
+    feedate = db.Column(db.Date, default=func.now())
     fee=db.Column(db.Float,default=0)
     notes = db.Column(db.String(250))
     status = db.Column(db.String(10))
@@ -71,7 +71,7 @@ class Fee4(db.Model,Basecls):
 class Fee5(db.Model,Basecls):
     __tablename__ = 'fee5'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    feedate = db.Column(db.DateTime, default=func.now())
+    feedate = db.Column(db.Date, default=func.now())
     fee=db.Column(db.Float,default=0)
     scale = db.Column(db.Float, default=0)
     prize=db.Column(db.Float,default=0)
