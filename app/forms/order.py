@@ -28,11 +28,9 @@ class OrderForm(FlaskForm):
         render_kw={'class': 'form-control',
                    "placeholder":"输入经办人"}
     )
-    fee1 =FloatField('合同金额',validators=[DataRequired(message='金额不能为空'),
-                                             NumberRange(min=0, max=10000000, message='金额只能为0-10000000')],
+    fee1 =FloatField('合同金额',validators=[NumberRange(min=0, max=10000000, message='金额只能为0-10000000')],
                          render_kw={'class': 'form-control', 'placeholder': '金额只能为0-10000000'},default=0)
-    words = IntegerField(label='合同字数:', validators=[DataRequired(message='字数不能为空'),
-                                             NumberRange(min=0, max=100000, message='字数只能为0-100000')],
+    words = IntegerField(label='合同字数:', validators=[NumberRange(min=0, max=100000, message='字数只能为0-100000')],
                          render_kw={'class': 'form-control', 'placeholder': '字数只能为0-100000'},default=0)
 
     notes=TextAreaField(label='合同说明:',

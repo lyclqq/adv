@@ -32,6 +32,17 @@ def getmenu(usermenu='00000000'):
             menu.append(item)
     return menu
 
+#获取角色的菜单权限
+def getrolemenu(rolename):
+    strpath = os.getcwd() + "\\app\\static\\role.json"
+    with open(strpath, 'r', encoding='utf-8') as f:
+        roles=json.load(f)
+    for item in roles:
+        if item.get("role")==rolename:
+            return item.get("menu")
+
+    return "000000000000"
+
 #写日志
 def ins_logs(userid,notes,type='system'):
     tf=False

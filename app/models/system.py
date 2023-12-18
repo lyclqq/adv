@@ -34,9 +34,9 @@ class Users(db.Model,Basecls):
         return resp_dict
 
 
-#用户表
+#用户部门表
 class Groups(db.Model):
-    __tablename__ = 'groups'
+    __tablename__ = 'usergroup'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     groupname = db.Column(db.String(20), nullable=False)
     type = db.Column(db.String(20))

@@ -46,18 +46,30 @@
     {% for post in posts %}
     <tr>
         <td>{{ post.id }}</td>
-        <td><a href="{{ url_for('homepage.article_detail',aid=post.id) }}" target="_blank">{{ post.title }}</td>
+        <td>{{ post.title }}</td>
         <td>{{ post.status }}</td>
         <td>{{ post.name }}</td>
         <td>{{ post.update_time }}</td>
         <td>
-        {% if isorderpower(post.i_user_id) == True: %}
-            <span class="badge"><a href="{{ url_for('article.articleedit',aid=post.id) }}">
+        {% if post.i_user_id == session.get("group_id") || session.get: %}
+            <span class="badge"><a href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">
                     修改
+                </a></span>
+            <span class="badge"><a href="{{ url_for('contract_admin.order_show',oid=post.id) }}">
+                    查看
+                </a></span>
+            <span class="badge"><a href="{{ url_for('contract_admin.order_upfiles',oid=post.id) }}">
+                    上传附件
                 </a></span>
             {% else :%}
             <span class="badge">
                     修改
+            </span>
+            <span class="badge">
+                    查看
+            </span>
+            <span class="badge">
+                    上传附件
             </span>
         {% endif %}
         </td>

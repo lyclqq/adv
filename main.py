@@ -10,7 +10,7 @@ from app import create_app,db,getKey,getVerifyCode
 import datetime
 import os
 from io import BytesIO
-from app.common import is_login
+from app.common import is_login,getrolemenu
 from flask_ckeditor import upload_fail, upload_success
 from app.models.other import Reports,Files
 from app.models.bill import Fee1,Fee2,Fee3,Fee4,Fee5,Wordnumbers
@@ -45,6 +45,7 @@ def imgcode():
 @is_login
 def logout():
     session.pop("user_id")
+    session.pop("group_id")
     session.pop("username")
     session.pop("usermenu")
     return redirect(url_for('login'))
@@ -124,7 +125,8 @@ def login():
     session["user_id"] = admin.id
     session["username"] = admin.username
     session["usermenu"]="111111111111"
-
+    session["group_id"]=admin.group_id
+    session["type"]=admin.type
     # 7.重定向到首页展示
     return redirect("/index")
 
