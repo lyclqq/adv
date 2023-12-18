@@ -12,7 +12,6 @@ from app.forms.order import OrderForm,OrderSearchForm
 
 contractView=Blueprint('contract_admin',__name__)
 
-
 #客户管理
 @contractView.route('/customer_admin',endpoint='customer_admin')
 @is_login
@@ -33,6 +32,7 @@ def customer_admin():
 def order_admin():
     uid = session.get('user_id')
     form=OrderSearchForm()
+
     page = request.args.get('page', 1, type=int)
     orders=Orders()
     if form.validate_on_submit():
@@ -128,17 +128,23 @@ def customer_create():
     return render_template('contract/customer_create.html',form=form)
 
 #合同新增
-@contractView.route('/order_create/',methods=["GET","POST"])
+@contractView.route('/order_create/<int:cuid>',methods=["GET","POST"])
 @is_login
-def order_create():
+def order_create(cuid):
     uid=session.get('user_id')
+    customer=Customers.query.get(cuid)
     form=OrderForm()
+    form.customername.readonly=True
+    form.customername.data=customer.name
     if form.validate_on_submit():
 
         order=Orders()
         order.name=form.name.data
         order.title=form.title.data
         order.notes=form.notes.data
+        order.Fee11=form.fee1.data
+        order.iuser_id=uid
+        order.contract_date=form.contract_date.data
         order.status='未审'
         try:
             db.session.add(order)
@@ -150,3 +156,21 @@ def order_create():
             current_app.logger.error(e)
             flash('新增失败')
     return render_template('contract/order_create.html',form=form)
+
+#合同修改
+@contractView.route('/order_edit/<int:oid>',methods=["GET","POST"])
+@is_login
+def order_edit(cuid):
+    pass
+
+#合同查看
+@contractView.route('/order_show/<int:oid>',methods=["GET","POST"])
+@is_login
+def order_show(cuid):
+    pass
+
+#合同附件上传
+@contractView.route('/order_upfiles/<int:oid>',methods=["GET","POST"])
+@is_login
+def order_upfiles(cuid):
+    pass

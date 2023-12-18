@@ -36,28 +36,41 @@
         <th style="width:60px">ID</th>
         <th >合同名称</th>
         <th style="width:150px">合同编号</th>
-        <th style="width:120px">状态</th>
-        <th style="width:120px">经办人</th>
+        <th style="width:100px">状态</th>
+        <th style="width:80px">经办人</th>
         <th style="width:150px">合同日期</th>
-        <th style="width:150px">操作</th>
+        <th style="width:200px">操作</th>
     </tr>
     </thead>
 
     {% for post in posts %}
     <tr>
         <td>{{ post.id }}</td>
-        <td><a href="{{ url_for('homepage.article_detail',aid=post.id) }}" target="_blank">{{ post.title }}</td>
+        <td>{{ post.title }}</td>
+        <td>{{ post.ordernumber }}</td>
         <td>{{ post.status }}</td>
         <td>{{ post.name }}</td>
         <td>{{ post.update_time }}</td>
         <td>
-        {% if isorderpower(post.i_user_id) == True: %}
-            <span class="badge"><a href="{{ url_for('article.articleedit',aid=post.id) }}">
+        {% if post.i_user_id == session.get("group_id") or session.get("type")=="admin": %}
+            <span class="badge"><a href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">
                     修改
+                </a></span>
+            <span class="badge"><a href="{{ url_for('contract_admin.order_show',oid=post.id) }}">
+                    查看
+                </a></span>
+            <span class="badge"><a href="{{ url_for('contract_admin.order_upfiles',oid=post.id) }}">
+                    上传
                 </a></span>
             {% else :%}
             <span class="badge">
                     修改
+            </span>
+            <span class="badge">
+                    查看
+            </span>
+            <span class="badge">
+                    上传
             </span>
         {% endif %}
         </td>

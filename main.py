@@ -10,7 +10,7 @@ from app import create_app,db,getKey,getVerifyCode
 import datetime
 import os
 from io import BytesIO
-from app.common import is_login
+from app.common import is_login,getrolemenu
 from flask_ckeditor import upload_fail, upload_success
 from app.models.other import Reports,Files
 from app.models.bill import Fee1,Fee2,Fee3,Fee4,Fee5,Wordnumbers
@@ -45,6 +45,7 @@ def imgcode():
 @is_login
 def logout():
     session.pop("user_id")
+    session.pop("group_id")
     session.pop("username")
     session.pop("usermenu")
     return redirect(url_for('login'))
@@ -96,7 +97,7 @@ def login():
     if request.method == "GET":
         # 判断管理员是否已经登陆过了,如果登陆过了指教跳转到首页
         if str(session.get('username')) != 'None':
-            return redirect("/admin/index")
+            return redirect("/index")
         return render_template("login.html",form=form)
     # 2.如果是POST请求,获取参数
     username = request.form.get("username")
@@ -123,8 +124,9 @@ def login():
     # 6.管理的session信息记录
     session["user_id"] = admin.id
     session["username"] = admin.username
-    session["usermenu"]="111111111111"
-
+    session["usermenu"]=getrolemenu(admin.type)
+    session["group_id"]=admin.group_id
+    session["type"]=admin.type
     # 7.重定向到首页展示
     return redirect("/index")
 
