@@ -9,7 +9,7 @@
 			"sublink": "/system/usercreate"
 		}, {
 			"subname": "日志管理",
-			"sublink": "/system/usercreate"
+			"sublink": "/log/list/1"
 		}]
 	},
 	{
@@ -34,7 +34,7 @@
 			"sublink": "/article/articleadmin"
 		}, {
 			"subname": "绩效查询",
-			"sublink": "/article/articlecreate_select"
+			"sublink": "/perf/list/1"
 		}, {
 			"subname": "到帐查询",
 			"sublink": "/article/articlecreate_select"
@@ -112,7 +112,7 @@
 			"sublink": "/article/articlecreate_select"
 		}, {
 			"subname": "到帐查询",
-			"sublink": "/article/articlecreate_select"
+			"sublink": "/paid/list/1"
 		}, {
 			"subname": "发票查询",
 			"sublink": "/article/articlecreate_select"
