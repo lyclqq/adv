@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    <div class="m-2 p-3 ">
+        <script src=" {{ url_for('static',filename='js/dept.js') }}"></script>
+        <h3>部门信息</h3>
+        <br>
+        <div style="text-align:right;">
+            <a class="btn btn-outline-secondary " href="/dept/to_add" role="button">新增</a>
+        </div>
+        <br>
+        <table class="table table-hover shadow table-bordered ">
+            <thead>
+            <tr>
+                <td class="text-bg-secondary">序号</td>
+                <td class="text-bg-secondary">名字</td>
+                <td class="text-bg-secondary">类型</td>
+                <td class="text-bg-secondary">年度目标</td>
+                <td class="text-bg-secondary">状态</td>
+                <td class="text-bg-secondary">操作</td>
+            </tr>
+            </thead>
+            {% for dept in pagination.items %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ dept.groupname }}</td>
+                    <td>{{ dept.type }}</td>
+                    <td>{{ dept.flag }}</td>
+                    <td>
+                        <div class="form-check form-switch float-start">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" {% if dept.status=='on' %}checked{% endif %} onclick="dept_status_switcher('{{ dept.id }}')" disabled>
+                            <label class="form-check-label" for="flexSwitchCheckChecked">{{ dept.status }}</label>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary float-start" onclick="dept_mod('{{ dept.id }}')">修改</button>
+                        <button class="btn btn-sm btn-outline-secondary ms-1" onclick="dept_status_switcher('{{ dept.id }}')">状态开关</button>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+        <div>{{ render_pagination(pagination,align='center') }}</div>
+    </div>
+{% endblock %}
