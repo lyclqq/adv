@@ -132,6 +132,7 @@ def customer_create():
 @is_login
 def order_create(cuid):
     uid=session.get('user_id')
+    groupid = session.get('group_id')
     customer=Customers.query.get(cuid)
     form=OrderForm()
     form.customername.readonly=True
@@ -145,6 +146,7 @@ def order_create(cuid):
         order.iuser_id=uid
         order.contract_date=form.contract_date.data
         order.status='未审'
+        order.group_id = groupid
         try:
             db.session.add(order)
             db.session.commit()
@@ -161,6 +163,7 @@ def order_create(cuid):
 @is_login
 def order_customer_create():
     uid=session.get('user_id')
+    groupid=session.get('group_id')
     form=OrderForm()
     form.customername.render_kw={'class': 'form-control','readonly':False}
     if form.validate_on_submit():
@@ -179,7 +182,7 @@ def order_customer_create():
             order.contract_date=form.contract_date.data
             order.status='未审'
             order.cutomer_id=customer.id
-
+            order.group_id=groupid
             db.session.add(order)
             db.session.commit()
             ins_logs(uid, '新增合同' , type='contract')

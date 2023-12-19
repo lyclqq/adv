@@ -1,4 +1,4 @@
-[{
+﻿[{
 		"menuname": "系统管理",
 		"id": 1,
 		"sublist": [{
@@ -19,11 +19,14 @@
 			"subname": "合同查询",
 			"sublink": "/contract/order_admin"
 		}, {
-			"subname": "客户管理",
+			"subname": "客户查询",
 			"sublink": "/contract/customer_admin"
 		}, {
 			"subname": "合同新增",
-			"sublink": "/contract/order_create"
+			"sublink": "/contract/order_customer_create"
+		}, {
+			"subname": "客户新增",
+			"sublink": "/contract/customer_create"
 		}]
 	},
 	{
