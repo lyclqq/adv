@@ -114,7 +114,7 @@
                     <td>{{ f.feedate }}</td>
                     <td>
                         {% if f.status in ('0','2') %}
-                            <button class="btn btn-sm btn-outline-secondary" onclick="fee2_to_audit('{{ f.id }}','{{ f.fee }}','{{ f.money }}','{{ f.path }}'.replace('\\','|'),'{{ f.filename }}')">审核</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="fee2_to_audit('{{ f.id }}','{{ f.fee }}','{{ f.money }}','{{ f.filename }}')">审核</button>
                         {% endif %}
                         {% if f.status=='0' %}
                             <button class="btn btn-sm btn-outline-secondary" onclick="publish_cancel({{ f.id }})">作废</button>

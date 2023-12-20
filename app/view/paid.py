@@ -5,7 +5,7 @@ from app import db
 from app.common import ins_logs
 from app.models.bill import Fee4
 from app.models.contract import Orders
-from app.view.publish import stat_dict, handle_file, down, get_order_list
+from app.view.publish import stat_dict, handle_file, down, get_order_list, old_file_check
 
 # 收付款
 paid_bp = Blueprint('paid', __name__)
@@ -57,6 +57,7 @@ def paid_add():
     #
     file4 = request.files.get('filename')
     if file4:
+        old_file_check(f4.filename, f4.path)
         t = handle_file(file4)
         f4.filename = t[0]
         f4.path = t[1]

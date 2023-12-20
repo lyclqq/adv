@@ -15,7 +15,7 @@ function publish_cancel(pid) {
     }
 }
 
-function fee2_to_audit(pid, fee, money, filepath, filename) {
+function fee2_to_audit(pid, fee, money, filename) {
     $('#pid').val(pid)
     $('#sp_fee').text(fee)
     $('#sp_money').text(money)

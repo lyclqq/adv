@@ -61,6 +61,7 @@ def publish_add():
     file = request.files.get('filename')
     #
     if file:
+        old_file_check(f.filename, f.path)
         t = handle_file(file)
         f.filename = t[0]
         f.path = t[1]
@@ -134,24 +135,34 @@ def download():
 
 
 def handle_file(file):
-    old_name = file.filename[0:file.filename.rindex('.')]
+    # old_name = file.filename[0:file.filename.rindex('.')]
     ext = file.filename.split('.')[-1].lower()
-    abs_path = os.path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], datetime.datetime.now().strftime("%Y") + os.sep)
+    parent_path = datetime.datetime.now().strftime("%Y") + os.sep
+    # , current_app.config['UPLOAD_FOLDER']
+    abs_path = os.path.join(current_app.root_path, 'static', 'files', parent_path)
     if not os.path.exists(abs_path):
         os.mkdir(abs_path)
     new_name = generate(size=10) + '.' + ext
     file.save(abs_path + new_name)
-    new_path = os.path.join(current_app.config['UPLOAD_FOLDER'], datetime.datetime.now().strftime("%Y") + os.sep) + new_name
-    return [old_name, new_path]
+    # new_path = os.path.join(current_app.config['UPLOAD_FOLDER'], datetime.datetime.now().strftime("%Y") + os.sep) + new_name
+    return [new_name, parent_path]
 
 
 def down(name, path):
-    is_file = os.path.isfile(os.path.join(current_app.root_path, path))
+    is_file = os.path.isfile(os.path.join(current_app.root_path, 'static', 'files', path, name))
     if is_file:
         # 路径
         # print(f2.path[0:str(f2.path).rindex('\\')])
         # 名字
         # print(f2.path[str(f2.path).rindex('\\') + 1:])
         # print(path[str(path).rindex('.'):])
-        response = make_response(send_from_directory(os.path.join(current_app.root_path, path[0:str(path).rindex('\\')]), path[str(path).rindex('\\') + 1:], download_name=name + path[str(path).rindex('.'):], as_attachment=True))
+        # print(os.path.join(current_app.root_path, 'static', 'files', path))
+        response = make_response(send_from_directory(os.path.join(current_app.root_path, 'static', 'files', path), name, download_name=name, as_attachment=True))
         return response
+
+
+def old_file_check(name, path):
+    if name is not None and path is not None:
+        file = os.path.join(current_app.root_path, 'static', 'files', path, name)
+        if os.path.isfile(file):
+            os.remove(file)
