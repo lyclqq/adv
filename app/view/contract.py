@@ -9,7 +9,7 @@ from app import db
 from app.models.contract import Customers,Orders
 from app.models.other import Files
 from app.forms.customer import CustomerForm
-from app.forms.order import OrderForm,OrderSearchForm
+from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
 
 contractView=Blueprint('contract_admin',__name__)
 
@@ -205,16 +205,26 @@ def order_edit(cuid):
 @is_login
 def order_show(oid):
     uid = session.get('user_id')
-    order=Orders.query.get(oid)
+    order=Orders.query.filter(Orders.id==oid).first()
     if order is None:
         flash('读取合同错误!')
     else:
         orderfiles=Files.query.filter(Files.order_id==oid).all()
-        return render_template('contract/order_show.html', order=order,result=orderfiles)
+        return render_template('contract/order_show.html', order=order,posts=orderfiles)
 
 
 #合同附件上传
 @contractView.route('/order_upfiles/<int:oid>',methods=["GET","POST"])
 @is_login
-def order_upfiles(cuid):
-    pass
+def order_upfiles(oid):
+    uid = session.get('user_id')
+    form=OrderupfileForm()
+    order = Orders.query.filter(Orders.id == oid).first()
+    form.title.data=order.title
+    if form.validate_on_submit():
+        try:
+            flash('上传成功')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('上传失败')
+    return render_template('contract/order_upfile.html', order=order,form=form)
