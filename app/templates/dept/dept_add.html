@@ -2,10 +2,10 @@
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
     <div class="m-2 p-3 ">
-<script src=" {{ url_for('static',filename='js/dept.js') }}"></script>
+        <script src=" {{ url_for('static',filename='js/dept.js') }}"></script>
         <h3>部门数据{% if dept.id %}修改{% else %}新增{% endif %}</h3>
         <!---新增窗口--->
-
+        <br>
         <div class="">
             <form id="dept_form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
