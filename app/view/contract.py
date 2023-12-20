@@ -7,6 +7,7 @@ from functools import wraps
 from app.common import is_login,ins_logs
 from app import db
 from app.models.contract import Customers,Orders
+from app.models.other import Files
 from app.forms.customer import CustomerForm
 from app.forms.order import OrderForm,OrderSearchForm
 
@@ -202,8 +203,15 @@ def order_edit(cuid):
 #合同查看
 @contractView.route('/order_show/<int:oid>',methods=["GET","POST"])
 @is_login
-def order_show(cuid):
-    pass
+def order_show(oid):
+    uid = session.get('user_id')
+    order=Orders.query.get(oid)
+    if order is None:
+        flash('读取合同错误!')
+    else:
+        orderfiles=Files.query.filter(Files.order_id==oid).all()
+        return render_template('contract/order_show.html', order=order,result=orderfiles)
+
 
 #合同附件上传
 @contractView.route('/order_upfiles/<int:oid>',methods=["GET","POST"])

@@ -27,6 +27,16 @@ app=create_app('develop')
 def page_not_found(e):
     return '页面没找到'
 
+#查用户名
+def replace_username(userid):
+    if userid==0:
+        return None
+    user=Users.query.filter(Users.id==userid).first()
+    return user.username
+
+app.add_template_filter(replace_username)
+
+
 #生成验证码
 @app.route('/imgCode')
 def imgcode():
