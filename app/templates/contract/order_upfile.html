@@ -24,17 +24,17 @@
                         {{ form.upfile.label }}
                         {{ form.upfile() }}
                     </div>
-
-                </fieldset>
-                {{ form.submit }}
-            </form>
             <div>
-                <ul>
+                <ul class="form-control">
                     {% for post in posts %}
-                    <li>附件</li>
+                    <li><a href="/files/{{ post.path }}{{ post.filename}}" target="_blank">{{ post.notes }}({{ post.status }})</a></li>
                     {% endfor %}
                 </ul>
             </div>
+                </fieldset>
+                {{ form.submit }}
+            </form>
+
         </div>
     </div>
 {% endblock %}
