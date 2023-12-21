@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    <div class="m-2 p-3 ">
+        <script src=" {{ url_for('static',filename='js/user.js') }}"></script>
+        <h3>用户信息</h3>
+        <br>
+        <div style="text-align:right;">
+            <a class="btn btn-outline-secondary " href="/user/to_add" role="button">新增</a>
+        </div>
+        <!--modal-->
+        <div class="modal fade" id="resetPwdModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="resetPwdModalTitle" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="resetPwdModalTitle">重置密码</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="pwd_reset_form" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <input type="hidden" name="uid" id="uid" value=""/>
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        <label><strong class="text-danger">输入密码：&nbsp;</strong>
+                                            <input id="reset_new" name="reset_new" type="password" required placeholder="不少于6位" minlength="6"/>
+                                        </label>
+                                    </td>
+                                </tr>
+
+                            </table>
+                            <span id="info70" style="text-align: center;color: red;"></span>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="pwd_reset();">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <table class="table table-hover shadow table-bordered ">
+            <thead>
+            <tr>
+                <td class="text-bg-secondary">序号</td>
+                <td class="text-bg-secondary">名字</td>
+                <td class="text-bg-secondary">类型</td>
+                <td class="text-bg-secondary">部门</td>
+                <td class="text-bg-secondary">状态</td>
+                <td class="text-bg-secondary">操作</td>
+            </tr>
+            </thead>
+            {% for user in pagination.items %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.type }}</td>
+                    <td>{{ dept_dict.get(user.group_id) }}</td>
+                    <td>
+                        <div class="form-check form-switch float-start">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" role="switch" {% if user.status=='on' %}checked{% endif %} onclick="user_status_switcher('{{ user.id }}')" disabled>
+                                {{ user.status }}
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary float-start" onclick="user_mod('{{ user.id }}')">修改</button>
+                        <button class="btn btn-sm btn-outline-secondary ms-1" onclick="user_status_switcher('{{ user.id }}')">状态开关</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="to_reset('{{ user.id }}')">重置密码</button>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+        <div>{{ render_pagination(pagination,align='center') }}</div>
+    </div>
+{% endblock %}

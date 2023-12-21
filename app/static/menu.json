@@ -3,13 +3,13 @@
 		"id": 1,
 		"sublist": [{
 			"subname": "用户管理",
-			"sublink": "/system/groupadmin"
+			"sublink": "/user/list/1"
 		}, {
 			"subname": "部门管理",
-			"sublink": "/system/usercreate"
+			"sublink": "/dept/list/1"
 		}, {
 			"subname": "日志管理",
-			"sublink": "/system/usercreate"
+			"sublink": "/log/list/1"
 		}]
 	},
 	{
@@ -37,7 +37,7 @@
 			"sublink": "/article/articleadmin"
 		}, {
 			"subname": "绩效查询",
-			"sublink": "/article/articlecreate_select"
+			"sublink": "/perf/list/1"
 		}, {
 			"subname": "到帐查询",
 			"sublink": "/article/articlecreate_select"
@@ -90,7 +90,7 @@
 			"sublink": "/other/linkadmin"
 		}, {
 			"subname": "刊登金额查询",
-			"sublink": "/publish/list"
+			"sublink": "/publish/list/1"
 		}]
 	},
 	{
@@ -115,7 +115,7 @@
 			"sublink": "/article/articlecreate_select"
 		}, {
 			"subname": "到帐查询",
-			"sublink": "/article/articlecreate_select"
+			"sublink": "/paid/list/1"
 		}, {
 			"subname": "发票查询",
 			"sublink": "/article/articlecreate_select"

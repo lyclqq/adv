@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    <div class="m-2 p-3 ">
+        <script src=" {{ url_for('static',filename='js/dept.js') }}"></script>
+        <h3>部门数据{% if dept.id %}修改{% else %}新增{% endif %}</h3>
+        <!---新增窗口--->
+        <br>
+        <div class="">
+            <form id="dept_form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" id="fid" name="fid" value="{{ dept.id }}"/>
+                <table class="table align-middle">
+
+                    <tr>
+                        <td><strong class="text-danger">部门名称</strong></td>
+                        <td>
+                            <input class="form-control" type="text" name="groupname" id="groupname" required value="{{ dept.groupname }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong class="text-danger">部门类型</strong></td>
+                        <td>
+                            <input class="form-control" type="text" name="type" id="type" required value="{{ dept.type }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong class="text-danger">年度目标</strong></td>
+                        <td>
+                            <input class="form-control" type="number" name="flag" id="flag" step="0.05" required value="{{ dept.flag }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>备注</td>
+                        <td>
+                            <input class="form-control" type="text" name="notes" value="{{ dept.notes }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>
+                            <select class="form-control" name="status">
+                                <option value="on" {% if dept.status=='on' %}selected{% endif %}>on</option>
+                                <option value="off" {% if dept.status=='off' %}selected{% endif %}>off</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="d-grid">
+                                <a class="btn btn-outline-primary" role="button" onclick="dept_add()">保存</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <span id="info61" style="text-align: center;color: red;"></span>
+            </form>
+        </div>
+
+
+    </div>
+{% endblock %}

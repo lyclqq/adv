@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    <div class="m-2 p-3">
+        <link rel="stylesheet" href="{{ url_for('static',filename='autocomplete/autoComplete.min.css') }}">
+        <script src=" {{ url_for('static',filename='autocomplete/autoComplete.min.js') }}"></script>
+
+        <h3>刊登数据{% if f2.id %}修改{% else %}新增{% endif %}</h3>
+        <!---新增窗口--->
+
+        <div class="w-100">
+            <form id="publish_form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" id="hidden_names" value='{{ names }}'/>
+                <input type="hidden" id="hidden_ids" value='{{ ids }}'/>
+                <input type="hidden" id="fid" name="fid" value="{{ f2.id }}"/>
+                <table class="table align-middle">
+                    <tr>
+                        <td><strong class="text-danger">合同</strong></td>
+                        <td colspan="">
+                            <div class="autoComplete_wrapper">
+                                <input id="autoComplete" type="search" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" class="input-border-radius " required value="{{ o.title }}" {% if f2.id %}readonly{% endif %}>
+                                <input id="order_id" name="order_id" type="hidden" value="{{ f2.order_id }}"/>
+                            </div>
+                            <script src=" {{ url_for('static',filename='js/publish_add.js') }}"></script>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong class="text-danger">金额</strong></td>
+                        <td>
+                            <input class="form-control" type="number" name="fee" id="fee" step="0.05" required onchange="perf_calc(this.value)" value="{{ f2.fee }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong class="text-danger">面积</strong></td>
+                        <td>
+                            <input class="form-control" type="number" name="area" id="area" step="0.05" required value="{{ f2.area }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong class="text-danger">日期</strong></td>
+                        <td>
+                            <input class="form-control" type="date" name="feedate" id="feedate" pattern="\d{4}-\d{2}-\d{2}" required value="{{ f2.feedate }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong class="text-danger">版次</strong></td>
+                        <td>
+                            <input class="form-control" type="text" name="pagename" id="pagename" required value="{{ f2.pagename }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>附件</td>
+                        <td>
+                            {% if f2.filename %}
+                                <label class="form-label"><a href="/publish/download?pid={{ f2.id }}" target="_blank"> {{ f2.filename }} </a></label>
+                            {% endif %}
+                            <input class="form-control" type="file" id="filename" name="filename" accept=".doc, .docx, .pdf"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>绩效</td>
+                        <td>
+                            <input class="form-control" type="number" name="money" id="money" value="{{ f2.money }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>备注</td>
+                        <td>
+                            <input class="form-control" type="text" name="notes" {% if f2.notes %}value="{{ f2.notes }}{% endif %}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="d-grid">
+                                <a class="btn btn-outline-primary" role="button" onclick="publish_add()">保存</a>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+                <span id="async-info2" style="text-align: center;color: red;"></span>
+            </form>
+        </div>
+    </div>
+{% endblock %}
