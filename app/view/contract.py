@@ -198,8 +198,41 @@ def order_customer_create():
 #合同修改
 @contractView.route('/order_edit/<int:oid>',methods=["GET","POST"])
 @is_login
-def order_edit(cuid):
-    pass
+def order_edit(oid):
+    uid = session.get('user_id')
+    order=Orders.query.filter(Orders.id==oid).first()
+    form=OrderForm()
+    form.customername.data = '1111'  # 只是为了验证加上
+    if form.validate_on_submit():
+        try:
+            if order.status=="未审":
+                order.notes=form.notes.data
+                order.title=form.title.data
+                order.ordernumber=form.ordernumber.data
+                order.contract_date=form.contract_date.data
+                order.name=form.name.data
+                db.session.add(order)
+                db.session.commit()
+                ins_logs(uid, '修改合同，orderid='+oid, type='contract')
+                flash("修改成功")
+            else:
+                flash("不是未审状态，不能修改")
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('修改失败')
+    else:
+        print('the errors is '+str(form.errors))
+        form.notes.data=order.notes
+        form.title.data=order.title
+        form.ordernumber.data=order.ordernumber
+        form.contract_date.data=order.contract_date
+        form.name.data=order.name
+        if order.status == "未审":
+            form.submit.render_kw = {'class': 'form-control', 'Enable': True}
+        else:
+            form.submit.render_kw = {'class': 'form-control', 'Enable': False}
+    return render_template('contract/order_edit.html',form=form)
+
 
 #合同查看
 @contractView.route('/order_show/<int:oid>',methods=["GET","POST"])
@@ -248,6 +281,7 @@ def order_upfiles(oid):
                     files.iuser_id=session.get('user_id')
                     db.session.add(files)
                     db.session.commit()
+                    ins_logs(uid, '合同上传附件，orderid=' + oid, type='contract')
                     flash('上传成功')
             else:
                 flash('请选择上传附件！')
