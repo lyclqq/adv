@@ -52,3 +52,16 @@ class OrderSearchForm(FlaskForm):
     status=SelectField(label='合同状态：',render_kw={'class': 'form-control'},
                            choices=[('己审','己审' ), ('未审','未审' ),( '待审','待审'), ('完成', '完成'),('作废', '作废')])
     submit = SubmitField('提交', render_kw={'class': 'btn btn-block btn-info'})
+
+
+class OrderupfileForm(FlaskForm):
+    title = StringField(label='合同标题:',
+        render_kw={'class': 'form-control','readonly':True,
+                   "placeholder":"输入合同标题"}
+    )
+    notes= StringField(label='附件标题:',
+        render_kw={'class': 'form-control',
+                   "placeholder":"输入合同标题"}
+    )
+    upfile=FileField(label='上传附件：',render_kw={'class': 'form-control'})
+    submit = SubmitField('提交', render_kw={'class': 'btn btn-block btn-info'})

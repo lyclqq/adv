@@ -1,0 +1,40 @@
+{% extends '/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+<ul class="breadcrumb top_row">
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li><a href="{{ url_for('contract_admin.order_admin') }}">合同查询</a></li>
+    <li class="active">附件上传</li>
+</ul>
+    <div class="row">
+        <div class="col-md-10">
+           <form action="" role="form" method="post"  enctype="multipart/form-data">
+                {{ form.csrf_token }}
+                <fieldset>
+                    <legend>附件上传</legend>
+                  <div class="form-group">
+                        {{ form.title.label }}
+                        {{ form.title() }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.notes.label }}
+                        {{ form.notes() }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.upfile.label }}
+                        {{ form.upfile() }}
+                    </div>
+            <div>
+                <ul class="form-control">
+                    {% for post in posts %}
+                    <li><a href="/files/{{ post.path }}{{ post.filename}}" target="_blank">{{ post.notes }}({{ post.status }})</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+                </fieldset>
+                {{ form.submit }}
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

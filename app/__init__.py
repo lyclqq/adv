@@ -11,6 +11,7 @@ import string
 from PIL import Image,ImageFont,ImageDraw
 import click
 from flask_bootstrap import Bootstrap
+import os
 
 redis_store = None
 db=SQLAlchemy()
@@ -24,6 +25,9 @@ def create_app(config_name):
 
     # 调用日志方法,记录程序运行信息
     log_file(config.LEVEL_NAME)
+
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['UPLOADED_PATH'] = os.path.join(basedir, 'static', 'files') + os.sep
 
     # 加载配置类
     app.config.from_object(config)

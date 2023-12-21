@@ -26,7 +26,12 @@
       <td>合同编号</td>
       <td style="width:180px;">{{ order.ordernumber }}</td>
       <td style="width:150px;">附件</td>
-        <td>Pune</td>
+        <td>{% for post in posts %}
+          <a href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">
+                    {{ post.notes }}
+                </a>
+        {% endfor %}
+        </td>
     </tr>
         <tr>
       <td>签约日期</td>
@@ -59,7 +64,7 @@
         <td>{{ order.fee41 }}</td>
     </tr>
       <tr>
-      <td>己发绩交金额</td>
+      <td>己发绩效金额</td>
       <td>{{ order.fee51 }}</td>
       <td>己发奖金额</td>
         <td>{{ order.fee61 }}</td>

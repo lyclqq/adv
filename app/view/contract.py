@@ -9,7 +9,8 @@ from app import db
 from app.models.contract import Customers,Orders
 from app.models.other import Files
 from app.forms.customer import CustomerForm
-from app.forms.order import OrderForm,OrderSearchForm
+from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
+import datetime
 
 contractView=Blueprint('contract_admin',__name__)
 
@@ -197,24 +198,95 @@ def order_customer_create():
 #合同修改
 @contractView.route('/order_edit/<int:oid>',methods=["GET","POST"])
 @is_login
-def order_edit(cuid):
-    pass
+def order_edit(oid):
+    uid = session.get('user_id')
+    order=Orders.query.filter(Orders.id==oid).first()
+    form=OrderForm()
+    form.customername.data = '1111'  # 只是为了验证加上
+    if form.validate_on_submit():
+        try:
+            if order.status=="未审":
+                order.notes=form.notes.data
+                order.title=form.title.data
+                order.ordernumber=form.ordernumber.data
+                order.contract_date=form.contract_date.data
+                order.name=form.name.data
+                db.session.add(order)
+                db.session.commit()
+                ins_logs(uid, '修改合同，orderid='+oid, type='contract')
+                flash("修改成功")
+            else:
+                flash("不是未审状态，不能修改")
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('修改失败')
+    else:
+        print('the errors is '+str(form.errors))
+        form.notes.data=order.notes
+        form.title.data=order.title
+        form.ordernumber.data=order.ordernumber
+        form.contract_date.data=order.contract_date
+        form.name.data=order.name
+        if order.status == "未审":
+            form.submit.render_kw = {'class': 'form-control', 'Enable': True}
+        else:
+            form.submit.render_kw = {'class': 'form-control', 'Enable': False}
+    return render_template('contract/order_edit.html',form=form)
+
 
 #合同查看
 @contractView.route('/order_show/<int:oid>',methods=["GET","POST"])
 @is_login
 def order_show(oid):
     uid = session.get('user_id')
-    order=Orders.query.get(oid)
+    order=Orders.query.filter(Orders.id==oid).first()
     if order is None:
         flash('读取合同错误!')
     else:
         orderfiles=Files.query.filter(Files.order_id==oid).all()
-        return render_template('contract/order_show.html', order=order,result=orderfiles)
+        return render_template('contract/order_show.html', order=order,posts=orderfiles)
 
 
 #合同附件上传
 @contractView.route('/order_upfiles/<int:oid>',methods=["GET","POST"])
 @is_login
-def order_upfiles(cuid):
-    pass
+def order_upfiles(oid):
+    uid = session.get('user_id')
+    form=OrderupfileForm()
+    order = Orders.query.filter(Orders.id == oid).first()
+    form.title.data=order.title
+    if form.validate_on_submit():
+        try:
+            f = request.files.get('upfile')
+            if f:
+                extension = f.filename.split('.')[-1].lower()
+                if extension not in ['doc', 'xls', 'docx', 'xlsx','pdf']:
+                    flash('只能上传pdf、word和excel文件!')
+                else:
+                    oldfilename = f.filename.split('.')
+                    if form.title.data is not None:
+                        oldfilename=form.notes.data
+                    newfilename = session.get('username') + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+                    path = os.path.join(current_app.config['UPLOADED_PATH'], datetime.datetime.now().strftime("%Y") + os.sep)
+
+                    if not os.path.exists(path):
+                        os.mkdir(path)
+                    f.save(os.path.join(path, newfilename + '.' + extension))
+                    files=Files()
+                    files.order_id=oid
+                    files.notes=oldfilename
+                    files.path=datetime.datetime.now().strftime("%Y") + os.sep
+                    files.filename=newfilename+'.'+extension
+                    files.status='on'
+                    files.iuser_id=session.get('user_id')
+                    db.session.add(files)
+                    db.session.commit()
+                    ins_logs(uid, '合同上传附件，orderid=' + oid, type='contract')
+                    flash('上传成功')
+            else:
+                flash('请选择上传附件！')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('上传失败')
+    orderfiles = Files.query.filter(Files.order_id == oid).all()
+    return render_template('contract/order_upfile.html', order=order,form=form,posts=orderfiles)
