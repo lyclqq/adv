@@ -3,10 +3,10 @@
 		"id": 1,
 		"sublist": [{
 			"subname": "用户管理",
-			"sublink": "/system/groupadmin"
+			"sublink": "/user/list/1"
 		}, {
 			"subname": "部门管理",
-			"sublink": "/system/usercreate"
+			"sublink": "/dept/list/1"
 		}, {
 			"subname": "日志管理",
 			"sublink": "/log/list/1"
