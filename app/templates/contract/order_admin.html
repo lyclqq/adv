@@ -38,9 +38,9 @@
         <th >合同名称</th>
         <th style="width:150px">合同编号</th>
         <th style="width:100px">状态</th>
-        <th style="width:80px">经办人</th>
-        <th style="width:150px">合同日期</th>
-        <th style="width:200px">操作</th>
+        <th style="width:80px">录入</th>
+        <th style="width:220px">处理时间</th>
+        <th style="width:240px">操作</th>
     </tr>
     </thead>
 
@@ -51,7 +51,7 @@
         <td>{{ post.ordernumber }}</td>
         <td>{{ post.status }}</td>
         <td>{{ post.iuser_id | replace_username }}</td>
-        <td>{{ post.create_datetime }}</td>
+        <td>{{ post.update_datetime }}</td>
         <td>
         {% if post.i_user_id == session.get("group_id") or session.get("type")=="admin": %}
             <span class="badge"><a href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">
@@ -63,6 +63,9 @@
             <span class="badge"><a href="{{ url_for('contract_admin.order_upfiles',oid=post.id) }}">
                     上传
                 </a></span>
+                        <span class="badge"><a href="{{ url_for('contract_admin.order_submit',oid=post.id) }}" onclick="return confirm('Are you sure?');">
+                    提交
+                </a></span>
             {% else :%}
             <span class="badge">
                     修改
@@ -72,6 +75,9 @@
             </span>
             <span class="badge">
                     上传
+            </span>
+                        <span class="badge">
+                    提交
             </span>
         {% endif %}
         </td>

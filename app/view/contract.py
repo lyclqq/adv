@@ -54,6 +54,7 @@ def order_admin():
 @is_login
 def customer_delete(cuid):
     uid=session.get('user_id')
+    page = request.args.get('page', 1, type=int)
     try:
         customer = Customers.query.filter_by(id=cuid).first()
         customer.status='delete'
@@ -63,7 +64,7 @@ def customer_delete(cuid):
     except Exception as e:
         current_app.logger.error(e)
         flash('删除失败')
-    return redirect(url_for('contract_admin.customer_admin'))
+    return redirect(url_for('contract_admin.customer_admin',page=page))
 
 #客户状态
 @contractView.route('/customer_status/<int:cuid>')
@@ -246,6 +247,25 @@ def order_show(oid):
     else:
         orderfiles=Files.query.filter(Files.order_id==oid).all()
         return render_template('contract/order_show.html', order=order,posts=orderfiles)
+
+
+#合同提交
+@contractView.route('/order_submit/<int:oid>',methods=["GET","POST"])
+@is_login
+def order_submit(oid):
+    uid = session.get('user_id')
+    order=Orders.query.filter(Orders.id==oid).first()
+    if order.status=='未审':
+        try:
+            order.update_datetime=datetime.datetime.now()
+            order.status='待审'
+            db.session.add(order)
+            db.session.commit()
+            ins_logs(uid, '提交成功，orderid=' + oid, type='contract')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    return redirect(url_for('contract_admin.order_admin'))
 
 
 #合同附件上传
