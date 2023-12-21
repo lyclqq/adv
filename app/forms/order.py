@@ -7,6 +7,9 @@ class OrderForm(FlaskForm):
     #username = StringField( validators=[DataRequired(), Length(1, 20)])
     customername=StringField(label='客户名称:',
         widget=widgets.TextInput(),
+        validators=[DataRequired(message='客户名称不能为空'),
+                                 Length(min=2, max=200, message='客户名称长度必须大于%(min)d且小于%(max)d')
+                             ],
         render_kw={'class': 'form-control','readonly': True}
     )
     title = StringField(label='合同名称:',

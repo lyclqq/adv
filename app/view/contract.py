@@ -7,6 +7,7 @@ from functools import wraps
 from app.common import is_login,ins_logs
 from app import db
 from app.models.contract import Customers,Orders
+from app.models.other import Files
 from app.forms.customer import CustomerForm
 from app.forms.order import OrderForm,OrderSearchForm
 
@@ -132,12 +133,12 @@ def customer_create():
 @is_login
 def order_create(cuid):
     uid=session.get('user_id')
+    groupid = session.get('group_id')
     customer=Customers.query.get(cuid)
     form=OrderForm()
     form.customername.readonly=True
     form.customername.data=customer.name
     if form.validate_on_submit():
-
         order=Orders()
         order.name=form.name.data
         order.title=form.title.data
@@ -146,7 +147,43 @@ def order_create(cuid):
         order.iuser_id=uid
         order.contract_date=form.contract_date.data
         order.status='未审'
+        order.group_id = groupid
         try:
+            db.session.add(order)
+            db.session.commit()
+            ins_logs(uid, '新增合同' , type='contract')
+            flash('新增成功')
+            return redirect(url_for('contract_admin.order_admin'))
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('新增失败')
+    return render_template('contract/order_create.html',form=form)
+
+#合同新增
+@contractView.route('/order_customer_create/',methods=["GET","POST"])
+@is_login
+def order_customer_create():
+    uid=session.get('user_id')
+    groupid=session.get('group_id')
+    form=OrderForm()
+    form.customername.render_kw={'class': 'form-control','readonly':False}
+    if form.validate_on_submit():
+        try:
+            customer=Customers()
+            customer.name=form.customername.data
+            customer.status='stay'
+            db.session.add(customer)
+            db.session.commit()
+            order=Orders()
+            order.name=form.name.data
+            order.title=form.title.data
+            order.notes=form.notes.data
+            order.Fee11=form.fee1.data
+            order.iuser_id=uid
+            order.contract_date=form.contract_date.data
+            order.status='未审'
+            order.cutomer_id=customer.id
+            order.group_id=groupid
             db.session.add(order)
             db.session.commit()
             ins_logs(uid, '新增合同' , type='contract')
@@ -166,8 +203,15 @@ def order_edit(cuid):
 #合同查看
 @contractView.route('/order_show/<int:oid>',methods=["GET","POST"])
 @is_login
-def order_show(cuid):
-    pass
+def order_show(oid):
+    uid = session.get('user_id')
+    order=Orders.query.get(oid)
+    if order is None:
+        flash('读取合同错误!')
+    else:
+        orderfiles=Files.query.filter(Files.order_id==oid).all()
+        return render_template('contract/order_show.html', order=order,result=orderfiles)
+
 
 #合同附件上传
 @contractView.route('/order_upfiles/<int:oid>',methods=["GET","POST"])

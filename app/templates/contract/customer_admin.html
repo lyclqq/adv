@@ -1,10 +1,10 @@
 {% extends '/base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
-<ol class="breadcrumb top_row">
+<ul class="breadcrumb top_row">
     <li><a href="{{ url_for('index') }}">Home</a></li>
     <li class="active">客户管理</li>
-</ol>
+</ul>
 <div>
     {% if posts  %}
     <div class="row">
@@ -37,5 +37,5 @@
     {% endif %}
 
 </div>
-{{ temp }}
+
 {% endblock %}

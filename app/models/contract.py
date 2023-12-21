@@ -10,6 +10,7 @@ class Customers(db.Model,Basecls):
     name = db.Column(db.String(200), nullable=False)
     notes = db.Column(db.String(250))
     status = db.Column(db.String(10))
+    orders = db.relationship('Orders', backref='customer', lazy='dynamic')
 
  #分页查询，支持多关键字
     def search_customers(self,keywords,page=1):
@@ -36,14 +37,13 @@ class Orders(db.Model,Basecls):
     Fee52=db.Column(db.Float,default=0)
     Fee62 = db.Column(db.Float, default=0)
     wordnumber=db.Column(db.Integer,default=0)
-    wordnumber = db.Column(db.Integer, default=0)
     wordcount=db.Column(db.Integer, default=0)
     publiccount=db.Column(db.Integer, default=0)
     area = db.Column(db.Float, default=0)
     name = db.Column(db.String(200))
     notes = db.Column(db.Text)
-    cutomer_id=db.Column(db.Integer, default=0)
-    group_id=db.Column(db.Integer, default=0)
+    cutomer_id=db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
+    group_id=db.Column(db.Integer, db.ForeignKey('usergroup.id'), nullable=False)
     iuser_id=db.Column(db.Integer, default=0)
     cuser_id=db.Column(db.Integer, default=0)
     contract_date=db.Column(db.Date)

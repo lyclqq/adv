@@ -1,10 +1,11 @@
 {% extends '/base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
-<ol class="breadcrumb top_row">
+<ul class="breadcrumb top_row">
     <li><a href="{{ url_for('index') }}">Home</a></li>
     <li class="active">合同管理</li>
-</ol>
+</ul>
+
 <div class="container">
     <div class="row">
     </div>
@@ -49,7 +50,7 @@
         <td>{{ post.title }}</td>
         <td>{{ post.ordernumber }}</td>
         <td>{{ post.status }}</td>
-        <td>{{ post.name }}</td>
+        <td>{{ post.iuser_id | replace_username }}</td>
         <td>{{ post.update_time }}</td>
         <td>
         {% if post.i_user_id == session.get("group_id") or session.get("type")=="admin": %}
