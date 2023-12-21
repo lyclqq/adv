@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-5.3.2-dist/css/bootstrap.min.css') }}">
     <script type="text/javascript" src="{{ url_for('static',filename='js/jquery-3.7.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js') }}"></script>
 
-	        <script  type="text/javascript" >
+    <script  type="text/javascript" >
          function f_refreshtype() {
-             var Image1 = document.getElementById("Image1");
+             let Image1 = document.getElementById("Image1");
              if (Image1 != null) {
                  Image1.src = Image1.src + "?";
              }
          }
-        </script>
+    </script>
 </head>
 <body>
 
  <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <!-- role属性主要是为了方便残疾人使用web -->
-                <form action="" role="form" method="post">
+     <div class="row">
+         <div class="col-md-3"></div>
+         <div class="col-md-6">
+         <br>
+             <!-- role属性主要是为了方便残疾人使用web -->
+             <form action="" role="form" method="post">
                     {{ form.csrf_token }}
                     <!-- 添加filedset表单域  -->
                     <fieldset>
@@ -53,12 +55,10 @@
                         <div class="error_tip" style="display: block;">错误提示:{{ errmsg }}</div>
                     {% endif %}
                 </form>
-            </div>
-        </div>
-    </div>
-
-
-
+         </div>
+         <div class="col-md-3"></div>
+     </div>
+ </div>
 
 </body>
 </html>
