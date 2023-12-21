@@ -62,13 +62,13 @@
 		"id": 5,
 		"sublist": [{
 			"subname": "合同查询",
-			"sublink": "/orderaudit/ordersearch"
+			"sublink": "/orderaudit/order_search"
 		}, {
 			"subname": "客户审核",
-			"sublink": "/orderaudit/customeraudit"
+			"sublink": "/orderaudit/customer_audit"
 		}, {
 			"subname": "附件审核",
-			"sublink": "/orderaudit/fileaudit"
+			"sublink": "/orderaudit/file_audit"
 		}]
 	},
 	{

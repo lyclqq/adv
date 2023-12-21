@@ -2,6 +2,7 @@ from app import db
 from app.models import Basecls
 from sqlalchemy import or_, and_, not_
 from flask import current_app
+from sqlalchemy.sql import func
 
 #客户表
 class Customers(db.Model,Basecls):
@@ -48,6 +49,7 @@ class Orders(db.Model,Basecls):
     cuser_id=db.Column(db.Integer, default=0)
     contract_date=db.Column(db.Date)
     ordernumber=db.Column(db.String(200))
+    update_datetime=db.Column(db.DateTime, default=func.now())
 
     #分页查询，支持多关键字
     def search_orders(self,keywords,status=None,page=1):

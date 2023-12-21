@@ -211,6 +211,7 @@ def order_edit(oid):
                 order.ordernumber=form.ordernumber.data
                 order.contract_date=form.contract_date.data
                 order.name=form.name.data
+                order.update_datetime=datetime.datetime.now()
                 db.session.add(order)
                 db.session.commit()
                 ins_logs(uid, '修改合同，orderid='+oid, type='contract')

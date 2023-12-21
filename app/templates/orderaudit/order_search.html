@@ -3,7 +3,7 @@
 {% block content %}
 <ul class="breadcrumb top_row">
     <li><a href="{{ url_for('index') }}">Home</a></li>
-    <li class="active">合同管理</li>
+    <li class="active">合同查询</li>
 </ul>
 
 <div class="container">
@@ -37,9 +37,9 @@
         <th style="width:60px">ID</th>
         <th >合同名称</th>
         <th style="width:150px">合同编号</th>
-        <th style="width:100px">状态</th>
+        <th style="width:80px">状态</th>
         <th style="width:80px">经办人</th>
-        <th style="width:150px">合同日期</th>
+        <th style="width:220px">合同日期</th>
         <th style="width:200px">操作</th>
     </tr>
     </thead>
@@ -55,13 +55,10 @@
         <td>
         {% if post.i_user_id == session.get("group_id") or session.get("type")=="admin": %}
             <span class="badge"><a href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">
-                    修改
-                </a></span>
-            <span class="badge"><a href="{{ url_for('contract_admin.order_show',oid=post.id) }}">
-                    查看
+                    合同审核
                 </a></span>
             <span class="badge"><a href="{{ url_for('contract_admin.order_upfiles',oid=post.id) }}">
-                    上传
+                    附件审核
                 </a></span>
             {% else :%}
             <span class="badge">
