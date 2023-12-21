@@ -62,13 +62,13 @@
 		"id": 5,
 		"sublist": [{
 			"subname": "合同查询",
-			"sublink": "/other/ftypesadmin"
+			"sublink": "/orderaudit/ordersearch"
 		}, {
-			"subname": "客户查询",
-			"sublink": "/other/ftypescreate"
+			"subname": "客户审核",
+			"sublink": "/orderaudit/customeraudit"
 		}, {
-			"subname": "合同金额",
-			"sublink": "/other/ftypescreate"
+			"subname": "附件审核",
+			"sublink": "/orderaudit/fileaudit"
 		}]
 	},
 	{
