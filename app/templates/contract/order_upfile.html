@@ -8,7 +8,7 @@
 </ul>
     <div class="row">
         <div class="col-md-10">
-           <form action="" role="form" method="post">
+           <form action="" role="form" method="post"  enctype="multipart/form-data">
                 {{ form.csrf_token }}
                 <fieldset>
                     <legend>附件上传</legend>
@@ -28,6 +28,13 @@
                 </fieldset>
                 {{ form.submit }}
             </form>
+            <div>
+                <ul>
+                    {% for post in posts %}
+                    <li>附件</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 {% endblock %}

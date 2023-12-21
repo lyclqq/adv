@@ -10,6 +10,7 @@ from app.models.contract import Customers,Orders
 from app.models.other import Files
 from app.forms.customer import CustomerForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
+import datetime
 
 contractView=Blueprint('contract_admin',__name__)
 
@@ -223,8 +224,34 @@ def order_upfiles(oid):
     form.title.data=order.title
     if form.validate_on_submit():
         try:
-            flash('上传成功')
+            f = request.files.get('upfile')
+            if f:
+                extension = f.filename.split('.')[-1].lower()
+                if extension not in ['doc', 'xls', 'docx', 'xlsx','pdf']:
+                    flash('只能上传pdf、word和excel文件!')
+                oldfilename = f.filename.split('.')
+                if form.title.data is not None:
+                    oldfilename=form.notes.data
+                newfilename = session.get('username') + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+                path = os.path.join(current_app.config['UPLOADED_PATH'], datetime.datetime.now().strftime("%Y") + os.sep)
+
+                if not os.path.exists(path):
+                    os.mkdir(path)
+                f.save(os.path.join(path, newfilename + '.' + extension))
+                files=Files()
+                files.order_id=oid
+                files.notes=oldfilename
+                files.path=datetime.datetime.now().strftime("%Y") + os.sep
+                files.filename=newfilename+'.'+extension
+                files.status='on'
+                files.iuser_id=session.get('user_id')
+                db.session.add(files)
+                db.session.commit()
+                flash('上传成功')
+            else:
+                flash('请选择上传附件！')
         except Exception as e:
             current_app.logger.error(e)
             flash('上传失败')
+    #orderfiles = Files.query.filter(Files.order_id == oid).all()
     return render_template('contract/order_upfile.html', order=order,form=form)
