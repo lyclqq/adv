@@ -48,7 +48,7 @@
             <span class="badge"><a href="{{ url_for('order_audit.customer_status',cuid=post.id) }}">
                     状态
                 </a></span>
-            <span class="badge"><a href="{{ url_for('order_audit.order_audit',oid=post.id) }}">
+            <span class="badge"><a href="{{ url_for('order_audit.customer_show',cuid=post.id) }}" target="_blank">
                     查看
                 </a></span>
         </td>

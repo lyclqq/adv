@@ -149,3 +149,12 @@ def file_del(fid):
         flash('删除失败')
     return redirect(url_for('order_audit.files_list',oid=files.order_id))
 
+#客户查看
+@orderauditView.route('/customer_show/<int:cuid>')
+@is_login
+def customer_show(cuid):
+    uid = session.get('user_id')
+    customer=Customers.query.filter(Customers.id==cuid).first_or_404()
+    orderlist=Orders.query.filter(Orders.cutomer_id==cuid).all()
+    return render_template('orderaudit/customer_show.html', customer=customer,posts=orderlist)
+
