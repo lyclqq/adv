@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request, session
 from sqlalchemy import and_
-
 from app import db
-from app.common import ins_logs
+from app.common import ins_logs, is_login
 from app.models.bill import Fee4
 from app.models.contract import Orders
 from app.view.publish import stat_dict, handle_file, down, get_order_list, old_file_check
@@ -13,8 +12,10 @@ paid_bp = Blueprint('paid', __name__)
 pagesize = 10
 
 
+# 列表页
 @paid_bp.route('/paid/list/<int:page>/', defaults={"qr_status": "-1", "qr_order": ""}, methods=["GET", "POST"])
 @paid_bp.route('/paid/list/<int:page>/', methods=["GET", "POST"])
+@is_login
 def paid_list(page):
     q = Fee4.query
     qr_status = request.args.get('qr_status')
@@ -28,6 +29,7 @@ def paid_list(page):
                            stat_dict=stat_dict)
 
 
+# 添加页
 @paid_bp.route('/paid/to_add', defaults={"fid": -1}, methods=["GET"])
 @paid_bp.route('/paid/to_add/<int:fid>', methods=["GET"])
 def paid_to_add(fid):
@@ -44,6 +46,7 @@ def paid_to_add(fid):
                            stat_dict=stat_dict, f4=f4, o=o)
 
 
+# 添加方法
 @paid_bp.route('/paid/add', methods=["POST"])
 def paid_add():
     order_id = request.form.get('order_id')
@@ -78,6 +81,7 @@ def paid_add():
     return re
 
 
+# 作废方法
 @paid_bp.route('/paid/cancel', methods=["POST"])
 def paid_cancel():
     pid = request.form.get('pid')
@@ -92,6 +96,7 @@ def paid_cancel():
     return re
 
 
+# 审核方法
 @paid_bp.route('/paid/audit', methods=["POST"])
 def paid_audit():
     pid = request.form.get('pid')
@@ -109,6 +114,7 @@ def paid_audit():
     return re
 
 
+# 附件下载
 @paid_bp.route('/paid/download', methods=['GET'])
 def download():
     pid = request.args.get('pid')
