@@ -4,7 +4,7 @@
 <ul class="breadcrumb top_row">
     <li><a href="{{ url_for('index') }}">Home</a></li>
     <li><a href="{{ url_for('contract_admin.order_admin') }}">合同查询</a></li>
-    <li class="active">合同查看</li>
+    <li class="active">合同审核</li>
 </ul>
     <div class="row">
         <div class="col-md-10">
@@ -25,11 +25,8 @@
             <tr>
       <td>合同编号</td>
       <td style="width:180px;">{{ order.ordernumber }}</td>
-      <td style="width:150px;">附件</td>
-        <td>{% for post in posts %}
- <a href="/files/{{ post.path }}{{ post.filename}}" target="_blank">{{ post.notes }}</a>
-        {% endfor %}
-        </td>
+      <td>合同金额</td>
+      <td>{{ order.fee11 }}</td>
     </tr>
         <tr>
       <td>签约日期</td>
@@ -50,33 +47,34 @@
         <td>{{ order.cuser_id | replace_username }}</td>
     </tr>
       <tr>
-      <td>合同金额</td>
-      <td>{{ order.fee11 }}</td>
-      <td>己刊登金额</td>
-        <td>{{ order.fee21 }}</td>
+
+      <td style="width:150px;">附件</td>
+        <td colspan="3">{% for post in posts %}
+<a href="/files/{{ post.path }}{{ post.filename}}" target="_blank">{{ post.notes }}</a>
+        {% endfor %}
+        </td>
     </tr>
-      <tr>
-      <td>己开发票金额</td>
-      <td>{{ order.fee31 }}</td>
-      <td>己到帐金额</td>
-        <td>{{ order.fee41 }}</td>
-    </tr>
-      <tr>
-      <td>己发绩效金额</td>
-      <td>{{ order.fee51 }}</td>
-      <td>己发奖金额</td>
-        <td>{{ order.fee61 }}</td>
-    </tr>
-      <tr>
-        <td>己刊登版面数</td>
-        <td>{{ order.area }}</td>
-      <td>己发字数</td>
-      <td>{{ order.publicnumber }}/{{ order.wordnumber }}</td>
+
 
     </tr>
 
   </tbody>
 </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+                      <form action="" role="form" method="post">
+                {{ form.csrf_token }}
+                <fieldset>
+                    <legend>合同审核</legend>
+                    <div class="form-group">
+                        {{ form.status.label }}
+                        {{ form.status() }}
+                    </div>
+                </fieldset>
+                {{ form.submit }}
+            </form>
         </div>
     </div>
 {% endblock %}

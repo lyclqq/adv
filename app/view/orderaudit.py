@@ -34,3 +34,27 @@ def order_search():
     pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
     result=pagination.items
     return render_template('orderaudit/order_search.html', page=page, pagination=pagination, posts=result,form=form)
+
+#合同审核
+@orderauditView.route('/order_audit/<int:oid>',methods=["GET","POST"])
+@is_login
+def order_audit(oid):
+    uid = session.get('user_id')
+    form=OrderSearchForm()
+    order=Orders.query.filter(Orders.id==oid).first_or_404()
+    form.status.data = order.status
+    orderfiles=Files.query.filter(Files.order_id==oid).all()
+    if form.validate_on_submit():
+        if order.status=='待审' and (form.status.data=='己审' or form.status.data=='作废'):
+            try:
+                order.status=form.status.data
+                db.session.add(order)
+                db.session.commit()
+                flash('审核成功.', 'success')
+                ins_logs(uid, '合同审核,id=' + str(oid), type='contract')
+            except Exception as e:
+                current_app.logger.error(e)
+                flash('审核失败')
+
+
+    return render_template('orderaudit/order_audit.html', order=order,posts=orderfiles,form=form)
