@@ -15,6 +15,24 @@ import datetime
 orderauditView=Blueprint('order_audit',__name__)
 
 
+#客户管理
+@orderauditView.route('/customer_search',methods=["GET","POST"])
+@is_login
+def customer_search():
+    uid = session.get('user_id')
+    form=OrderSearchForm()
+
+    page = request.args.get('page', 1, type=int)
+    customers=Customers()
+    if form.validate_on_submit():
+        title=form.title.data
+        pagination=customers.search_customers( keywords=title,page=1)
+    else:
+        pagination=customers.search_customers(None,page=page)
+
+    result=pagination.items
+    return render_template('orderaudit/customer_search.html', page=page, pagination=pagination, posts=result,form=form)
+
 #合同管理
 @orderauditView.route('/order_search',methods=["GET","POST"])
 @is_login
@@ -30,8 +48,8 @@ def order_search():
         pagination=orders.search_orders( keywords=title,status=status,page=1)
     else:
         pagination=orders.search_orders(None,page=page)
-
-    pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
+    form.status.choices=[('全部','全部'),('己审','己审' ), ('未审','未审' ),( '待审','待审'), ('完成', '完成'),('作废', '作废')]
+    #pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
     result=pagination.items
     return render_template('orderaudit/order_search.html', page=page, pagination=pagination, posts=result,form=form)
 
@@ -93,6 +111,27 @@ def file_status(fid):
         current_app.logger.error(e)
         flash('修改失败')
     return redirect(url_for('order_audit.files_list',oid=files.order_id))
+
+#附件状态
+@orderauditView.route('/customer_status/<int:cuid>')
+@is_login
+def customer_status(cuid):
+    uid=session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    try:
+        customer = Customers.query.filter_by(id=cuid).first_or_404()
+        if customer.status=='on':
+            customer.status='off'
+        elif customer.status=='stay':
+            customer.status='on'
+        else:
+            customer.status='stay'
+        db.session.commit()
+        ins_logs(uid,'修改客户状态,id='+str(cuid),type='order_audit')
+    except Exception as e:
+        current_app.logger.error(e)
+        flash('修改失败')
+    return redirect(url_for('order_audit.customer_search',page=page))
 
 #删除附件
 @orderauditView.route('/file_del/<int:fid>')

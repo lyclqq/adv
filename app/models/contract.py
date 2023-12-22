@@ -15,10 +15,12 @@ class Customers(db.Model,Basecls):
 
  #分页查询，支持多关键字
     def search_customers(self,keywords,page=1):
+        pagerows=current_app.config['PAGEROWS']
         if keywords is None:
-            return None
-        keys=keywords.split(',')
-        pagination = Customers.query.filter(Customers.name.in_(keys)).order_by(Customers.id.desc()).paginate(page,per_page=current_app.config['PAGEROWS'])
+            pagination = Customers.query.order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
+        else:
+            keys=keywords.split(',')
+            pagination = Customers.query.filter(Customers.name.in_(keys)).order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
         return pagination
 
 #合同表
@@ -52,11 +54,11 @@ class Orders(db.Model,Basecls):
     update_datetime=db.Column(db.DateTime, default=func.now())
 
     #分页查询，支持多关键字
-    def search_orders(self,keywords,status=None,page=1):
+    def search_orders(self,keywords,status='全部',page=1):
         pagerows=current_app.config['PAGEROWS']
 
         if keywords is None:
-            if status is None:
+            if status =='全部':
                 pagination = Orders.query.order_by(Orders.id.desc()).paginate(page,per_page=pagerows)
             else:
                 pagination = Orders.query.filter( Orders.status == status).order_by(
@@ -64,7 +66,7 @@ class Orders(db.Model,Basecls):
             return pagination
         keys=keywords.split(',')
 
-        if status is None:
+        if status =='全部':
             pagination = Orders.query.filter(Orders.name.in_(keys)).order_by(Orders.id.desc()).paginate(page,per_page=pagerows)
         else:
             pagination = Orders.query.filter(Orders.name.in_(keys),Orders.status==status).order_by(Orders.id.desc()).paginate(page, per_page=pagerows)
