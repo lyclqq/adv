@@ -44,7 +44,10 @@ def order_audit(oid):
     order=Orders.query.filter(Orders.id==oid).first_or_404()
     orderfiles=Files.query.filter(Files.order_id==oid).all()
     if form.validate_on_submit():
-        if order.status=='待审' and (form.status.data=='己审' or form.status.data=='作废'):
+        if order.status=='待审' and ( form.status.data=='作废' or form.status.data=='未审'):
+            order.status = form.status.data
+            db.session.add(order)
+        if order.status=='待审' and form.status.data=='己审' :
             order.status = form.status.data
             db.session.add(order)
             customer = Customers.query.filter(Customers.id == order.cutomer_id).first()
@@ -62,3 +65,48 @@ def order_audit(oid):
             flash('审核失败')
     form.status.data = order.status
     return render_template('orderaudit/order_audit.html', order=order,posts=orderfiles,form=form)
+
+#附件审核
+@orderauditView.route('/files_list/<int:oid>')
+@is_login
+def files_list(oid):
+    uid = session.get('user_id')
+    order=Orders.query.filter(Orders.id==oid).first_or_404()
+    orderfiles=Files.query.filter(Files.order_id==oid).all()
+    return render_template('orderaudit/files_list.html', order=order,posts=orderfiles)
+
+#附件状态
+@orderauditView.route('/file_status/<int:fid>')
+@is_login
+def file_status(fid):
+    uid=session.get('user_id')
+    try:
+        files = Files.query.filter_by(id=fid).first_or_404()
+        if files.status=='on':
+            files.status='off'
+        else:
+            files.status='on'
+        db.session.commit()
+        flash('修改成功.', 'success')
+        ins_logs(uid,'修改附件状态,orderid='+str(files.order_id)+',id='+str(fid),type='order_audit')
+    except Exception as e:
+        current_app.logger.error(e)
+        flash('修改失败')
+    return redirect(url_for('order_audit.files_list',oid=files.order_id))
+
+#删除附件
+@orderauditView.route('/file_del/<int:fid>')
+@is_login
+def file_del(fid):
+    uid=session.get('user_id')
+    try:
+        files = Files.query.filter_by(id=fid).first_or_404()
+        ins_logs(uid, '删除附件,orderid=' + str(files.order_id) + ',id=' + str(fid), type='order_audit')
+        db.session.delete(files)
+        db.session.commit()
+        flash('删除成功.', 'success')
+    except Exception as e:
+        current_app.logger.error(e)
+        flash('删除失败')
+    return redirect(url_for('order_audit.files_list',oid=files.order_id))
+

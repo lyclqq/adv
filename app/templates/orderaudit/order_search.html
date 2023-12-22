@@ -56,7 +56,7 @@
             <span class="badge"><a href="{{ url_for('order_audit.order_audit',oid=post.id) }}">
                     合同审核
                 </a></span>
-            <span class="badge"><a href="{{ url_for('contract_admin.order_upfiles',oid=post.id) }}">
+            <span class="badge"><a href="{{ url_for('order_audit.files_list',oid=post.id) }}">
                     附件审核
                 </a></span>
         </td>
