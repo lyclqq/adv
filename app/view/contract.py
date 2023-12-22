@@ -54,8 +54,9 @@ def order_admin():
 @is_login
 def customer_delete(cuid):
     uid=session.get('user_id')
+    page = request.args.get('page', 1, type=int)
     try:
-        customer = Customers.query.filter_by(id=cuid).first()
+        customer = Customers.query.filter_by(id=cuid).first_or_404()
         customer.status='delete'
         db.session.commit()
         flash('删除成功.', 'success')
@@ -63,7 +64,7 @@ def customer_delete(cuid):
     except Exception as e:
         current_app.logger.error(e)
         flash('删除失败')
-    return redirect(url_for('contract_admin.customer_admin'))
+    return redirect(url_for('contract_admin.customer_admin',page=page))
 
 #客户状态
 @contractView.route('/customer_status/<int:cuid>')
@@ -71,7 +72,7 @@ def customer_delete(cuid):
 def customer_status(cuid):
     uid=session.get('user_id')
     try:
-        customer = Customers.query.filter_by(id=cuid).first()
+        customer = Customers.query.filter_by(id=cuid).first_or_404()
         if customer.status=='stay':
             customer.status='on'
         elif customer.status=='on':
@@ -200,7 +201,7 @@ def order_customer_create():
 @is_login
 def order_edit(oid):
     uid = session.get('user_id')
-    order=Orders.query.filter(Orders.id==oid).first()
+    order=Orders.query.filter(Orders.id==oid).first_or_404()
     form=OrderForm()
     form.customername.data = '1111'  # 只是为了验证加上
     if form.validate_on_submit():
@@ -211,6 +212,7 @@ def order_edit(oid):
                 order.ordernumber=form.ordernumber.data
                 order.contract_date=form.contract_date.data
                 order.name=form.name.data
+                order.update_datetime=datetime.datetime.now()
                 db.session.add(order)
                 db.session.commit()
                 ins_logs(uid, '修改合同，orderid='+oid, type='contract')
@@ -239,12 +241,28 @@ def order_edit(oid):
 @is_login
 def order_show(oid):
     uid = session.get('user_id')
-    order=Orders.query.filter(Orders.id==oid).first()
-    if order is None:
-        flash('读取合同错误!')
-    else:
-        orderfiles=Files.query.filter(Files.order_id==oid).all()
-        return render_template('contract/order_show.html', order=order,posts=orderfiles)
+    order=Orders.query.filter(Orders.id==oid).first_or_404()
+    orderfiles=Files.query.filter(Files.order_id==oid).all()
+    return render_template('contract/order_show.html', order=order,posts=orderfiles)
+
+
+#合同提交
+@contractView.route('/order_submit/<int:oid>',methods=["GET","POST"])
+@is_login
+def order_submit(oid):
+    uid = session.get('user_id')
+    order=Orders.query.filter(Orders.id==oid).first_or_404()
+    if order.status=='未审':
+        try:
+            order.update_datetime=datetime.datetime.now()
+            order.status='待审'
+            db.session.add(order)
+            db.session.commit()
+            ins_logs(uid, '提交成功，orderid=' + oid, type='contract')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    return redirect(url_for('contract_admin.order_admin'))
 
 
 #合同附件上传
@@ -253,7 +271,7 @@ def order_show(oid):
 def order_upfiles(oid):
     uid = session.get('user_id')
     form=OrderupfileForm()
-    order = Orders.query.filter(Orders.id == oid).first()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
     form.title.data=order.title
     if form.validate_on_submit():
         try:

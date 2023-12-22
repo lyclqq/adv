@@ -3,7 +3,7 @@
 {% block content %}
 <ul class="breadcrumb top_row">
     <li><a href="{{ url_for('index') }}">Home</a></li>
-    <li class="active">合同管理</li>
+    <li class="active">合同查询</li>
 </ul>
 
 <div class="container">
@@ -37,10 +37,10 @@
         <th style="width:60px">ID</th>
         <th >合同名称</th>
         <th style="width:150px">合同编号</th>
-        <th style="width:100px">状态</th>
+        <th style="width:80px">状态</th>
         <th style="width:80px">录入</th>
         <th style="width:220px">处理时间</th>
-        <th style="width:240px">操作</th>
+        <th style="width:200px">操作</th>
     </tr>
     </thead>
 
@@ -53,33 +53,12 @@
         <td>{{ post.iuser_id | replace_username }}</td>
         <td>{{ post.update_datetime }}</td>
         <td>
-        {% if post.i_user_id == session.get("group_id") or session.get("type")=="admin": %}
-            <span class="badge"><a href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">
-                    修改
+            <span class="badge"><a href="{{ url_for('order_audit.order_audit',oid=post.id) }}">
+                    合同审核
                 </a></span>
-            <span class="badge"><a href="{{ url_for('contract_admin.order_show',oid=post.id) }}">
-                    查看
+            <span class="badge"><a href="{{ url_for('order_audit.files_list',oid=post.id) }}">
+                    附件审核
                 </a></span>
-            <span class="badge"><a href="{{ url_for('contract_admin.order_upfiles',oid=post.id) }}">
-                    上传
-                </a></span>
-                        <span class="badge"><a href="{{ url_for('contract_admin.order_submit',oid=post.id) }}" onclick="return confirm('Are you sure?');">
-                    提交
-                </a></span>
-            {% else :%}
-            <span class="badge">
-                    修改
-            </span>
-            <span class="badge">
-                    查看
-            </span>
-            <span class="badge">
-                    上传
-            </span>
-                        <span class="badge">
-                    提交
-            </span>
-        {% endif %}
         </td>
     </tr>
     {% endfor %}

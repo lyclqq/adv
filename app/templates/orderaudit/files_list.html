@@ -1,0 +1,36 @@
+{% extends '/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+<ul class="breadcrumb top_row">
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li><a href="{{ url_for('order_audit.order_search') }}">合同查询</a></li>
+    <li class="active">附件审核</li>
+</ul>
+    <div class="row">
+        <div class="col-md-10">
+                <fieldset>
+                    <legend>附件审核</legend>
+                  <div class="form-group">
+                        合同名称:
+                        {{ order.title }}
+                    </div>
+            <div>
+                {% if posts %}
+                附件：
+                <ul class="form-control">
+                    {% for post in posts %}
+                    <li><a href="/files/{{ post.path }}{{ post.filename}}" target="_blank">{{ post.notes }}({{ post.status }})</a>
+                        <a href="{{ url_for('order_audit.file_status',fid=post.id)}}">状态</a>
+                        <a href="{{ url_for('order_audit.file_del',fid=post.id)}}">删除</a></li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                没有附件
+                {% endif %}
+            </div>
+                </fieldset>
+
+
+        </div>
+    </div>
+{% endblock %}
