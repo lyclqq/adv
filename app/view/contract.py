@@ -43,8 +43,9 @@ def order_admin():
         pagination=orders.search_orders( keywords=title,status=status,page=1)
     else:
         pagination=orders.search_orders(None,page=page)
-
-    pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
+    form.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
+                           ('作废', '作废')]
+    #pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
     result=pagination.items
     return render_template('contract/order_admin.html', page=page, pagination=pagination, posts=result,form=form)
 
