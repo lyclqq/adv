@@ -5,11 +5,10 @@ from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from logging.handlers import RotatingFileHandler
-from config import Config,config_dict
+from config import config_dict
 import random
 import string
 from PIL import Image,ImageFont,ImageDraw
-import click
 from flask_bootstrap import Bootstrap
 import os
 
@@ -60,6 +59,8 @@ def create_app(config_name):
     app.register_blueprint(performance_bp, url_prefix='/')  # 绩效
     from app.view.logs import log_bp
     app.register_blueprint(log_bp, url_prefix='/')  # 日志
+    from app.view.dept import dept_bp
+    app.register_blueprint(dept_bp, url_prefix='/')  # 日志
     return app
 
 #日志文件

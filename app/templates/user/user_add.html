@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    <div class="m-2 p-3 ">
+        <script src=" {{ url_for('static',filename='js/user.js') }}"></script>
+        <h3>用户数据{% if user.id %}修改{% else %}新增{% endif %}</h3>
+        <!---新增窗口--->
+        <br>
+        <div class="">
+            <form id="user_form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" id="fid" name="fid" value="{{ user.id }}"/>
+                <table class="table align-middle">
+
+                    <tr>
+                        <td><strong class="text-danger">用户名</strong></td>
+                        <td>
+                            <input class="form-control" type="text" name="username" id="username" required value="{{ user.username }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong class="text-danger">用户类型</strong></td>
+                        <td>
+                            <select class="form-control" name="type" id="type">
+                                {% for r in roles %}
+                                    <option value="{{ r.get('role') }}" {% if r.get('role')==user.type %}selected{% endif %}>{{ r.get('role') }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% if user.id %}
+                    {% else %}
+                        <tr>
+                            <td><strong class="text-danger">密码</strong></td>
+                            <td>
+                                <input class="form-control" type="text" name="passwd" id="passwd" required value="{{ user.passwd }}"/>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td><strong class="text-danger">部门</strong></td>
+                        <td>
+                            <select class="form-control" name="group_id" id="group_id">
+                                {% for d in dept %}
+                                    <option value="{{ d.id }}" {% if d.id==user.group_id %}selected{% endif %}>{{ d.groupname }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>备注</td>
+                        <td>
+                            <input class="form-control" type="text" name="notes" value="{{ user.notes }}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>
+                            <select class="form-control" name="status">
+                                <option value="on" {% if user.status=='on' %}selected{% endif %}>on</option>
+                                <option value="off" {% if user.status=='off' %}selected{% endif %}>off</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="d-grid">
+                                <a class="btn btn-outline-primary" role="button" onclick="user_add()">保存</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <span id="info71" style="text-align: center;color: red;"></span>
+            </form>
+        </div>
+
+
+    </div>
+{% endblock %}
