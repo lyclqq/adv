@@ -51,6 +51,8 @@ def create_app(config_name):
     app.register_blueprint(contractView,url_prefix='/contract')
     from app.view.orderaudit import orderauditView #合同审核
     app.register_blueprint(orderauditView,url_prefix='/orderaudit')
+    from app.view.wordsadmin import wordsadminView #字数管理
+    app.register_blueprint(wordsadminView,url_prefix='/wordsadmin')
     from app.view.publish import publish_bp
     from app.view.paid import paid_bp
     from app.view.performance import performance_bp

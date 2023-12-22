@@ -51,10 +51,10 @@
 		"id": 4,
 		"sublist": [{
 			"subname": "合同查询",
-			"sublink": "/other/fileadmin"
+			"sublink": "/wordsadmin/ordersearch"
 		}, {
 			"subname": "字数查询",
-			"sublink": "/other/upfiles"
+			"sublink": "/wordsadmin/wordssearch"
 		}]
 	},
 	{

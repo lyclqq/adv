@@ -1,0 +1,75 @@
+{% extends '/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+<ul class="breadcrumb top_row">
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li class="active">合同查询</li>
+</ul>
+
+<div class="container">
+    <div class="row">
+    </div>
+        <div class="col-md-6">
+            <form action="" role="form" method="post">
+                {{ form.csrf_token }}
+                <fieldset>
+                    <legend>查询条件</legend>
+                    <div class="form-group">
+                        {{ form.status.label }}
+                        {{ form.status() }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.title.label }}
+                        {{ form.title() }}
+                    </div>
+                </fieldset>
+                {{ form.submit }}
+            </form>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+{% if posts %}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th style="width:60px">ID</th>
+        <th >合同名称</th>
+        <th style="width:150px">合同编号</th>
+        <th style="width:80px">状态</th>
+        <th style="width:120px">己发字数</th>
+        <th style=" width:120px">合同字数</th>
+        <th style="width:200px">操作</th>
+    </tr>
+    </thead>
+
+    {% for post in posts %}
+    <tr>
+        <td>{{ post.id }}</td>
+        <td>{{ post.title }}</td>
+        <td>{{ post.ordernumber }}</td>
+        <td>{{ post.status }}</td>
+        <td>{{ post.wordnumber }}</td>
+        <td>{{ post.wordcount }}</td>
+        <td>
+            <span class="badge"><a href="{{ url_for('words_admin.words_input',oid=post.id) }}">
+                    字数输入
+                </a></span>
+            <span class="badge"><a href="{{ url_for('words_admin.words_show',oid=post.id) }}">
+                    字数查看
+                </a></span>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+        </div> </div>
+        <div class="row">
+        <div class="page-footer">{{ render_pagination(pagination) }}</div></div>
+
+{% else %}
+<div class="tip"><h5>没有数据.</h5></div>
+{% endif %}
+
+       </div>
+{% endblock %}
