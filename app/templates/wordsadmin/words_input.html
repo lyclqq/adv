@@ -5,55 +5,89 @@
     <li><a href="{{ url_for('words_admin.order_search') }}">合同查询</a></li>
     <li class="active">字数输入</li>
 </ul>
-
-    <div class="row">
-        <div class="col-md-12">
-            <form action="" role="form" method="post">
-                {{ form.csrf_token }}
-                <fieldset>
-                    <legend>字数输入</legend>
-                    <div class="form-group">
-                        {{ form.title.label }}
-                        {{ form.title() }}
-                    </div>
-                    <div class="form-group">
-                        {{ form.ordernumber.label }}
-                        {{ form.ordernumber() }}
-                    </div>
-                    <div class="form-group">
-                        {{ form.wordnumber.label }}
-                        {{ form.wordnumber() }}
-                    </div>
-                    <div class="form-group">
-                        {{ form.wordcount.label }}
-                        {{ form.wordcount() }}
-                    </div>
-                    <div class="form-group">
-                        {{ form.type.label }}
-                        {{ form.type() }}
-                    </div>
-                    <div class="form-group">
-                        {{ form.words.label }}
-                        {{ form.words() }}
-                        {%for message in form.words.errors%}
-                            <small class="error">{{message}}</small>
-                        {%endfor%}
-                    </div>
-                    <div class="form-group">
-                        {{ form.fee_date.label }}
-                        {{ form.fee_date() }}
-                        {%for message in form.words.errors%}
-                            <small class="error">{{message}}</small>
-                        {%endfor%}
-                    </div>
-                    <div class="form-group">
-                        {{ form.notes.label }}
-                        {{ form.notes() }}
-                    </div>
-                </fieldset>
-                {{ form.submit }}
-            </form>
-        </div>
+<div class="row">
+    <div class="col-md-10">
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td style="width:180px;">合同名称</td>
+                <td colspan="3">{{ order.title }}</td>
+            </tr>
+            <tr>
+                <td>合同编号</td>
+                <td>{{ order.ordernumber }}</td>
+                <td>己发字数：{{ order.wordcount }}</td>
+                <td>合同字数：{{ order.wordnumber }}</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
+</div>
+<div class="row">
+    <div class="col-md-10">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <td>字数发生明细</td>
+            </tr>
+            <tr>
+                <td>id</td>
+                <td>输入时间</td>
+                <td>发生额</td>
+                <td>状态</td>
+                <td>录入</td>
+                <td>审核</td>
+                <td>发生日期</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="width:180px;">合同名称</td>
+                <td colspan="3">{{ order.title }}</td>
+            </tr>
+            <tr>
+                <td>合同编号</td>
+                <td>{{ order.ordernumber }}</td>
+                <td>己发字数：{{ order.wordcount }}</td>
+                <td>合同字数：{{ order.wordnumber }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <form action="" role="form" method="post">
+            {{ form.csrf_token }}
+            <fieldset>
+                <legend>字数输入</legend>
+
+                <div class="form-group">
+                    {{ form.type.label }}
+                    {{ form.type() }}
+                </div>
+                <div class="form-group">
+                    {{ form.words.label }}
+                    {{ form.words() }}
+                    {%for message in form.words.errors%}
+                    <small class="error">{{message}}</small>
+                    {%endfor%}
+                </div>
+                <div class="form-group">
+                    {{ form.fee_date.label }}
+                    {{ form.fee_date() }}
+                    {%for message in form.words.errors%}
+                    <small class="error">{{message}}</small>
+                    {%endfor%}
+                </div>
+                <div class="form-group">
+                    {{ form.notes.label }}
+                    {{ form.notes() }}
+                </div>
+            </fieldset>
+            {{ form.submit }}
+        </form>
+    </div>
+</div>
 
 {% endblock %}

@@ -8,6 +8,7 @@ from app.common import is_login,ins_logs
 from app import db
 from app.models.contract import Customers,Orders
 from app.models.other import Files
+from app.models.bill import Wordnumbers
 from app.forms.customer import CustomerForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
 import datetime
@@ -73,6 +74,13 @@ def order_audit(oid):
             customer = Customers.query.filter(Customers.id == order.cutomer_id).first()
             customer.status = 'on'
             db.session.add(customer)
+            wordnumber=Wordnumbers()
+            wordnumber.order_id=oid
+            wordnumber.feedate=order.contract_date
+            wordnumber.type='order'
+            wordnumber.wordnumber=order.wordnmber
+            wordnumber.status='off'
+            db.session.add(wordnumber)
         if order.status=='己审' and form.status.data=='完成':
             order.status = form.status.data
             db.session.add(order)

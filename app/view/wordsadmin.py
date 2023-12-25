@@ -37,19 +37,77 @@ def order_search():
     result=pagination.items
     return render_template('wordsadmin/order_search.html', page=page, pagination=pagination, posts=result,form=form)
 
-#字数输入
-@wordsadminView.route('/words_input/<int:oid>',methods=["GET","POST"])
+#合同字数
+@wordsadminView.route('/words_order/<int:oid>',methods=["GET","POST"])
 @is_login
-def words_input(oid):
+def words_order(oid):
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
     form=WordsForm()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
+    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'order').paginate(page,
+                                                                                per_page=current_app.config['PAGEROWS'])
     form.title.data=order.title
     form.ordernumber.data=order.ordernumber
     form.wordnumber.data=order.wordnumber
     form.wordcount.data=order.wordcount
-    return render_template('wordsadmin/words_input.html', form=form)
+    if form.validate_on_submit():
+        wordnumber=Wordnumbers()
+        wordnumber.order_id=oid
+        wordnumber.feedate = order.contract_date
+        wordnumber.status = 'off'
+        wordnumber.wordnumber=form.wordnumber.data
+        wordnumber.type = 'order'
+        words=order.wordnumber+form.wordnumber.data
+        db.session.add(wordnumber)
+        #db.session.add(order)
+        try:
+            if words>=0:
+                db.session.commit()
+                flash('录入成功.', 'success')
+                ins_logs(uid, '字数录入,id=' + str(oid), type='words_admin')
+            else:
+                flash('字数余额不能小于0!')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('录入失败')
+    return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination)
+
+#出版字数
+@wordsadminView.route('/words_publish/<int:oid>',methods=["GET","POST"])
+@is_login
+def words_publish(oid):
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    form=WordsForm()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'publish').paginate(page, per_page=current_app.config[
+        'PAGEROWS'])
+    form.title.data=order.title
+    form.ordernumber.data=order.ordernumber
+    form.wordnumber.data=order.wordnumber
+    form.wordcount.data=order.wordcount
+    if form.validate_on_submit():
+        wordnumber=Wordnumbers()
+        wordnumber.order_id=oid
+        wordnumber.feedate = order.contract_date
+        wordnumber.status = 'off'
+        wordnumber.wordnumber=form.wordnumber.data
+        wordnumber.type = 'publish'
+        words=order.count+form.wordnumber.data
+        db.session.add(wordnumber)
+        #db.session.add(order)
+        try:
+            if words>=0:
+                db.session.commit()
+                flash('录入成功.', 'success')
+                ins_logs(uid, '字数录入,id=' + str(oid), type='words_admin')
+            else:
+                flash('字数余额不能小于0!')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('录入失败')
+    return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination)
 
 #己发字数查看
 @wordsadminView.route('/words_show_publish/<int:oid>',methods=["GET","POST"])
@@ -58,7 +116,7 @@ def words_show_publish(oid):
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
     order = Orders.query.filter(Orders.id == oid).first_or_404()
-    pagination=Wordnumbers.query.filter(Wordnumbers.type=='publish').paginate(page, per_page=current_app.config['PAGEROWS'])
+
     return render_template('wordsadmin/words_show.html', order=order,pagination=pagination,page=page,title='己发字数查看')
 
 #合同字数查看
@@ -68,5 +126,5 @@ def words_show_order(oid):
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
     order = Orders.query.filter(Orders.id == oid).first_or_404()
-    pagination=Wordnumbers.query.filter(Wordnumbers.type=='order').paginate(page, per_page=current_app.config['PAGEROWS'])
+
     return render_template('wordsadmin/words_show.html', order=order,pagination=pagination,page=page,title='合同字数查看')
