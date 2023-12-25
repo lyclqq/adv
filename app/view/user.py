@@ -6,6 +6,7 @@ from app.common import is_login, ins_logs
 from app.forms.user import PwdForm
 from app.models.system import Users, Groups
 
+# 用户管理
 userView = Blueprint('user', __name__)
 pagesize = 10
 
@@ -29,6 +30,7 @@ def editpwd():
 
 
 @userView.route('/edit_pwd', methods=["POST"])
+@is_login
 def edit_pwd():
     pwd2 = request.form.get('new_pwd2')
     if session.get('user_id'):
@@ -47,12 +49,14 @@ def edit_pwd():
     return re
 
 
+# 列表页
 @userView.route('/list/<int:page>', methods=["GET", "POST"])
 def user_list(page):
     pagination = Users.query.order_by(Users.updatetime.desc()).paginate(page=page, per_page=pagesize, error_out=False)
     return render_template('user/user_list.html', pagination=pagination, dept_dict=get_dept_dict())
 
 
+# 添加页
 @userView.route('/to_add', defaults={"fid": -1}, methods=["GET"])
 @userView.route('/to_add/<int:fid>', methods=["GET"])
 def user_to_add(fid):
@@ -64,6 +68,7 @@ def user_to_add(fid):
     return render_template('user/user_add.html', user=user, dept=dept, roles=get_roles())
 
 
+# 查询部门数据
 def get_dept_dict():
     dept_dict = dict()
     gs = Groups.query.filter(Groups.status == 'on').all()
@@ -72,6 +77,7 @@ def get_dept_dict():
     return dept_dict
 
 
+# 查询角色数据
 def get_roles():
     strpath = os.getcwd() + "\\app\\static\\role.json"
     with open(strpath, 'r', encoding='utf-8') as f:
@@ -79,6 +85,7 @@ def get_roles():
     return roles
 
 
+# 添加方法
 @userView.route('/add', methods=["POST"])
 def user_add():
     fid = request.form.get('fid')
@@ -105,6 +112,7 @@ def user_add():
     return re
 
 
+# 状态开关
 @userView.route('/status', methods=["POST"])
 def user_status():
     pid = request.form.get('pid')
@@ -122,6 +130,7 @@ def user_status():
     return re
 
 
+# 密码重置方法
 @userView.route('/reset_pwd', methods=["POST"])
 def reset_pwd():
     try:
@@ -130,7 +139,7 @@ def reset_pwd():
         userid = int(request.form.get('uid'))
         user = Users.query.get(userid)
         user.set_password(request.form.get('reset_new'))
-        #user.passwd = request.form.get('reset_new')
+        # user.passwd = request.form.get('reset_new')
         db.session.add(user)
         db.session.commit()
         ins_logs(userid, '修改密码', 'user')

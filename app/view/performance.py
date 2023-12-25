@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request, session
 from sqlalchemy.sql.elements import and_
-
 from app import db
-from app.common import ins_logs
+from app.common import ins_logs, is_login
 from app.models.bill import Fee5
 from app.models.contract import Orders
 from app.view.publish import stat_dict, get_order_list
@@ -12,8 +11,10 @@ performance_bp = Blueprint('performance', __name__)
 pagesize = 10
 
 
+# 列表页
 @performance_bp.route('/perf/list/<int:page>/', defaults={"qr_status": "-1", "qr_order": ""}, methods=["GET", "POST"])
 @performance_bp.route('/perf/list/<int:page>/', methods=["GET", "POST"])
+@is_login
 def performance_list(page):
     q = Fee5.query
     qr_status = request.args.get('qr_status')
@@ -27,6 +28,7 @@ def performance_list(page):
                            stat_dict=stat_dict)
 
 
+# 添加页
 @performance_bp.route('/perf/to_add', defaults={"fid": -1}, methods=["GET"])
 @performance_bp.route('/perf/to_add/<int:fid>', methods=["GET"])
 def performance_to_add(fid):
@@ -43,6 +45,7 @@ def performance_to_add(fid):
                            stat_dict=stat_dict, f5=f5, o=o)
 
 
+# 添加方法
 @performance_bp.route('/perf/add', methods=["POST"])
 def perf_add():
     order_id = request.form.get('order_id')
@@ -71,6 +74,7 @@ def perf_add():
     return re
 
 
+# 作废方法
 @performance_bp.route('/perf/cancel', methods=["POST"])
 def perf_cancel():
     pid = request.form.get('pid')
@@ -85,6 +89,7 @@ def perf_cancel():
     return re
 
 
+# 审核方法
 @performance_bp.route('/perf/audit', methods=["POST"])
 def perf_audit():
     pid = request.form.get('pid')
