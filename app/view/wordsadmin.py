@@ -45,7 +45,7 @@ def words_order(oid):
     page = request.args.get('page', 1, type=int)
     form=WordsForm()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
-    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'order').paginate(page,
+    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'order',Wordnumbers.order_id==oid).paginate(page,
                                                                                 per_page=current_app.config['PAGEROWS'])
     form.title.data=order.title
     form.ordernumber.data=order.ordernumber
@@ -58,6 +58,7 @@ def words_order(oid):
         wordnumber.status = 'off'
         wordnumber.wordnumber=form.wordnumber.data
         wordnumber.type = 'order'
+        wordnumber.iuser_id = uid
         words=order.wordnumber+form.wordnumber.data
         db.session.add(wordnumber)
         #db.session.add(order)
@@ -81,7 +82,7 @@ def words_publish(oid):
     page = request.args.get('page', 1, type=int)
     form=WordsForm()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
-    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'publish').paginate(page, per_page=current_app.config[
+    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'publish',Wordnumbers.order_id==oid).paginate(page, per_page=current_app.config[
         'PAGEROWS'])
     form.title.data=order.title
     form.ordernumber.data=order.ordernumber
@@ -94,6 +95,7 @@ def words_publish(oid):
         wordnumber.status = 'off'
         wordnumber.wordnumber=form.wordnumber.data
         wordnumber.type = 'publish'
+        wordnumber.iuser_id=uid
         words=order.count+form.wordnumber.data
         db.session.add(wordnumber)
         #db.session.add(order)
@@ -109,22 +111,3 @@ def words_publish(oid):
             flash('录入失败')
     return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination)
 
-#己发字数查看
-@wordsadminView.route('/words_show_publish/<int:oid>',methods=["GET","POST"])
-@is_login
-def words_show_publish(oid):
-    uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
-    order = Orders.query.filter(Orders.id == oid).first_or_404()
-
-    return render_template('wordsadmin/words_show.html', order=order,pagination=pagination,page=page,title='己发字数查看')
-
-#合同字数查看
-@wordsadminView.route('/words_show_order/<int:oid>',methods=["GET","POST"])
-@is_login
-def words_show_order(oid):
-    uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
-    order = Orders.query.filter(Orders.id == oid).first_or_404()
-
-    return render_template('wordsadmin/words_show.html', order=order,pagination=pagination,page=page,title='合同字数查看')

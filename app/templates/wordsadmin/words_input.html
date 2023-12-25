@@ -41,16 +41,17 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td style="width:180px;">合同名称</td>
-                <td colspan="3">{{ order.title }}</td>
-            </tr>
-            <tr>
-                <td>合同编号</td>
-                <td>{{ order.ordernumber }}</td>
-                <td>己发字数：{{ order.wordcount }}</td>
-                <td>合同字数：{{ order.wordnumber }}</td>
-            </tr>
+            {% for item in pagination.items %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.create_datetime }}</td>
+                    <td>{{ item.wordnumber}}</td>
+                    <td>{{ item.status }}</td>
+                    <td>{{ item.iuser_id | replace_username }}</td>
+                    <td>{{ item.cuser_id | replace_username }}</td>
+                    <td>{{ item.feedate }}</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
@@ -61,11 +62,6 @@
             {{ form.csrf_token }}
             <fieldset>
                 <legend>字数输入</legend>
-
-                <div class="form-group">
-                    {{ form.type.label }}
-                    {{ form.type() }}
-                </div>
                 <div class="form-group">
                     {{ form.words.label }}
                     {{ form.words() }}
