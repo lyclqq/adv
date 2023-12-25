@@ -43,15 +43,12 @@ def order_search():
                            ('作废', '作废')]
     page = request.args.get('page', 1, type=int)
     orders=Orders()
-    print('this is orderaudit.order_search')
     if form.validate_on_submit():
 
         title=form.title.data
-        print('title is ' + title)
         status=form.status.data
         pagination=orders.search_orders( keywords=title,status=status,page=1)
     else:
-        print('errors is '+str(form.errors))
         pagination=orders.search_orders(None,page=page)
 
     #pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
