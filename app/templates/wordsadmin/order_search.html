@@ -38,9 +38,9 @@
         <th >合同名称</th>
         <th style="width:150px">合同编号</th>
         <th style="width:80px">状态</th>
-        <th style="width:120px">己发字数</th>
-        <th style=" width:120px">合同字数</th>
-        <th style="width:200px">操作</th>
+        <th style="width:110px">己发字数</th>
+        <th style=" width:110px">合同字数</th>
+        <th style="width:290px">操作</th>
     </tr>
     </thead>
 
@@ -56,8 +56,11 @@
             <span class="badge"><a href="{{ url_for('words_admin.words_input',oid=post.id) }}">
                     字数输入
                 </a></span>
-            <span class="badge"><a href="{{ url_for('words_admin.words_show',oid=post.id) }}">
-                    字数查看
+            <span class="badge"><a href="{{ url_for('words_admin.words_show_publish',oid=post.id) }}" target="_blank">
+                    己发字数
+                </a></span>
+            <span class="badge"><a href="{{ url_for('words_admin.words_show_order',oid=post.id) }}" target="_blank">
+                    合同字数
                 </a></span>
         </td>
     </tr>
