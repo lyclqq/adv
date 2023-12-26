@@ -78,8 +78,11 @@
 			"subname": "合同查询",
 			"sublink": "/wordsaudit/order_search"
 		}, {
-			"subname": "字数查询",
-			"sublink": "/wordsaudit/words_search"
+			"subname": "合同字数",
+			"sublink": "/wordsaudit/words_search/order"
+		}, {
+			"subname": "己发字数",
+			"sublink": "/wordsaudit/words_search/publish"
 		}]
 	},
 	{
