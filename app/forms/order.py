@@ -61,7 +61,7 @@ class OrderupfileForm(FlaskForm):
     )
     notes= StringField(label='附件标题:',
         render_kw={'class': 'form-control',
-                   "placeholder":"输入合同标题"}
+                   "placeholder":"输入附件标题"}
     )
     upfile=FileField(label='上传附件：',render_kw={'class': 'form-control'})
     submit = SubmitField('提交', render_kw={'class': 'btn btn-block btn-info'})

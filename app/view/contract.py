@@ -93,9 +93,9 @@ def customer_edit(cuid):
     form.name.data=customer.name
     form.notes.data=customer.notes
     if customer.status=='stay':
-        form.submit.render_kw = {'class': 'form-control', 'Enable': True}
+        form.submit.render_kw = {'class': 'form-control', 'disabled': False}
     else:
-        form.submit.render_kw = {'class': 'form-control', 'Enable': False}
+        form.submit.render_kw = {'class': 'form-control', 'disabled': True}
         flash('状态不对，不能修改!')
     return render_template('contract/customer_edit.html',form=form)
 
@@ -227,9 +227,9 @@ def order_edit(oid):
         form.fee1.data=order.Fee11
         form.words.data=order.wordnumber
         if order.status == "未审" and order.iuser_id==uid:
-            form.submit.render_kw = {'class': 'form-control', 'Enable': True}
+            form.submit.render_kw = {'class': 'form-control', 'disabled': False}
         else:
-            form.submit.render_kw = {'class': 'form-control', 'Enable': False}
+            form.submit.render_kw = {'class': 'form-control', 'disabled': True}
     return render_template('contract/order_edit.html',form=form)
 
 
@@ -278,8 +278,8 @@ def order_upfiles(oid):
                 if extension not in ['doc', 'xls', 'docx', 'xlsx','pdf']:
                     flash('只能上传pdf、word和excel文件!')
                 else:
-                    oldfilename = f.filename.split('.')
-                    if form.title.data is not None:
+                    oldfilename = f.filename
+                    if form.notes.data is not None:
                         oldfilename=form.notes.data
                     newfilename = session.get('username') + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
                     path = os.path.join(current_app.config['UPLOADED_PATH'], datetime.datetime.now().strftime("%Y") + os.sep)
@@ -296,7 +296,7 @@ def order_upfiles(oid):
                     files.iuser_id=session.get('user_id')
                     db.session.add(files)
                     db.session.commit()
-                    ins_logs(uid, '合同上传附件，orderid=' + oid, type='contract')
+                    ins_logs(uid, '合同上传附件，orderid=' + str(oid), type='contract')
                     flash('上传成功')
             else:
                 flash('请选择上传附件！')
