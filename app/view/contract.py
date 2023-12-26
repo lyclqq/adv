@@ -216,7 +216,7 @@ def order_edit(oid):
                 order.contract_date=form.contract_date.data
                 order.name=form.name.data
                 order.update_datetime=datetime.datetime.now()
-                order.fee11=form.fee1.data
+                order.Fee11=form.fee1.data
                 order.wordnumber=form.words.data
                 db.session.add(order)
                 db.session.commit()
@@ -234,6 +234,8 @@ def order_edit(oid):
         form.ordernumber.data=order.ordernumber
         form.contract_date.data=order.contract_date
         form.name.data=order.name
+        form.fee1.data=order.Fee11
+        form.words.data=order.wordnumber
         if order.status == "未审" and order.iuser_id==uid:
             form.submit.render_kw = {'class': 'form-control', 'Enable': True}
         else:

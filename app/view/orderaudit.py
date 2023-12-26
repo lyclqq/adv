@@ -67,9 +67,11 @@ def order_audit(oid):
     if form.validate_on_submit():
         if order.status=='待审' and ( form.status.data=='作废' or form.status.data=='未审'):
             order.status = form.status.data
+            order.update_datetime=datetime.datetime.now()
             db.session.add(order)
         if order.status=='待审' and form.status.data=='己审' :
             order.status = form.status.data
+            order.update_datetime = datetime.datetime.now()
             db.session.add(order)
             customer = Customers.query.filter(Customers.id == order.cutomer_id).first()
             customer.status = 'on'
@@ -83,6 +85,7 @@ def order_audit(oid):
             db.session.add(wordnumber)
         if order.status=='己审' and form.status.data=='完成':
             order.status = form.status.data
+            order.update_datetime = datetime.datetime.now()
             db.session.add(order)
         try:
             db.session.commit()
