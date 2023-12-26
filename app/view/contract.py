@@ -216,9 +216,11 @@ def order_edit(oid):
                 order.contract_date=form.contract_date.data
                 order.name=form.name.data
                 order.update_datetime=datetime.datetime.now()
+                order.fee11=form.fee1.data
+                order.wordnumber=form.words.data
                 db.session.add(order)
                 db.session.commit()
-                ins_logs(uid, '修改合同，orderid='+oid, type='contract')
+                ins_logs(uid, '修改合同，orderid='+str(oid), type='contract')
                 flash("修改成功")
             else:
                 flash("不是未审状态，不能修改")
