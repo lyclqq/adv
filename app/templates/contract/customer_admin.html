@@ -13,14 +13,8 @@
             <li class="list-group-item">
                 {{ post.id }}
                 <strong>{{ post.name}}</strong>【{{ post.create_datetime}}】({{ post.status }})
-                <span class="badge"><a href="{{ url_for('contract_admin.customer_delete',cuid=post.id) }}" onclick="return confirm('Are you sure?');">
-                    删除
-                </a></span>
                 <span class="badge"><a href="{{ url_for('contract_admin.customer_edit',cuid=post.id) }}">
                     修改
-                </a></span>
-                <span class="badge"><a href="{{ url_for('contract_admin.customer_status',cuid=post.id) }}">
-                    状态
                 </a></span>
                 <span class="badge"><a href="{{ url_for('contract_admin.order_create',cuid=post.id) }}">
                     新增合同

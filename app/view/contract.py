@@ -50,23 +50,6 @@ def order_admin():
     return render_template('contract/order_admin.html', page=page, pagination=pagination, posts=result,form=form)
 
 
-#客户删除
-@contractView.route('/customer_delete/<int:cuid>')
-@is_login
-def customer_delete(cuid):
-    uid=session.get('user_id')
-    page = request.args.get('page', 1, type=int)
-    try:
-        customer = Customers.query.filter_by(id=cuid).first_or_404()
-        customer.status='delete'
-        db.session.commit()
-        flash('删除成功.', 'success')
-        ins_logs(uid,'删除客户,id='+str(cuid),type='contract')
-    except Exception as e:
-        current_app.logger.error(e)
-        flash('删除失败')
-    return redirect(url_for('contract_admin.customer_admin',page=page))
-
 #客户状态
 @contractView.route('/customer_status/<int:cuid>')
 @is_login
@@ -93,21 +76,28 @@ def customer_status(cuid):
 @is_login
 def customer_edit(cuid):
     uid=session.get('user_id')
-    customer = Customers.query.get(id == cuid)
+    customer = Customers.query.filter(Customers.id == cuid).first_or_404()
     form=CustomerForm()
     if form.validate_on_submit():
         try:
 
-            customer.name=form.typename.data
-            customer.notes=form.typecontent.data
+            customer.name=form.name.data
+            customer.notes=form.notes.data
 
             db.session.commit()
-            flash('删除成功.', 'success')
-            ins_logs(uid,'删除客户'+str(cuid),type='contract')
+            flash('修改成功.', 'success')
+            ins_logs(uid,'修改客户'+str(cuid),type='contract')
         except Exception as e:
             current_app.logger.error(e)
-            flash('删除失败')
-    return redirect(url_for('contract_admin.customer_admin'))
+            flash('修改失败')
+    form.name.data=customer.name
+    form.notes.data=customer.notes
+    if customer.status=='stay':
+        form.submit.render_kw = {'class': 'form-control', 'Enable': True}
+    else:
+        form.submit.render_kw = {'class': 'form-control', 'Enable': False}
+        flash('状态不对，不能修改!')
+    return render_template('contract/customer_edit.html',form=form)
 
 #客户新增
 @contractView.route('/customer_create/',methods=["GET","POST"])
