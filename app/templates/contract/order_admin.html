@@ -53,7 +53,7 @@
         <td>{{ post.iuser_id | replace_username }}</td>
         <td>{{ post.update_datetime }}</td>
         <td>
-        {% if post.i_user_id == session.get("group_id") or session.get("type")=="admin": %}
+        {% if post.iuser_id == session.get("user_id") or session.get("type")=="admin": %}
             <span class="badge"><a href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">
                     修改
                 </a></span>

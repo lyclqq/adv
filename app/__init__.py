@@ -53,8 +53,10 @@ def create_app(config_name):
     app.register_blueprint(orderauditView,url_prefix='/orderaudit')
     from app.view.wordsadmin import wordsadminView #字数管理
     app.register_blueprint(wordsadminView,url_prefix='/wordsadmin')
-    from app.view.wordsaudit import wordsauditView #字数管理
+    from app.view.wordsaudit import wordsauditView #字数审核
     app.register_blueprint(wordsauditView,url_prefix='/wordsaudit')
+    from app.view.fee2 import fee2View #己刊登金额相关
+    app.register_blueprint(fee2View,url_prefix='/fee2')
     from app.view.publish import publish_bp
     from app.view.paid import paid_bp
     from app.view.performance import performance_bp
