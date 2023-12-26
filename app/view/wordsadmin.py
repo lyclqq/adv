@@ -65,9 +65,9 @@ def words_order(oid):
         except Exception as e:
             current_app.logger.error(e)
             flash('录入失败')
-    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'order',Wordnumbers.order_id==oid).order_by(Wordnumbers.order_id.desc()).paginate(page,
+    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'order',Wordnumbers.order_id==oid).order_by(Wordnumbers.id.desc()).paginate(page,
                                                                                 per_page=8)
-    return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination)
+    return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination,page=page)
 
 #出版字数
 @wordsadminView.route('/words_publish/<int:oid>',methods=["GET","POST"])
@@ -97,6 +97,15 @@ def words_publish(oid):
                 flash('录入失败')
         else:
             flash('字数余额不能小于0!')
-    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'publish',Wordnumbers.order_id==oid).order_by(Wordnumbers.order_id.desc()).paginate(page, per_page=8)
-    return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination)
+    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'publish',Wordnumbers.order_id==oid).order_by(Wordnumbers.id.desc()).paginate(page, per_page=8)
+    return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination,page=page)
 
+#出版字数
+@wordsadminView.route('/words_search/<type>')
+@is_login
+def words_search(type):
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    pagerows = current_app.config['PAGEROWS']
+    pagination = Wordnumbers.query.filter(Wordnumbers.type == type).order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('wordsadmin/words_search.html', pagination=pagination,page=page)
