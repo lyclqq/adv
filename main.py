@@ -36,6 +36,14 @@ def replace_username(userid):
 
 app.add_template_filter(replace_username)
 
+#查合同名
+def replace_ordername(orderid):
+    if orderid==0:
+        return None
+    order=Orders.query.filter(Orders.id==orderid).first()
+    return order.title
+
+app.add_template_filter(replace_ordername)
 
 #生成验证码
 @app.route('/imgCode')

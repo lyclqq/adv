@@ -26,6 +26,7 @@
             <tr>
                 <td>{{ item.id }}</td>
                 <td>{{ item.create_datetime }}</td>
+                <td>{{ item.order_id | replace_ordername}}</td>
                 <td>{{ item.wordnumber}}</td>
                 <td>{{ item.status }}</td>
                 <td>{{ item.iuser_id | replace_username }}</td>
@@ -34,11 +35,11 @@
             </tr>
             {% endfor %}
             <tr>
-                <td colspan="7">{{ render_pagination(pagination,align='center') }}</td>
+                <td colspan="8">{{ render_pagination(pagination,align='center') }}</td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="7">没有查到相关数据</td>
+                <td colspan="8">没有查到相关数据</td>
             </tr>
             {% endif %}
             </tbody>
