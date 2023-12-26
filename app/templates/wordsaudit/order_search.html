@@ -53,10 +53,10 @@
         <td>{{ post.wordnumber }}</td>
         <td>{{ post.wordcount }}</td>
         <td>
-            <span class="badge"><a href="{{ url_for('words_admin.words_publish',oid=post.id) }}" target="_blank">
+            <span class="badge"><a href="{{ url_for('words_audit.words_publish',oid=post.id) }}" target="_blank">
                     己发字数
                 </a></span>
-            <span class="badge"><a href="{{ url_for('words_admin.words_order',oid=post.id) }}" target="_blank">
+            <span class="badge"><a href="{{ url_for('words_audit.words_order',oid=post.id) }}" target="_blank">
                     合同字数
                 </a></span>
         </td>

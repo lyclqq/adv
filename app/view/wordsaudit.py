@@ -35,7 +35,7 @@ def order_search():
     form.status.choices=[('全部','全部'),('己审','己审' ), ('未审','未审' ),( '待审','待审'), ('完成', '完成'),('作废', '作废')]
 
     result=pagination.items
-    return render_template('wordsadmin/order_search.html', page=page, pagination=pagination, posts=result,form=form)
+    return render_template('wordsaudit/order_search.html', page=page, pagination=pagination, posts=result,form=form)
 
 #合同字数
 @wordsauditView.route('/words_order/<int:oid>',methods=["GET","POST"])
@@ -67,7 +67,7 @@ def words_order(oid):
             flash('录入失败')
     pagination = Wordnumbers.query.filter(Wordnumbers.type == 'order',Wordnumbers.order_id==oid).order_by(Wordnumbers.id.desc()).paginate(page,
                                                                                 per_page=8)
-    return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination,page=page)
+    return render_template('wordsaudit/words_show.html', form=form,order=order,pagination=pagination,page=page)
 
 #出版字数
 @wordsauditView.route('/words_publish/<int:oid>',methods=["GET","POST"])
@@ -98,7 +98,7 @@ def words_publish(oid):
         else:
             flash('字数余额不能小于0!')
     pagination = Wordnumbers.query.filter(Wordnumbers.type == 'publish',Wordnumbers.order_id==oid).order_by(Wordnumbers.id.desc()).paginate(page, per_page=8)
-    return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination,page=page)
+    return render_template('wordsaudit/words_show.html', form=form,order=order,pagination=pagination,page=page)
 
 #出版字数
 @wordsauditView.route('/words_search/<type>')
@@ -108,4 +108,4 @@ def words_search(type):
     page = request.args.get('page', 1, type=int)
     pagerows = current_app.config['PAGEROWS']
     pagination = Wordnumbers.query.filter(Wordnumbers.type == type).order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
-    return render_template('wordsadmin/words_search.html', pagination=pagination,page=page)
+    return render_template('wordsaudit/words_search.html', pagination=pagination,page=page)

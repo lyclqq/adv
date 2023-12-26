@@ -49,7 +49,7 @@ def words_order(oid):
         wordnumber=Wordnumbers()
         wordnumber.order_id=oid
         wordnumber.feedate = form.fee_date.data
-        wordnumber.status = 'off'
+        wordnumber.status = 'stay'
         wordnumber.wordnumber=form.words.data
         wordnumber.type = 'order'
         wordnumber.iuser_id = uid
@@ -81,7 +81,7 @@ def words_publish(oid):
         wordnumber=Wordnumbers()
         wordnumber.order_id=oid
         wordnumber.feedate = form.fee_date.data
-        wordnumber.status = 'off'
+        wordnumber.status = 'stay'
         wordnumber.wordnumber=form.words.data
         wordnumber.type = 'publish'
         wordnumber.iuser_id=uid

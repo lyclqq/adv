@@ -149,6 +149,7 @@ def order_create(cuid):
         order.Fee11=form.fee1.data
         order.iuser_id=uid
         order.contract_date=form.contract_date.data
+        order.wordnumber=form.words.data
         order.status='未审'
         order.group_id = groupid
         try:
@@ -187,6 +188,7 @@ def order_customer_create():
             order.status='未审'
             order.cutomer_id=customer.id
             order.group_id=groupid
+            order.wordnumber=form.words.data
             db.session.add(order)
             db.session.commit()
             ins_logs(uid, '新增合同' , type='contract')
@@ -230,7 +232,7 @@ def order_edit(oid):
         form.ordernumber.data=order.ordernumber
         form.contract_date.data=order.contract_date
         form.name.data=order.name
-        if order.status == "未审":
+        if order.status == "未审" and order.iuser_id==uid:
             form.submit.render_kw = {'class': 'form-control', 'Enable': True}
         else:
             form.submit.render_kw = {'class': 'form-control', 'Enable': False}

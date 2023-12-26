@@ -78,8 +78,8 @@ def order_audit(oid):
             wordnumber.order_id=oid
             wordnumber.feedate=order.contract_date
             wordnumber.type='order'
-            wordnumber.wordnumber=order.wordnmber
-            wordnumber.status='off'
+            wordnumber.wordnumber=order.wordnumber
+            wordnumber.status='on'
             db.session.add(wordnumber)
         if order.status=='己审' and form.status.data=='完成':
             order.status = form.status.data
