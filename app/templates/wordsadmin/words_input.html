@@ -1,4 +1,5 @@
 {% extends '/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
 <ul class="breadcrumb top_row">
     <li><a href="{{ url_for('index') }}">Home</a></li>
@@ -28,9 +29,6 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <td>字数发生明细</td>
-            </tr>
-            <tr>
                 <td>id</td>
                 <td>输入时间</td>
                 <td>发生额</td>
@@ -41,17 +39,26 @@
             </tr>
             </thead>
             <tbody>
+            {% if pagination.items %}
             {% for item in pagination.items %}
-                <tr>
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.create_datetime }}</td>
-                    <td>{{ item.wordnumber}}</td>
-                    <td>{{ item.status }}</td>
-                    <td>{{ item.iuser_id | replace_username }}</td>
-                    <td>{{ item.cuser_id | replace_username }}</td>
-                    <td>{{ item.feedate }}</td>
-                </tr>
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.create_datetime }}</td>
+                <td>{{ item.wordnumber}}</td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.iuser_id | replace_username }}</td>
+                <td>{{ item.cuser_id | replace_username }}</td>
+                <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+            </tr>
             {% endfor %}
+            <tr>
+                <td colspan="7">{{ render_pagination(pagination,align='center') }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7">没有查到相关数据</td>
+            </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>

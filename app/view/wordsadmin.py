@@ -45,33 +45,28 @@ def words_order(oid):
     page = request.args.get('page', 1, type=int)
     form=WordsForm()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
-    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'order',Wordnumbers.order_id==oid).paginate(page,
-                                                                                per_page=current_app.config['PAGEROWS'])
-    form.title.data=order.title
-    form.ordernumber.data=order.ordernumber
-    form.wordnumber.data=order.wordnumber
-    form.wordcount.data=order.wordcount
     if form.validate_on_submit():
         wordnumber=Wordnumbers()
         wordnumber.order_id=oid
-        wordnumber.feedate = order.contract_date
+        wordnumber.feedate = form.fee_date.data
         wordnumber.status = 'off'
-        wordnumber.wordnumber=form.wordnumber.data
+        wordnumber.wordnumber=form.words.data
         wordnumber.type = 'order'
         wordnumber.iuser_id = uid
-        words=order.wordnumber+form.wordnumber.data
+        words=order.wordnumber+form.words.data
         db.session.add(wordnumber)
-        #db.session.add(order)
         try:
             if words>=0:
                 db.session.commit()
                 flash('录入成功.', 'success')
-                ins_logs(uid, '字数录入,id=' + str(oid), type='words_admin')
+                ins_logs(uid, '合同字数录入,id=' + str(oid), type='words_admin')
             else:
                 flash('字数余额不能小于0!')
         except Exception as e:
             current_app.logger.error(e)
             flash('录入失败')
+    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'order',Wordnumbers.order_id==oid).order_by(Wordnumbers.order_id.desc()).paginate(page,
+                                                                                per_page=8)
     return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination)
 
 #出版字数
@@ -82,32 +77,26 @@ def words_publish(oid):
     page = request.args.get('page', 1, type=int)
     form=WordsForm()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
-    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'publish',Wordnumbers.order_id==oid).paginate(page, per_page=current_app.config[
-        'PAGEROWS'])
-    form.title.data=order.title
-    form.ordernumber.data=order.ordernumber
-    form.wordnumber.data=order.wordnumber
-    form.wordcount.data=order.wordcount
     if form.validate_on_submit():
         wordnumber=Wordnumbers()
         wordnumber.order_id=oid
-        wordnumber.feedate = order.contract_date
+        wordnumber.feedate = form.fee_date.data
         wordnumber.status = 'off'
-        wordnumber.wordnumber=form.wordnumber.data
+        wordnumber.wordnumber=form.words.data
         wordnumber.type = 'publish'
         wordnumber.iuser_id=uid
-        words=order.count+form.wordnumber.data
+        words=order.wordcount+form.words.data
         db.session.add(wordnumber)
-        #db.session.add(order)
-        try:
-            if words>=0:
+        if words>=0:
+            try:
                 db.session.commit()
                 flash('录入成功.', 'success')
-                ins_logs(uid, '字数录入,id=' + str(oid), type='words_admin')
-            else:
-                flash('字数余额不能小于0!')
-        except Exception as e:
-            current_app.logger.error(e)
-            flash('录入失败')
+                ins_logs(uid, '出版字数录入,id=' + str(oid), type='words_admin')
+            except Exception as e:
+                current_app.logger.error(e)
+                flash('录入失败')
+        else:
+            flash('字数余额不能小于0!')
+    pagination = Wordnumbers.query.filter(Wordnumbers.type == 'publish',Wordnumbers.order_id==oid).order_by(Wordnumbers.order_id.desc()).paginate(page, per_page=8)
     return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination)
 
