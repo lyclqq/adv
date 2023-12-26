@@ -126,8 +126,10 @@ def file_status(fid):
         files = Files.query.filter_by(id=fid).first_or_404()
         if files.status=='on':
             files.status='off'
-        else:
+        elif files.status=='stay':
             files.status='on'
+        else:
+            files.status='stay'
         db.session.commit()
         flash('修改成功.', 'success')
         ins_logs(uid,'修改附件状态,orderid='+str(files.order_id)+',id='+str(fid),type='order_audit')

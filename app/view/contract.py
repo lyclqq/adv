@@ -292,7 +292,7 @@ def order_upfiles(oid):
                     files.notes=oldfilename
                     files.path=datetime.datetime.now().strftime("%Y") + os.sep
                     files.filename=newfilename+'.'+extension
-                    files.status='on'
+                    files.status='stay'
                     files.iuser_id=session.get('user_id')
                     db.session.add(files)
                     db.session.commit()
