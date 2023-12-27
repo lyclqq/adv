@@ -93,26 +93,56 @@ def fee2_search_audit():
 def fee2_audit(fid):
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
-    form= AuditForm()
+    pagerows = current_app.config['PAGEROWS']
     fee2=Fee2.query.filter(Fee2.id==fid).first_or_404()
     order = Orders.query.filter(Orders.id == fee2.order_id).first_or_404()
-    if form.validate_on_submit():
-        total=order.Fee21+form.fee.data
-        if total>=0:
-            try:
-                fee2.status = form.status.data
-                fee2.cuser_id=uid
-                db.session.add(fee2)
-                order.Fee21=total
-                order.update_datetime=datetime.datetime.now()
-                db.session.add(order)
-                db.session.commit()
-                flash('审核成功.', 'success')
-                ins_logs(uid, '刊登金额审核,id=' + str(oid), type='fee2')
-            except Exception as e:
-                current_app.logger.error(e)
-                flash('审核失败')
-        else:
-            flash('余额不能小于0!')
+    pagination = Fee2.query.filter(Fee2.order_id==order.id).order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee2/fee2_audit.html', order=order,page=page,pagination=pagination)
 
-    return render_template('fee2/fee2_audit.html', form=form,order=order,page=page)
+#合同查询为管理
+@fee2View.route('/order_search_audit',methods=["GET","POST"])
+@is_login
+def order_search_audit():
+    uid = session.get('user_id')
+    form=OrderSearchForm()
+    form.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
+                           ('作废', '作废')]
+    page = request.args.get('page', 1, type=int)
+    orders=Orders()
+    if form.validate_on_submit():
+
+        title=form.title.data
+        status=form.status.data
+        pagination=orders.search_orders( keywords=title,status=status,page=1)
+    else:
+        pagination=orders.search_orders(None,page=page)
+
+    #pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
+    result=pagination.items
+    return render_template('fee2/order_search_audit.html', page=page, pagination=pagination, posts=result,form=form)
+
+#刊登金额审核同意
+@fee2View.route('/fee2_audit_on/<int:oid>/<int:fid>')
+@is_login
+def fee2_audit_on(oid,fid):
+    uid = session.get('user_id')
+    fee2=Fee2.query.filter(Fee2.id==fid).first_or_404()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    total=order.Fee21+fee2.fee
+    if fee2.status=='stay' and total>=0:
+        try:
+            order.update_datetime=datetime.datetime.now()
+            order.Fee21=total
+            order.Fee22=order.Fee22+fee2.fee
+            order.area=order.area+fee2.area
+            db.session.add(order)
+            fee2.status='on'
+            fee2.cuser_id=uid
+            db.session.commit()
+            ins_logs(uid, '审核刊登金额同意，orderid=' + oid, type='contract')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    else:
+        flash('不符合条件！')
+    return redirect(url_for('fee2.fee2_audit',oid=oid,fid=fid))
