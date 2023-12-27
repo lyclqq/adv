@@ -1,0 +1,98 @@
+{% extends '/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+<ul class="breadcrumb top_row">
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li><a href="{{ url_for('words_admin.order_search') }}">合同查询</a></li>
+    <li class="active">刊登金额输入</li>
+</ul>
+<div class="row">
+    <div class="col-md-10">
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td style="width:180px;">合同名称</td>
+                <td colspan="3">{{ order.title }}</td>
+            </tr>
+            <tr>
+                <td>合同编号</td>
+                <td>{{ order.ordernumber }}</td>
+                <td>刊登金额：{{ order.Fee21 }}</td>
+                <td>合同金额：{{ order.Fee11 }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <td style="width:60px">id</td>
+                <td style="width:240px">输入时间</td>
+                <td>发生额</td>
+                <td style="width:80px">状态</td>
+                <td style="width:120px">录入</td>
+                <td style="width:120px">审核</td>
+                <td style="width:120px">绩效ID</td>
+                <td style="width:180px">发生日期</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% if pagination.items %}
+            {% for item in pagination.items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.create_datetime }}</td>
+                <td>{{ item.fee}}</td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.iuser_id | replace_username }}</td>
+                <td>{{ item.cuser_id | replace_username }}</td>
+                <td>{{ item.fee5_id }}</td>
+                <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="7">{{ render_pagination(pagination,align='center') }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="８">没有查到相关数据</td>
+            </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <form action="" role="form" method="post">
+            {{ form.csrf_token }}
+            <fieldset>
+                <legend>刊登金额输入</legend>
+                <div class="form-group">
+                    {{ form.fee.label }}
+                    {{ form.fee() }}
+                    {%for message in form.fee.errors%}
+                    <small class="error">{{message}}</small>
+                    {%endfor%}
+                </div>
+                <div class="form-group">
+                    {{ form.fee_date.label }}
+                    {{ form.fee_date() }}
+                    {%for message in form.fee_date.errors%}
+                    <small class="error">{{message}}</small>
+                    {%endfor%}
+                </div>
+                <div class="form-group">
+                    {{ form.notes.label }}
+                    {{ form.notes() }}
+                </div>
+            </fieldset>
+            {{ form.submit }}
+        </form>
+    </div>
+</div>
+
+{% endblock %}
