@@ -63,11 +63,6 @@ def fee2_input(oid):
                 db.session.commit()
                 flash('录入成功.', 'success')
                 ins_logs(uid, '刊登金额录入,id=' + str(oid), type='fee2')
-                form.fee.data=0
-                form.notes.data=''
-                form.fee_date.data=None
-                form.area.data=0
-                print('this is '+str(form.fee_date.data))
             except Exception as e:
                 current_app.logger.error(e)
                 flash('录入失败')
