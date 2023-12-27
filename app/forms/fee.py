@@ -28,3 +28,12 @@ class FeeForm(FlaskForm):
     fee_date  = DateField('发生日期', format='%Y-%m-%d',validators=[DataRequired('日期不能为空')],
                             render_kw={'class': 'form-control','height':'60px'})
     submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
+
+class AuditForm(FlaskForm):
+    notes=TextAreaField(label='备注:',
+        widget=widgets.TextInput(),
+        render_kw={'class': 'form-control',
+                   "placeholder":"备注"})
+    status=SelectField(label='状态：',render_kw={'class': 'form-control'},
+                           choices=[('on','on' ), ('off','off' ),( 'stay','stay')])
+    submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})

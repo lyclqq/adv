@@ -1,0 +1,72 @@
+{% extends '/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+<ul class="breadcrumb top_row">
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li><a href="{{ url_for('fee2.order_search_audit') }}">合同查询</a></li>
+    <li class="active">刊登金额审核</li>
+</ul>
+<div class="row">
+    <div class="col-md-10">
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td style="width:180px;">合同名称</td>
+                <td colspan="3">{{ order.title }}</td>
+            </tr>
+            <tr>
+                <td>客户名称</td>
+                <td colspan="3">{{ order.customer.name }}</td>
+            </tr>
+            <tr>
+                <td>备注</td>
+                <td colspan="3">{{ order.notes }}</td>
+            </tr>
+            <tr>
+                <td>合同编号</td>
+                <td style="width:180px;">{{ order.ordernumber }}</td>
+                <td style="width:240px;">合同金额:{{ order.Fee11 }}</td>
+                <td>合同字数:{{ order.wordnumber }}</td>
+            </tr>
+            <tr>
+                <td>签约日期</td>
+                <td>{{ order.contract_date }}</td>
+                <td style="width:150px;">经办人</td>
+                <td>{{ order.name }}</td>
+            </tr>
+            <tr>
+                <td>所属部门</td>
+                <td>{{ order.name }}</td>
+                <td>状态</td>
+                <td>{{ order.status }}</td>
+            </tr>
+            <tr>
+                <td>录入员</td>
+                <td>{{ order.iuser_id | replace_username }}</td>
+                <td>审核员</td>
+                <td>{{ order.cuser_id | replace_username }}</td>
+            </tr>
+
+
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10">
+        <form action="" role="form" method="post">
+            {{ form.csrf_token }}
+            <fieldset>
+                <legend>合同审核</legend>
+                <div class="form-group">
+                    {{ form.status.label }}
+                    {{ form.status() }}
+                </div>
+            </fieldset>
+            {{ form.submit }}
+        </form>
+    </div>
+</div>
+{% endblock %}
