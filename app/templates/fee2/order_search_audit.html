@@ -54,11 +54,11 @@
                 <td>{{ post.update_datetime }}</td>
                 <td>
                     {% if post.status=="己审" or post.status=="完成": %}
-                    <span class="badge"><a href="{{ url_for('fee2.fee2_input',oid=post.id) }}">
-                    输入
+                    <span class="badge"><a href="{{ url_for('fee2.fee2_audit',oid=post.id) }}">
+                    审核
                 </a></span>
                     {% else :%}
-                    <span class="badge">输入</span>
+                    <span class="badge">审核</span>
                     {% endif %}
                 </td>
             </tr>

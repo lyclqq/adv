@@ -88,15 +88,14 @@ def fee2_search_audit():
 
 
 #刊登金额审核
-@fee2View.route('/fee2_audit/<int:fid>',methods=["GET","POST"])
+@fee2View.route('/fee2_audit/<int:oid>',methods=["GET","POST"])
 @is_login
-def fee2_audit(fid):
+def fee2_audit(oid):
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
     pagerows = current_app.config['PAGEROWS']
-    fee2=Fee2.query.filter(Fee2.id==fid).first_or_404()
-    order = Orders.query.filter(Orders.id == fee2.order_id).first_or_404()
-    pagination = Fee2.query.filter(Fee2.order_id==order.id).order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    pagination = Fee2.query.filter(Fee2.order_id==oid).order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee2/fee2_audit.html', order=order,page=page,pagination=pagination)
 
 #合同查询为管理
@@ -140,6 +139,25 @@ def fee2_audit_on(oid,fid):
             fee2.cuser_id=uid
             db.session.commit()
             ins_logs(uid, '审核刊登金额同意，orderid=' + oid, type='contract')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    else:
+        flash('不符合条件！')
+    return redirect(url_for('fee2.fee2_audit',oid=oid,fid=fid))
+
+#刊登金额审核拒绝
+@fee2View.route('/fee2_audit_off/<int:oid>/<int:fid>')
+@is_login
+def fee2_audit_off(oid,fid):
+    uid = session.get('user_id')
+    fee2=Fee2.query.filter(Fee2.id==fid).first_or_404()
+    if fee2.status=='stay' :
+        try:
+            fee2.status='off'
+            fee2.cuser_id=uid
+            db.session.commit()
+            ins_logs(uid, '审核刊登金额拒绝，fee2id=' + fid, type='contract')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
