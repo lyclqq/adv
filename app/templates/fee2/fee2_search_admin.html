@@ -6,30 +6,32 @@
     <li class="active">刊登金额查询</li>
 </ul>
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-11">
  <table class="table table-bordered">
             <thead>
-            <tr>
+            <tr >
                 <td style="width:60px">id</td>
                 <td style="width:240px">输入时间</td>
                 <td >合同名称</td>
                 <td style="width:120px">发生额</td>
                 <td style="width:80px">状态</td>
-                <td style="width:120px">录入</td>
-                <td style="width:120px">审核</td>
-                <td style="width:120px">绩效ID</td>
-                <td style="width:180px">发生日期</td>
+                <td style="width:80px">面积</td>
+                <td style="width:100px">录入</td>
+                <td style="width:100px">审核</td>
+                <td style="width:100px">绩效ID</td>
+                <td style="width:160px">发生日期</td>
             </tr>
             </thead>
             <tbody>
             {% if pagination.items %}
             {% for item in pagination.items %}
-            <tr>
+            <tr title="{{ item.notes }}">
                 <td>{{ item.id }}</td>
                 <td>{{ item.create_datetime }}</td>
                 <td>{{ item.order_id | replace_ordername }}</td>
                 <td>{{ item.fee}}</td>
                 <td>{{ item.status }}</td>
+                <td>{{ item.area }}</td>
                 <td>{{ item.iuser_id | replace_username }}</td>
                 <td>{{ item.cuser_id | replace_username }}</td>
                 <td>{{ item.fee5_id }}</td>
@@ -37,11 +39,11 @@
             </tr>
             {% endfor %}
             <tr>
-                <td colspan="9">{{ render_pagination(pagination,align='center') }}</td>
+                <td colspan="10">{{ render_pagination(pagination,align='center') }}</td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="9">没有查到相关数据</td>
+                <td colspan="10">没有查到相关数据</td>
             </tr>
             {% endif %}
             </tbody>

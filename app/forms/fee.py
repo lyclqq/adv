@@ -17,10 +17,12 @@ class WordsForm(FlaskForm):
                             render_kw={'class': 'form-control','height':'60px'})
     submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
 
-class FeeForm(FlaskForm):
+class Fee2Form(FlaskForm):
 
     fee =FloatField('发生金额',validators=[NumberRange(min=-9999999, max=9999999, message='金额只能为-9999999至9999999')],
                          render_kw={'class': 'form-control', 'placeholder': '金额只能为-9999999至9999999'},default=0)
+    area =FloatField('刊登面积',validators=[NumberRange(min=-999, max=999, message='只能为-999至999')],
+                         render_kw={'class': 'form-control', 'placeholder': '只能为-999至999'},default=0)
     notes=TextAreaField(label='备注:',
         widget=widgets.TextInput(),
         render_kw={'class': 'form-control',

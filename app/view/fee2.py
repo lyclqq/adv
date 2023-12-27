@@ -10,7 +10,7 @@ from app.models.contract import Customers,Orders
 from app.models.other import Files
 from app.models.bill import Wordnumbers,Fee1,Fee2
 from app.forms.customer import CustomerForm
-from app.forms.fee import FeeForm,AuditForm
+from app.forms.fee import Fee2Form,AuditForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
 import datetime
 
@@ -44,7 +44,7 @@ def order_search_admin():
 def fee2_input(oid):
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
-    form= FeeForm()
+    form= Fee2Form()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if form.validate_on_submit():
         fee2=Fee2()
@@ -52,14 +52,22 @@ def fee2_input(oid):
         fee2.feedate = form.fee_date.data
         fee2.status = 'stay'
         fee2.fee=form.fee.data
+        fee2.area=form.area.data
         fee2.iuser_id=uid
         total=order.Fee21+form.fee.data
-        db.session.add(fee2)
+        fee2.notes=form.notes.data
+
         if total>=0:
             try:
+                db.session.add(fee2)
                 db.session.commit()
                 flash('录入成功.', 'success')
                 ins_logs(uid, '刊登金额录入,id=' + str(oid), type='fee2')
+                form.fee.data=0
+                form.notes.data=''
+                form.fee_date.data=None
+                form.area.data=0
+                print('this is '+str(form.fee_date.data))
             except Exception as e:
                 current_app.logger.error(e)
                 flash('录入失败')
@@ -88,7 +96,7 @@ def fee2_search_audit():
 
 
 #刊登金额审核
-@fee2View.route('/fee2_audit/<int:oid>',methods=["GET","POST"])
+@fee2View.route('/fee2_audit/<int:oid>')
 @is_login
 def fee2_audit(oid):
     uid = session.get('user_id')
