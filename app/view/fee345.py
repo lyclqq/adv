@@ -8,7 +8,7 @@ from app.common import is_login,ins_logs
 from app import db
 from app.models.contract import Customers,Orders
 from app.models.other import Files
-from app.models.bill import Wordnumbers,Fee1,Fee2
+from app.models.bill import Wordnumbers,Fee1,Fee2,Fee3,Fee4,Fee5
 from app.forms.customer import CustomerForm
 from app.forms.fee import Fee2Form,AuditForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
@@ -36,4 +36,4 @@ def order_search_admin():
 
     #pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
     result=pagination.items
-    return render_template('fee2/order_search_admin.html', page=page, pagination=pagination, posts=result,form=form)
+    return render_template('fee345/order_search_admin.html', page=page, pagination=pagination, posts=result,form=form)

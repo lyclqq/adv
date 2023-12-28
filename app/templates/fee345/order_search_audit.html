@@ -1,0 +1,78 @@
+{% extends '/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+<ul class="breadcrumb top_row">
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li class="active">合同管理</li>
+</ul>
+
+<div class="container">
+    <div class="row">
+    </div>
+    <div class="col-md-6">
+        <form action="" role="form" method="post">
+            {{ form.csrf_token }}
+            <fieldset>
+                <legend>查询条件</legend>
+                <div class="form-group">
+                    {{ form.status.label }}
+                    {{ form.status() }}
+                </div>
+                <div class="form-group">
+                    {{ form.title.label }}
+                    {{ form.title() }}
+                </div>
+            </fieldset>
+            {{ form.submit }}
+        </form>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-10">
+        {% if posts %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th style="width:60px">ID</th>
+                <th>合同名称</th>
+                <th style="width:150px">合同编号</th>
+                <th style="width:100px">状态</th>
+                <th style="width:120px">刊登金额</th>
+                <th style="width:220px">处理时间</th>
+                <th style="width:80px">操作</th>
+            </tr>
+            </thead>
+
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td>{{ post.title }}</td>
+                <td>{{ post.ordernumber }}</td>
+                <td>{{ post.status }}</td>
+                <td>{{ post.Fee21 }}</td>
+                <td>{{ post.update_datetime }}</td>
+                <td>
+                    {% if post.status=="己审" or post.status=="完成": %}
+                    <span class="badge"><a href="{{ url_for('fee2.fee2_audit',oid=post.id) }}">
+                    审核
+                </a></span>
+                    {% else :%}
+                    <span class="badge">审核</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="page-footer">{{ render_pagination(pagination) }}</div>
+</div>
+
+{% else %}
+<div class="tip"><h5>没有数据.</h5></div>
+{% endif %}
+
+</div>
+{% endblock %}

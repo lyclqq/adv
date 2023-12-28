@@ -45,6 +45,11 @@ def replace_ordername(orderid):
 
 app.add_template_filter(replace_ordername)
 
+#短日期时间格式
+def short_time(value):
+	return value.strftime('%m-%d %H:%M')
+app.add_template_filter(short_time)
+
 #生成验证码
 @app.route('/imgCode')
 def imgcode():

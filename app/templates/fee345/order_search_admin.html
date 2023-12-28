@@ -1,0 +1,87 @@
+{% extends '/base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+<ul class="breadcrumb top_row">
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li class="active">合同查询</li>
+</ul>
+
+<div class="container">
+    <div class="row">
+    </div>
+    <div class="col-md-6">
+        <form action="" role="form" method="post">
+            {{ form.csrf_token }}
+            <fieldset>
+                <legend>查询条件</legend>
+                <div class="form-group">
+                    {{ form.status.label }}
+                    {{ form.status() }}
+                </div>
+                <div class="form-group">
+                    {{ form.title.label }}
+                    {{ form.title() }}
+                </div>
+            </fieldset>
+            {{ form.submit }}
+        </form>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-11">
+        {% if posts %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th style="width:60px">ID</th>
+                <th>合同名称</th>
+                <th style="width:150px">合同编号</th>
+                <th style="width:100px">状态</th>
+                <th style="width:110px">绩效金额</th>
+                <th style="width:110px">到帐金额</th>
+                <th style="width:110px">发票金额</th>
+                <th style="width:150px">处理时间</th>
+                <th style="width:280px">操作</th>
+            </tr>
+            </thead>
+
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td>{{ post.title }}</td>
+                <td>{{ post.ordernumber }}</td>
+                <td>{{ post.status }}</td>
+                <td>{{ post.Fee31 }}</td>
+                <td>{{ post.Fee41 }}</td>
+                <td>{{ post.Fee51 }}</td>
+                <td>{{ post.update_datetime | short_time }}</td>
+                <td>
+                    {% if post.status=="己审" or post.status=="完成": %}
+                    <span class="badge"><a href="{{ url_for('fee2.fee2_input',oid=post.id) }}">
+                    绩效输入</a></span>
+                    <span class="badge"><a href="{{ url_for('fee2.fee2_input',oid=post.id) }}">
+                    到帐输入</a></span>
+                    <span class="badge"><a href="{{ url_for('fee2.fee2_input',oid=post.id) }}">
+                    发票输入</a></span>
+                    {% else :%}
+                    <span class="badge">绩效输入</span>
+                    <span class="badge">到帐输入</span>
+                    <span class="badge">发票输入</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="page-footer">{{ render_pagination(pagination) }}</div>
+</div>
+
+{% else %}
+<div class="tip"><h5>没有数据.</h5></div>
+{% endif %}
+
+</div>
+{% endblock %}
