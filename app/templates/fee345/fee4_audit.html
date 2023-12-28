@@ -80,11 +80,11 @@
                 <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
                 <td>
                     {% if item.status=="stay" : %}
-                    <span class="badge"><a href="{{ url_for('fee2.fee2_audit_on',fid=item.id,oid=item.order_id) }}"
+                    <span class="badge"><a href="{{ url_for('fee345.fee4_audit_on',fid=item.id,oid=item.order_id) }}"
                                            target="_blank">
                     同意
                 </a></span>
-                    <span class="badge"><a href="{{ url_for('fee2.fee2_audit_off',fid=item.id,oid=item.order_id) }}"
+                    <span class="badge"><a href="{{ url_for('fee345.fee4_audit_off',fid=item.id,oid=item.order_id) }}"
                                            target="_blank">
                     拒绝
                 </a></span>

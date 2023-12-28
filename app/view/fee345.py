@@ -249,3 +249,91 @@ def fee4_audit(oid):
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     pagination = Fee4.query.filter(Fee4.order_id==oid).order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee345/fee4_audit.html', order=order,page=page,pagination=pagination)
+
+#发票金额审核同意
+@fee345View.route('/fee3_audit_on/<int:oid>/<int:fid>')
+@is_login
+def fee3_audit_on(oid,fid):
+    uid = session.get('user_id')
+    fee3=Fee3.query.filter(Fee3.id==fid).first_or_404()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    total=order.Fee31+fee3.fee
+    if fee3.status=='stay' and total>=0:
+        try:
+            order.update_datetime=datetime.datetime.now()
+            order.Fee31=total
+            order.Fee32=order.Fee32+fee3.fee
+            db.session.add(order)
+            fee3.status='on'
+            fee3.cuser_id=uid
+            db.session.commit()
+            ins_logs(uid, '审核发票金额同意，orderid=' + oid, type='fee345')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    else:
+        flash('不符合条件！')
+    return redirect(url_for('fee345.fee3_audit',oid=oid,fid=fid))
+
+#刊登金额审核拒绝
+@fee345View.route('/fee3_audit_off/<int:oid>/<int:fid>')
+@is_login
+def fee3_audit_off(oid,fid):
+    uid = session.get('user_id')
+    fee3=Fee3.query.filter(Fee3.id==fid).first_or_404()
+    if fee3.status=='stay' :
+        try:
+            fee3.status='off'
+            fee3.cuser_id=uid
+            db.session.commit()
+            ins_logs(uid, '审核发票金额拒绝，fee3id=' + fid, type='fee345')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    else:
+        flash('不符合条件！')
+    return redirect(url_for('fee345.fee3_audit',oid=oid,fid=fid))
+
+#到帐金额审核同意
+@fee345View.route('/fee4_audit_on/<int:oid>/<int:fid>')
+@is_login
+def fee4_audit_on(oid,fid):
+    uid = session.get('user_id')
+    fee4=Fee4.query.filter(Fee3.id==fid).first_or_404()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    total=order.Fee41+fee4.fee
+    if fee4.status=='stay' and total>=0:
+        try:
+            order.update_datetime=datetime.datetime.now()
+            order.Fee41=total
+            order.Fee42=order.Fee42+fee4.fee
+            db.session.add(order)
+            fee4.status='on'
+            fee4.cuser_id=uid
+            db.session.commit()
+            ins_logs(uid, '审核到帐金额同意，orderid=' + oid, type='fee345')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    else:
+        flash('不符合条件！')
+    return redirect(url_for('fee345.fee4_audit',oid=oid,fid=fid))
+
+#刊登金额审核拒绝
+@fee345View.route('/fee4_audit_off/<int:oid>/<int:fid>')
+@is_login
+def fee4_audit_off(oid,fid):
+    uid = session.get('user_id')
+    fee4=Fee4.query.filter(Fee4.id==fid).first_or_404()
+    if fee4.status=='stay' :
+        try:
+            fee4.status='off'
+            fee4.cuser_id=uid
+            db.session.commit()
+            ins_logs(uid, '审核到帐金额拒绝，fee4id=' + fid, type='fee345')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    else:
+        flash('不符合条件！')
+    return redirect(url_for('fee345.fee4_audit',oid=oid,fid=fid))
