@@ -80,31 +80,30 @@ def fee5_input(oid):
 def fee4_input(oid):
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
-    form = Fee2Form()
+    form = Fee3Form()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if form.validate_on_submit():
-        fee2 = Fee2()
-        fee2.order_id = oid
-        fee2.feedate = form.fee_date.data
-        fee2.status = 'stay'
-        fee2.fee = form.fee.data
-        fee2.area = form.area.data
-        fee2.iuser_id = uid
-        total = order.Fee21 + form.fee.data
-        fee2.notes = form.notes.data
+        fee4 = Fee4()
+        fee4.order_id = oid
+        fee4.feedate = form.fee_date.data
+        fee4.status = 'stay'
+        fee4.fee = form.fee.data
+        fee4.iuser_id = uid
+        total = order.Fee41 + form.fee.data
+        fee4.notes = form.notes.data
 
         if total >= 0:
             try:
-                db.session.add(fee2)
+                db.session.add(fee4)
                 db.session.commit()
                 flash('录入成功.', 'success')
-                ins_logs(uid, '刊登金额录入,id=' + str(oid), type='fee2')
+                ins_logs(uid, '到帐金额录入,id=' + str(oid), type='fee345')
             except Exception as e:
                 current_app.logger.error(e)
                 flash('录入失败')
         else:
             flash('余额不能小于0!')
-    pagination = Fee2.query.filter(Fee2.order_id == oid).order_by(Fee2.id.desc()).paginate(page, per_page=8)
+    pagination = Fee4.query.filter(Fee4.order_id == oid).order_by(Fee4.id.desc()).paginate(page, per_page=8)
     return render_template('fee345/fee4_input.html', form=form, order=order, pagination=pagination, page=page)
 
 
