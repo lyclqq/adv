@@ -35,7 +35,7 @@
                 <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
                 <td>
                     {% if item.status=="stay" : %}
-                    <span class="badge"><a href="{{ url_for('fee345.fee3_audit',oid=item.order_id) }}" target="_blank">
+                    <span class="badge"><a href="{{ url_for('fee345.fee4_audit',oid=item.order_id) }}" target="_blank">
                     审核
                 </a></span>
                     {% else :%}

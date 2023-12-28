@@ -207,6 +207,7 @@ def fee4_search_admin():
     pagination = Fee4.query.order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee345/fee4_search_admin.html', pagination=pagination,page=page)
 
+#发票查询
 @fee345View.route('/fee3_search_audit')
 @is_login
 def fee3_search_audit():
@@ -216,6 +217,7 @@ def fee3_search_audit():
     pagination = Fee3.query.order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee345/fee3_search_audit.html', pagination=pagination,page=page)
 
+#到帐金额查询
 @fee345View.route('/fee4_search_audit')
 @is_login
 def fee4_search_audit():
@@ -224,3 +226,26 @@ def fee4_search_audit():
     pagerows = current_app.config['PAGEROWS']
     pagination = Fee4.query.order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee345/fee4_search_audit.html', pagination=pagination,page=page)
+
+
+#发票审核页
+@fee345View.route('/fee3_audit/<int:oid>')
+@is_login
+def fee3_audit(oid):
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    pagerows = current_app.config['PAGEROWS']
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    pagination = Fee3.query.filter(Fee3.order_id==oid).order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee345/fee3_audit.html', order=order,page=page,pagination=pagination)
+
+#到帐审核页
+@fee345View.route('/fee4_audit/<int:oid>')
+@is_login
+def fee4_audit(oid):
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    pagerows = current_app.config['PAGEROWS']
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    pagination = Fee4.query.filter(Fee4.order_id==oid).order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee345/fee4_audit.html', order=order,page=page,pagination=pagination)

@@ -56,9 +56,9 @@
                 <td>{{ post.update_datetime | short_time }}</td>
                 <td>
                     {% if post.status=="己审" or post.status=="完成": %}
-                    <span class="badge"><a href="{{ url_for('fee345.fee4_input',oid=post.id) }}">
+                    <span class="badge"><a href="{{ url_for('fee345.fee4_audit',oid=post.id) }}">
                     到帐审核</a></span>
-                    <span class="badge"><a href="{{ url_for('fee345.fee3_input',oid=post.id) }}">
+                    <span class="badge"><a href="{{ url_for('fee345.fee3_audit',oid=post.id) }}">
                     发票审核</a></span>
                     {% else :%}
                     <span class="badge">到帐输入</span>
