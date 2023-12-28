@@ -206,3 +206,21 @@ def fee4_search_admin():
     pagerows = current_app.config['PAGEROWS']
     pagination = Fee4.query.order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee345/fee4_search_admin.html', pagination=pagination,page=page)
+
+@fee345View.route('/fee3_search_audit')
+@is_login
+def fee3_search_audit():
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    pagerows = current_app.config['PAGEROWS']
+    pagination = Fee3.query.order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee345/fee3_search_audit.html', pagination=pagination,page=page)
+
+@fee345View.route('/fee4_search_audit')
+@is_login
+def fee4_search_audit():
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    pagerows = current_app.config['PAGEROWS']
+    pagination = Fee4.query.order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee345/fee4_search_audit.html', pagination=pagination,page=page)
