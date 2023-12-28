@@ -34,16 +34,16 @@
 		"id": 3,
 		"sublist": [{
 			"subname": "合同查询",
-			"sublink": "/article/articleadmin"
+			"sublink": "/fee345/order_search_admin"
 		}, {
 			"subname": "绩效查询",
-			"sublink": "/perf/list/1"
+			"sublink": "/fee345/list/1"
 		}, {
 			"subname": "到帐查询",
-			"sublink": "/article/articlecreate_select"
+			"sublink": "/fee345/articlecreate_select"
 		}, {
 			"subname": "发票查询",
-			"sublink": "/article/articlecreate_select"
+			"sublink": "/fee345/articlecreate_select"
 		}]
 	},
 	{
@@ -122,6 +122,17 @@
 		}, {
 			"subname": "发票查询",
 			"sublink": "/article/articlecreate_select"
+		}]
+	},
+	{
+		"menuname": "统计报表",
+		"id": 10,
+		"sublist": [{
+			"subname": "报表生成",
+			"sublink": "/report/articleadmin"
+		}, {
+			"subname": "统计图",
+			"sublink": "/report/articlecreate_select"
 		}]
 	}
 ]

@@ -57,6 +57,8 @@ def create_app(config_name):
     app.register_blueprint(wordsauditView,url_prefix='/wordsaudit')
     from app.view.fee2 import fee2View #己刊登金额相关
     app.register_blueprint(fee2View,url_prefix='/fee2')
+    from app.view.fee345 import fee345View #3大金额相关
+    app.register_blueprint(fee345View,url_prefix='/fee345')
     from app.view.publish import publish_bp
     from app.view.paid import paid_bp
     from app.view.performance import performance_bp

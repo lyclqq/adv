@@ -119,7 +119,6 @@ def order_search_audit():
     else:
         pagination=orders.search_orders(None,page=page)
 
-    #pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
     result=pagination.items
     return render_template('fee2/order_search_audit.html', page=page, pagination=pagination, posts=result,form=form)
 
