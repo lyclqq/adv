@@ -2,12 +2,17 @@ function dept_add() {
     const info61 = document.getElementById('info61')
     info61.innerText = ''
     const dept_form = document.getElementById('dept_form')
+    const dept_type = document.getElementById('type')
 
     const v1 = document.getElementById('groupname').validity.valid
-    const v2 = document.getElementById('type').validity.valid
+    const v2 = dept_type.validity.valid
     const v3 = document.getElementById('flag').validity.valid
-
-    if (!(v1 && v2 && v3)) {
+    let flag = v1 && v2 && v3
+    console.log(dept_type.value === '0')
+    if (dept_type.value === '0') {
+        flag = v1 && v2
+    }
+    if (!flag) {
         info61.innerText = '有必填项未填'
     } else {
         const data = new FormData(dept_form);
@@ -45,6 +50,6 @@ function dept_status_switcher(pid) {
     }
 }
 
-function dept_mod(fid){
+function dept_mod(fid) {
     window.location.href = '/dept/to_add/' + fid
 }

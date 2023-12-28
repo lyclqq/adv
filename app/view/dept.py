@@ -7,13 +7,15 @@ from app.models.system import Groups
 dept_bp = Blueprint('dept', __name__)
 pagesize = 10
 
+dept_type_dict = {"1": "数据统计部门", "0": "非数据统计部门"}
+
 
 # 列表页
 @dept_bp.route('/dept/list/<int:page>/', methods=["GET", "POST"])
 @is_login
 def dept_list(page):
     pagination = Groups.query.order_by(Groups.groupname).paginate(page=page, per_page=pagesize, error_out=False)
-    return render_template('dept/dept_list.html', pagination=pagination)
+    return render_template('dept/dept_list.html', pagination=pagination, dept_type_dict=dept_type_dict)
 
 
 # 添加页
@@ -24,7 +26,7 @@ def dept_to_add(fid):
         dept = Groups.query.filter(Groups.id == fid).first()
     else:
         dept = None
-    return render_template('dept/dept_add.html', dept=dept)
+    return render_template('dept/dept_add.html', dept=dept, dept_type_dict=dept_type_dict)
 
 
 # 添加方法
@@ -39,7 +41,8 @@ def dept_add():
     #
     dept.groupname = request.form.get('groupname')
     dept.type = request.form.get('type')
-    dept.flag = float(request.form.get('flag'))
+    if request.form.get('flag') != '':
+        dept.flag = float(request.form.get('flag'))
     dept.status = request.form.get('status')
     dept.notes = request.form.get('notes')
     #

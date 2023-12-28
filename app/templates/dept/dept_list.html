@@ -24,7 +24,7 @@
                 <tr>
                     <td>{{ loop.index }}</td>
                     <td>{{ dept.groupname }}</td>
-                    <td>{{ dept.type }}</td>
+                    <td>{{ dept_type_dict.get(dept.type) }}</td>
                     <td>{{ dept.flag }}</td>
                     <td>
                         <div class="form-check form-switch float-start">
