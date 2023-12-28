@@ -37,12 +37,11 @@
                 <th style="width:60px">ID</th>
                 <th>合同名称</th>
                 <th style="width:150px">合同编号</th>
-                <th style="width:100px">状态</th>
-                <th style="width:110px">绩效金额</th>
+                <th style="width:80px">状态</th>
                 <th style="width:110px">到帐金额</th>
                 <th style="width:110px">发票金额</th>
                 <th style="width:150px">处理时间</th>
-                <th style="width:280px">操作</th>
+                <th style="width:200px">操作</th>
             </tr>
             </thead>
 
@@ -52,20 +51,16 @@
                 <td>{{ post.title }}</td>
                 <td>{{ post.ordernumber }}</td>
                 <td>{{ post.status }}</td>
-                <td>{{ post.Fee31 }}</td>
                 <td>{{ post.Fee41 }}</td>
-                <td>{{ post.Fee51 }}</td>
+                <td>{{ post.Fee31 }}</td>
                 <td>{{ post.update_datetime | short_time }}</td>
                 <td>
                     {% if post.status=="己审" or post.status=="完成": %}
-                    <span class="badge"><a href="{{ url_for('fee2.fee2_input',oid=post.id) }}">
-                    绩效输入</a></span>
-                    <span class="badge"><a href="{{ url_for('fee2.fee2_input',oid=post.id) }}">
+                    <span class="badge"><a href="{{ url_for('fee345.fee4_input',oid=post.id) }}">
                     到帐输入</a></span>
-                    <span class="badge"><a href="{{ url_for('fee2.fee2_input',oid=post.id) }}">
+                    <span class="badge"><a href="{{ url_for('fee345.fee3_input',oid=post.id) }}">
                     发票输入</a></span>
                     {% else :%}
-                    <span class="badge">绩效输入</span>
                     <span class="badge">到帐输入</span>
                     <span class="badge">发票输入</span>
                     {% endif %}

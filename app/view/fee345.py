@@ -10,7 +10,7 @@ from app.models.contract import Customers,Orders
 from app.models.other import Files
 from app.models.bill import Wordnumbers,Fee1,Fee2,Fee3,Fee4,Fee5
 from app.forms.customer import CustomerForm
-from app.forms.fee import Fee2Form,AuditForm
+from app.forms.fee import Fee2Form,AuditForm,Fee3Form
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
 import datetime
 
@@ -37,3 +37,101 @@ def order_search_admin():
     #pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
     result=pagination.items
     return render_template('fee345/order_search_admin.html', page=page, pagination=pagination, posts=result,form=form)
+
+#刊登金额输入
+@fee345View.route('/fee5_input/<int:oid>',methods=["GET","POST"])
+@is_login
+def fee5_input(oid):
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    form= Fee2Form()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        fee2=Fee2()
+        fee2.order_id=oid
+        fee2.feedate = form.fee_date.data
+        fee2.status = 'stay'
+        fee2.fee=form.fee.data
+        fee2.area=form.area.data
+        fee2.iuser_id=uid
+        total=order.Fee21+form.fee.data
+        fee2.notes=form.notes.data
+
+        if total>=0:
+            try:
+                db.session.add(fee2)
+                db.session.commit()
+                flash('录入成功.', 'success')
+                ins_logs(uid, '刊登金额录入,id=' + str(oid), type='fee2')
+            except Exception as e:
+                current_app.logger.error(e)
+                flash('录入失败')
+        else:
+            flash('余额不能小于0!')
+    pagination = Fee2.query.filter(Fee2.order_id==oid).order_by(Fee2.id.desc()).paginate(page, per_page=8)
+    return render_template('fee345/fee3_input.html', form=form,order=order,pagination=pagination,page=page)
+
+#刊登金额输入
+@fee345View.route('/fee4_input/<int:oid>',methods=["GET","POST"])
+@is_login
+def fee4_input(oid):
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    form= Fee2Form()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        fee2=Fee2()
+        fee2.order_id=oid
+        fee2.feedate = form.fee_date.data
+        fee2.status = 'stay'
+        fee2.fee=form.fee.data
+        fee2.area=form.area.data
+        fee2.iuser_id=uid
+        total=order.Fee21+form.fee.data
+        fee2.notes=form.notes.data
+
+        if total>=0:
+            try:
+                db.session.add(fee2)
+                db.session.commit()
+                flash('录入成功.', 'success')
+                ins_logs(uid, '刊登金额录入,id=' + str(oid), type='fee2')
+            except Exception as e:
+                current_app.logger.error(e)
+                flash('录入失败')
+        else:
+            flash('余额不能小于0!')
+    pagination = Fee2.query.filter(Fee2.order_id==oid).order_by(Fee2.id.desc()).paginate(page, per_page=8)
+    return render_template('fee345/fee4_input.html', form=form,order=order,pagination=pagination,page=page)
+
+#发票金额输入
+@fee345View.route('/fee3_input/<int:oid>',methods=["GET","POST"])
+@is_login
+def fee3_input(oid):
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    form= Fee3Form()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        fee3=Fee3()
+        fee3.order_id=oid
+        fee3.feedate = form.fee_date.data
+        fee3.status = 'stay'
+        fee3.fee=form.fee.data
+        fee3.iuser_id=uid
+        total=order.Fee31+form.fee.data
+        fee3.notes=form.notes.data
+
+        if total>=0:
+            try:
+                db.session.add(fee3)
+                db.session.commit()
+                flash('录入成功.', 'success')
+                ins_logs(uid, '刊登金额录入,id=' + str(oid), type='fee2')
+            except Exception as e:
+                current_app.logger.error(e)
+                flash('录入失败')
+        else:
+            flash('余额不能小于0!')
+    pagination = Fee3.query.filter(Fee3.order_id==oid).order_by(Fee3.id.desc()).paginate(page, per_page=8)
+    return render_template('fee345/fee3_input.html', form=form,order=order,pagination=pagination,page=page)

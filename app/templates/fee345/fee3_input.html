@@ -3,20 +3,20 @@
 {% block content %}
 <ul class="breadcrumb top_row">
     <li><a href="{{ url_for('index') }}">Home</a></li>
-    <li><a href="{{ url_for('fee2.order_search_admin') }}">合同查询</a></li>
-    <li class="active">刊登金额输入</li>
+    <li><a href="{{ url_for('fee345.order_search_admin') }}">合同查询</a></li>
+    <li class="active">发票金额输入</li>
 </ul>
 <div class="row">
     <div class="col-md-8">
         <table class="table table-bordered">
             <tbody>
             <tr>
-                <td style="width:180px;">合同名称</td>
-                <td colspan="3">{{ order.title }}</td>
+                <td colspan="2">合同名称:{{ order.title }}</td>
+                <td colspan="2">合同编号:{{ order.ordernumber }}</td>
             </tr>
             <tr>
-                <td>合同编号</td>
-                <td>{{ order.ordernumber }}</td>
+                <td>发票金额：{{ order.Fee31 }}</td>
+                <td>到帐金额：{{ order.Fee41 }}</td>
                 <td>刊登金额：{{ order.Fee21 }}</td>
                 <td>合同金额：{{ order.Fee11 }}</td>
             </tr>
@@ -33,7 +33,6 @@
                 <td style="width:240px">输入时间</td>
                 <td>发生额</td>
                 <td style="width:80px">状态</td>
-                <td style="width:100px">面积</td>
                 <td style="width:120px">录入</td>
                 <td style="width:120px">审核</td>
                 <td style="width:120px">绩效ID</td>
@@ -48,7 +47,6 @@
                 <td>{{ item.create_datetime }}</td>
                 <td>{{ item.fee}}</td>
                 <td>{{ item.status }}</td>
-                <td>{{ item.area }}</td>
                 <td>{{ item.iuser_id | replace_username }}</td>
                 <td>{{ item.cuser_id | replace_username }}</td>
                 <td>{{ item.fee5_id }}</td>
@@ -72,7 +70,7 @@
         <form action="" role="form" method="post">
             {{ form.csrf_token }}
             <fieldset>
-                <legend>刊登金额输入</legend>
+                <legend>发票金额输入</legend>
                 <div class="form-group">
                     {{ form.fee.label }}
                     {{ form.fee() }}
@@ -81,11 +79,8 @@
                     {%endfor%}
                 </div>
                 <div class="form-group">
-                    {{ form.area.label }}
-                    {{ form.area() }}
-                    {%for message in form.area.errors%}
-                    <small class="error">{{message}}</small>
-                    {%endfor%}
+                    {{ form.upfile.label }}
+                    {{ form.upfile() }}
                 </div>
                 <div class="form-group">
                     {{ form.fee_date.label }}
