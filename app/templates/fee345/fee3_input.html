@@ -33,9 +33,9 @@
                 <td style="width:240px">输入时间</td>
                 <td>发生额</td>
                 <td style="width:80px">状态</td>
+                <td style="width:80px">附件</td>
                 <td style="width:120px">录入</td>
                 <td style="width:120px">审核</td>
-                <td style="width:120px">绩效ID</td>
                 <td style="width:180px">发生日期</td>
             </tr>
             </thead>
@@ -47,9 +47,11 @@
                 <td>{{ item.create_datetime }}</td>
                 <td>{{ item.fee}}</td>
                 <td>{{ item.status }}</td>
+                <td>{% if item.filename is none %} None {% else %} <a href="/files/{{ item.path}}{{item.filename}}"
+                                                                      target="_blank">file</a> {% endif %}
+                </td>
                 <td>{{ item.iuser_id | replace_username }}</td>
                 <td>{{ item.cuser_id | replace_username }}</td>
-                <td>{{ item.fee5_id }}</td>
                 <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
             </tr>
             {% endfor %}
@@ -67,7 +69,7 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <form action="" role="form" method="post">
+        <form action="" role="form" method="post" enctype="multipart/form-data">
             {{ form.csrf_token }}
             <fieldset>
                 <legend>发票金额输入</legend>
