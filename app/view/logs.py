@@ -17,8 +17,7 @@ def log_list(page):
         userid = int(session.get('user_id'))
         q = q.filter(Logs.user_id == userid)
     pagination = q.order_by(Logs.create_datetime.desc()).paginate(page=page, per_page=pagesize, error_out=False)
-    udict = get_user_dict()
-    return render_template('log/log_list.html', pagination=pagination, udict=udict)
+    return render_template('log/log_list.html', pagination=pagination)
 
 
 # 查询用户信息

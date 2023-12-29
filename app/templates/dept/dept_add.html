@@ -21,7 +21,11 @@
                     <tr>
                         <td><strong class="text-danger">部门类型</strong></td>
                         <td>
-                            <input class="form-control" type="text" name="type" id="type" required value="{{ dept.type }}"/>
+                            <select class="form-control" name="type" id="type" required>
+                                {% for k,v in dept_type_dict.items() %}
+                                    <option value="{{ k }}" {% if dept.type==k %}selected{% endif %}>{{ v }}</option>
+                                {% endfor %}
+                            </select>
                         </td>
                     </tr>
                     <tr>

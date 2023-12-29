@@ -71,6 +71,8 @@ def create_app(config_name):
     app.register_blueprint(log_bp, url_prefix='/')  # 日志
     from app.view.dept import dept_bp
     app.register_blueprint(dept_bp, url_prefix='/')  # 日志
+    from app.view.report import report_bp
+    app.register_blueprint(report_bp, url_prefix='/')  # 日志
     return app
 
 #日志文件

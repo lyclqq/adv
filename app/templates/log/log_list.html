@@ -13,16 +13,20 @@
                 <td class="text-bg-secondary">日志类型</td>
                 <td class="text-bg-secondary">用户IP</td>
                 <td class="text-bg-secondary">生成时间</td>
+                <td class="text-bg-secondary">内容</td>
+
             </tr>
             </thead>
             {% for log in pagination.items %}
                 <tr>
                     <td>{{ loop.index }}</td>
                     <td>{{ log.id }}</td>
-                    <td>{{ udict.get(log.user_id) }}</td>
+                    <td>{{ log.user_id|replace_username }}</td>
                     <td>{{ log.type }}</td>
                     <td>{{ log.ip }}</td>
                     <td>{{ log.create_datetime }}</td>
+                    <td>{{ log.notes }}</td>
+
                 </tr>
             {% endfor %}
 
