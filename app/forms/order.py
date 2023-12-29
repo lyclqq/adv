@@ -42,7 +42,7 @@ class OrderForm(FlaskForm):
                    "placeholder":"输入合同说明"})
     contract_date  = DateField('签订日期', format='%Y-%m-%d',validators=[DataRequired('日期不能为空')],
                             render_kw={'class': 'form-control','height':'60px'})
-    submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
+    submit = SubmitField('提交',render_kw={'class':'form-control'})
 
 class OrderSearchForm(FlaskForm):
     title = StringField(label='合同标题:',
@@ -51,7 +51,7 @@ class OrderSearchForm(FlaskForm):
     )
     status=SelectField(label='合同状态：',render_kw={'class': 'form-control'},
                            choices=[('己审','己审' ), ('未审','未审' ),( '待审','待审'), ('完成', '完成'),('作废', '作废')])
-    submit = SubmitField('提交', render_kw={'class': 'btn btn-block btn-info'})
+    submit = SubmitField('提交', render_kw={'class': 'form-control'})
 
 
 class OrderupfileForm(FlaskForm):
@@ -64,4 +64,4 @@ class OrderupfileForm(FlaskForm):
                    "placeholder":"输入附件标题"}
     )
     upfile=FileField(label='上传附件：',render_kw={'class': 'form-control'})
-    submit = SubmitField('提交', render_kw={'class': 'btn btn-block btn-info'})
+    submit = SubmitField('提交', render_kw={'class': 'form-control'})

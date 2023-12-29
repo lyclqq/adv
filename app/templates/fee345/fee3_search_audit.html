@@ -1,59 +1,57 @@
-{% extends '/base.html' %}
+{% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
-<ul class="breadcrumb top_row">
-    <li><a href="{{ url_for('index') }}">Home</a></li>
-    <li class="active">发票金额查询</li>
-</ul>
-<div class="row">
-    <div class="col-md-11">
-        <table class="table table-bordered">
+    <div class="m-2 p-3 ">
+        <ul class="breadcrumb top_row">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="active">发票金额查询</li>
+        </ul>
+        <br>
+        <table class="table table-hover shadow table-bordered align-middle">
             <thead>
             <tr>
-                <td style="width:60px">id</td>
-                <td style="width:240px">输入时间</td>
-                <td>合同名称</td>
-                <td style="width:120px">发生额</td>
-                <td style="width:80px">状态</td>
-                <td style="width:100px">录入</td>
-                <td style="width:100px">审核</td>
-                <td style="width:180px">发生日期</td>
-                <td style="width:80px">审核</td>
+                <td class="text-bg-secondary" style="width:60px">id</td>
+                <td class="text-bg-secondary" style="width:240px">输入时间</td>
+                <td class="text-bg-secondary">合同名称</td>
+                <td class="text-bg-secondary" style="width:120px">发生额</td>
+                <td class="text-bg-secondary" style="width:80px">状态</td>
+                <td class="text-bg-secondary" style="width:100px">录入</td>
+                <td class="text-bg-secondary" style="width:100px">审核</td>
+                <td class="text-bg-secondary" style="width:180px">发生日期</td>
+                <td class="text-bg-secondary" style="width:80px">审核</td>
             </tr>
             </thead>
             <tbody>
             {% if pagination.items %}
-            {% for item in pagination.items %}
-            <tr title="{{ item.notes }}">
-                <td>{{ item.id }}</td>
-                <td>{{ item.create_datetime }}</td>
-                <td>{{ item.order_id | replace_ordername }}</td>
-                <td>{{ item.fee}}</td>
-                <td>{{ item.status }}</td>
-                <td>{{ item.iuser_id | replace_username }}</td>
-                <td>{{ item.cuser_id | replace_username }}</td>
-                <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
-                <td>
-                    {% if item.status=="stay" : %}
-                    <span class="badge"><a href="{{ url_for('fee345.fee3_audit',oid=item.order_id) }}" target="_blank">
-                    审核
-                </a></span>
-                    {% else :%}
-                    <span class="badge">审核</span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td colspan="10">{{ render_pagination(pagination,align='center') }}</td>
-            </tr>
+                {% for item in pagination.items %}
+                    <tr title="{{ item.notes }}">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.create_datetime }}</td>
+                        <td>{{ item.order_id | replace_ordername }}</td>
+                        <td>{{ item.fee }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>{{ item.iuser_id | replace_username }}</td>
+                        <td>{{ item.cuser_id | replace_username }}</td>
+                        <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% if item.status=="stay" %}
+                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee345.fee3_audit',oid=item.order_id) }}" target="_blank">审核</a>
+                            {% else %}
+                                审核
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+
             {% else %}
-            <tr>
-                <td colspan="10">没有查到相关数据</td>
-            </tr>
+                <tr>
+                    <td colspan="10">没有查到相关数据</td>
+                </tr>
             {% endif %}
             </tbody>
         </table>
+        <div class="row">
+            <div class="page-footer">{{ render_pagination(pagination,align='center') }}</div>
+        </div>
     </div>
-</div>
 {% endblock %}
