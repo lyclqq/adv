@@ -58,10 +58,10 @@
                 <td>{{ post.update_datetime | short_time }}</td>
                 <td>
                     {% if post.status=="己审" or post.status=="完成": %}
-                    <span class="badge"><a href="{{ url_for('fee5.fee5_input',oid=post.id) }}">
-                    绩效输入</a></span>
+                    <span class="badge"><a href="{{ url_for('fee5.fee5_audit',oid=post.id) }}">
+                    绩效审核</a></span>
                     {% else :%}
-                    <span class="badge">绩效输入</span>
+                    <span class="badge">绩效审核</span>
                     {% endif %}
                 </td>
             </tr>

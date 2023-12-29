@@ -111,3 +111,15 @@ def order_search_audit():
     # pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
     result = pagination.items
     return render_template('fee5/order_search_audit.html', page=page, pagination=pagination, posts=result, form=form)
+
+
+#发票审核页
+@fee5View.route('/fee5_audit/<int:oid>')
+@is_login
+def fee5_audit(oid):
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    pagerows = current_app.config['PAGEROWS']
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    pagination = Fee5.query.filter(Fee5.order_id==oid).order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee5/fee5_audit.html', order=order,page=page,pagination=pagination)
