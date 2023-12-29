@@ -44,6 +44,7 @@ def order_search_admin():
 def fee5_input(oid):
     uid = session.get('user_id')
     form = Fee5Form()
+    form.scale.data= current_app.config['SCALE']
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if form.validate_on_submit():
         try:
@@ -61,8 +62,6 @@ def fee5_input(oid):
                         fee2_sum=fee2_sum+fee2.fee
                         fee2.fee5_id=fee5.id
                         db.session.add(fee2)
-                    print('fee2id='+str_fee2id)
-
             fee5.feedate = form.fee_date.data
             fee5.fee = form.fee.data
             fee5.scale = form.scale.data
@@ -77,6 +76,6 @@ def fee5_input(oid):
             current_app.logger.error(e)
             flash('录入失败')
 
-    result_fee2 = Fee2.query.filter(Fee2.order_id == oid,Fee2.status=='on').all()
-    result_fee5=Fee5.query.filter(Fee5.order_id==oid).all()
+    result_fee2 = Fee2.query.filter(Fee2.order_id == oid,Fee2.status=='on',Fee2.fee5_id==0).all()
+    result_fee5=Fee5.query.filter(Fee5.order_id==oid).order_by(Fee5.id.desc()).all()
     return render_template('fee5/fee5_input.html', form=form, order=order, result_fee2=result_fee2,result_fee5=result_fee5)
