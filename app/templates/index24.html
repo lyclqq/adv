@@ -1,4 +1,80 @@
 {% extends 'base.html' %}
 {% block content %}
-    默认报表
+    <div class="m-2 p-3 ">
+        <script src="{{ url_for('static',filename='js/echarts.min.js') }}"></script>
+        <br>
+        <div class="d-flex flex-row justify-content-evenly pt-2">
+            <div id="bar" style="width:600px; height:380px;"></div>
+            <script>
+                $(
+                    function () {
+                        let chart = echarts.init(document.getElementById('bar'), 'white', {renderer: 'canvas'});
+                        $.ajax({
+                            type: "GET",
+                            url: "http://127.0.0.1:5000/report/barChart",
+                            dataType: 'json',
+                            success: function (result) {
+                                chart.setOption(result);
+                            }
+                        });
+                    }
+                )
+            </script>
+
+            <div id="bar2" style="width:600px; height:380px;"></div>
+            <script>
+                $(
+                    function () {
+                        let chart = echarts.init(document.getElementById('bar2'), 'white', {renderer: 'canvas'});
+                        $.ajax({
+                            type: "GET",
+                            url: "http://127.0.0.1:5000/report/line",
+                            dataType: 'json',
+                            success: function (result) {
+                                chart.setOption(result);
+                            }
+                        });
+                    }
+                )
+            </script>
+        </div>
+
+        <br>
+
+        <div class="d-flex flex-row justify-content-evenly pt-2">
+            <div id="bar3" style="width:600px; height:380px;"></div>
+            <script>
+                $(
+                    function () {
+                        let chart = echarts.init(document.getElementById('bar3'), 'white', {renderer: 'canvas'});
+                        $.ajax({
+                            type: "GET",
+                            url: "http://127.0.0.1:5000/report/barChart",
+                            dataType: 'json',
+                            success: function (result) {
+                                chart.setOption(result);
+                            }
+                        });
+                    }
+                )
+            </script>
+
+            <div id="bar4" style="width:600px; height:380px;"></div>
+            <script>
+                $(
+                    function () {
+                        let chart = echarts.init(document.getElementById('bar4'), 'white', {renderer: 'canvas'});
+                        $.ajax({
+                            type: "GET",
+                            url: "http://127.0.0.1:5000/report/pie",
+                            dataType: 'json',
+                            success: function (result) {
+                                chart.setOption(result);
+                            }
+                        });
+                    }
+                )
+            </script>
+        </div>
+    </div>
 {% endblock %}

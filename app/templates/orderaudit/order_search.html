@@ -1,75 +1,64 @@
-{% extends '/base.html' %}
+{% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
-<ul class="breadcrumb top_row">
-    <li><a href="{{ url_for('index') }}">Home</a></li>
-    <li class="active">合同查询</li>
-</ul>
+    <div class="m-2 p-3 ">
+        <ul class="breadcrumb top_row">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="active">合同查询</li>
+        </ul>
 
-<div class="container">
-    <div class="row">
+        <form action="" role="form" method="post">
+            {{ form.csrf_token }}
+
+            <table>
+                <tr>
+                    <td>{{ form.status.label }}</td>
+                    <td class="p-2">{{ form.status() }}</td>
+                    <td>{{ form.title.label }}</td>
+                    <td class="p-2">{{ form.title() }}</td>
+                    <td class="p-2">{{ form.submit }}</td>
+                </tr>
+            </table>
+
+        </form>
+
+        {% if posts %}
+            <table class="table table-hover shadow table-bordered align-middle">
+                <thead>
+                <tr>
+                    <th class="text-bg-secondary" style="width:60px">ID</th>
+                    <th class="text-bg-secondary">合同名称</th>
+                    <th class="text-bg-secondary" style="width:150px">合同编号</th>
+                    <th class="text-bg-secondary" style="width:80px">状态</th>
+                    <th class="text-bg-secondary" style="width:80px">录入</th>
+                    <th class="text-bg-secondary" style="width:220px">处理时间</th>
+                    <th class="text-bg-secondary" style="width:200px">操作</th>
+                </tr>
+                </thead>
+
+                {% for post in posts %}
+                    <tr>
+                        <td>{{ post.id }}</td>
+                        <td>{{ post.title }}</td>
+                        <td>{{ post.ordernumber }}</td>
+                        <td>{{ post.status }}</td>
+                        <td>{{ post.iuser_id | replace_username }}</td>
+                        <td>{{ post.update_datetime }}</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.order_audit',oid=post.id) }}">合同审核</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.files_list',oid=post.id) }}">附件审核</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <div class="row">
+                <div class="page-footer">{{ render_pagination(pagination,align='center') }}</div>
+            </div>
+
+        {% else %}
+            <div class="tip"><h5>没有数据.</h5></div>
+        {% endif %}
+
     </div>
-        <div class="col-md-6">
-            <form action="" role="form" method="post">
-                {{ form.csrf_token }}
-                <fieldset>
-                    <legend>查询条件</legend>
-                    <div class="form-group">
-                        {{ form.status.label }}
-                        {{ form.status() }}
-                    </div>
-                    <div class="form-group">
-                        {{ form.title.label }}
-                        {{ form.title() }}
-                    </div>
-                </fieldset>
-                {{ form.submit }}
-            </form>
-        </div>
-
-    </div>
-    <div class="row">
-        <div class="col-md-10">
-{% if posts %}
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th style="width:60px">ID</th>
-        <th >合同名称</th>
-        <th style="width:150px">合同编号</th>
-        <th style="width:80px">状态</th>
-        <th style="width:80px">录入</th>
-        <th style="width:220px">处理时间</th>
-        <th style="width:200px">操作</th>
-    </tr>
-    </thead>
-
-    {% for post in posts %}
-    <tr>
-        <td>{{ post.id }}</td>
-        <td>{{ post.title }}</td>
-        <td>{{ post.ordernumber }}</td>
-        <td>{{ post.status }}</td>
-        <td>{{ post.iuser_id | replace_username }}</td>
-        <td>{{ post.update_datetime }}</td>
-        <td>
-            <span class="badge"><a href="{{ url_for('order_audit.order_audit',oid=post.id) }}">
-                    合同审核
-                </a></span>
-            <span class="badge"><a href="{{ url_for('order_audit.files_list',oid=post.id) }}">
-                    附件审核
-                </a></span>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-        </div> </div>
-        <div class="row">
-        <div class="page-footer">{{ render_pagination(pagination) }}</div></div>
-
-{% else %}
-<div class="tip"><h5>没有数据.</h5></div>
-{% endif %}
-
-       </div>
 {% endblock %}

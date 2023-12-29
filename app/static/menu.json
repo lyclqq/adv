@@ -123,7 +123,7 @@
 		"id": 10,
 		"sublist": [{
 			"subname": "报表生成",
-			"sublink": "/report/articleadmin"
+			"sublink": "/report/test"
 		}, {
 			"subname": "统计图",
 			"sublink": "/report/articlecreate_select"

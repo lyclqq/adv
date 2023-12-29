@@ -15,7 +15,7 @@ class WordsForm(FlaskForm):
                    "placeholder":"备注"})
     fee_date  = DateField('发生日期', format='%Y-%m-%d',validators=[DataRequired('日期不能为空')],
                             render_kw={'class': 'form-control','height':'60px'})
-    submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
+    submit = SubmitField('提交',render_kw={'class':'form-control'})
 
 class Fee2Form(FlaskForm):
 
@@ -29,7 +29,7 @@ class Fee2Form(FlaskForm):
                    "placeholder":"备注"})
     fee_date  = DateField('发生日期', format='%Y-%m-%d',validators=[DataRequired('日期不能为空')],
                             render_kw={'class': 'form-control','height':'60px'})
-    submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
+    submit = SubmitField('提交',render_kw={'class':'form-control'})
 
 class Fee3Form(FlaskForm):
 
@@ -59,7 +59,7 @@ class Fee5Form(FlaskForm):
                    "placeholder":"备注"})
     fee_date  = DateField('发生日期', format='%Y-%m-%d',validators=[DataRequired('日期不能为空')],
                             render_kw={'class': 'form-control','height':'60px'})
-    submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
+    submit = SubmitField('提交',render_kw={'class':'form-control'})
 
 class AuditForm(FlaskForm):
     notes=TextAreaField(label='备注:',

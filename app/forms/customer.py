@@ -22,6 +22,6 @@ class CustomerForm(FlaskForm):
         widget=widgets.TextInput(),
         render_kw={'class': 'form-control',
                    "placeholder":"输入客户说明"})
-    submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
+    submit = SubmitField('提交',render_kw={'class':'form-control'})
 
 
