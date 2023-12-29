@@ -46,28 +46,37 @@ def fee5_input(oid):
     form = Fee5Form()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if form.validate_on_submit():
-        fee5 = Fee5()
-        fee5.order_id = oid
-        fee5.feedate = form.fee_date.data
-        fee5.status = 'stay'
-        fee5.fee = form.fee.data
-        fee5.scale = form.scale.data
-        fee5.prize = form.prize.data
-        fee5.iuser_id = uid
-        total = order.Fee51 + form.fee.data
-        fee5.notes = form.notes.data
+        try:
+            fee2_sum=0
+            fee5 = Fee5()
+            fee5.order_id = oid
+            fee5.status = 'stay'
+            fee5.iuser_id = uid
+            db.session.add(fee5)
+            for item in request.form:
+                if item[:5]=='Fee2_':
+                    str_fee2id=item[5:]
+                    fee2=Fee2.query.filter(Fee2.id==str_fee2id).first()
+                    if fee2 is not None and fee2.status=='on' and fee2.fee5_id==0:
+                        fee2_sum=fee2_sum+fee2.fee
+                        fee2.fee5_id=fee5.id
+                        db.session.add(fee2)
+                    print('fee2id='+str_fee2id)
 
-        if total >= 0:
-            try:
-                db.session.add(fee5)
-                db.session.commit()
-                flash('录入成功.', 'success')
-                ins_logs(uid, '绩效金额录入,id=' + str(oid), type='fee5')
-            except Exception as e:
-                current_app.logger.error(e)
-                flash('录入失败')
-        else:
-            flash('余额不能小于0!')
-    result_fee5=Fee5.query.filter(Fee5.order_id==oid).all()
+            fee5.feedate = form.fee_date.data
+            fee5.fee = form.fee.data
+            fee5.scale = form.scale.data
+            fee5.prize = form.prize.data
+            fee5.notes = form.notes.data
+            db.session.add(fee5)
+            db.session.commit()
+            flash('录入成功.', 'success')
+            ins_logs(uid, '绩效金额录入,id=' + str(oid), type='fee5')
+
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('录入失败')
+
     result_fee2 = Fee2.query.filter(Fee2.order_id == oid,Fee2.status=='on').all()
-    return render_template('fee5/fee5_input.html', form=form, order=order, result_fee5=result_fee5, result_fee2=result_fee2)
+    result_fee5=Fee5.query.filter(Fee5.order_id==oid).all()
+    return render_template('fee5/fee5_input.html', form=form, order=order, result_fee2=result_fee2,result_fee5=result_fee5)

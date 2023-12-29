@@ -1,6 +1,7 @@
 {% extends '/base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
+
 <ul class="breadcrumb top_row">
     <li><a href="{{ url_for('index') }}">Home</a></li>
     <li><a href="{{ url_for('fee2.order_search_admin') }}">合同查询</a></li>
@@ -46,11 +47,45 @@
         </table>
     </div>
 </div>
+<form action="" role="form" method="post">
+    {{ form.csrf_token }}
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <td colspan="10">刊登金额明细</td>
+                <tr>
+                    <td style="width:60px">id</td>
+                    <td style="width:240px">输入时间</td>
+                    <td>金额</td>
+                    <td style="width:80px">状态</td>
+                    <td style="width:100px">绩效id</td>
+                    <td style="width:180px">发生日期</td>
+                    <td style="width:80px">选定</td>
+                </tr>
+                </thead>
+                <tbody>
 
-<div class="row">
-    <div class="col-md-8">
-        <form action="" role="form" method="post">
-            {{ form.csrf_token }}
+                {% for item in result_fee2 %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.create_datetime }}</td>
+                    <td>{{ item.fee}}</td>
+                    <td>{{ item.status }}</td>
+                    <td>{{ item.fee5_id }}</td>
+                    <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+                    <td><input name="Fee2_{{ item.id }}" type="checkbox" value="{{ item.fee }}"/></td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+
             <fieldset>
                 <table>
                     <tr>
@@ -101,14 +136,35 @@
                         <td colspan="3">{{ form.notes() }}</td>
                     </tr>
                     <tr>
-                        <td colspan="4">{{ form.submit }}</td>
+                        <td colspan="2">{{ form.submit }}</td>
+                        <td><input type="button" id="btn" name="btn" value="计算" onclick="show()"/></td>
                     </tr>
                 </table>
             </fieldset>
 
-        </form>
+        </div>
     </div>
-</div>
+</form>
+
+<script>
+$("#btn").click(function() {
+    var sum=0
+    $('form input').each(function(index,element){
+        if (element.name.slice(0,5)=='Fee2_')
+        {
+            if (element.checked==true)
+            {
+                sum=sum+parseFloat(element.value);
+            }
+
+        }
+    });
+    alert('sum is '+sum);
+    $('#fee').prop('value',sum)
+});
+
+
+</script>
 <div class="row">
     <div class="col-md-11">
         <table class="table table-bordered">
@@ -129,8 +185,8 @@
             </tr>
             </thead>
             <tbody>
-            {% if result_fee5.items %}
-            {% for item in result_fee5.items %}
+            {% if result_fee5 %}
+            {% for item in result_fee5 %}
             <tr>
                 <td>{{ item.id }}</td>
                 <td>{{ item.create_datetime }}</td>
@@ -153,4 +209,5 @@
         </table>
     </div>
 </div>
+
 {% endblock %}
