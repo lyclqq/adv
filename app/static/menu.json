@@ -36,14 +36,11 @@
 			"subname": "合同查询",
 			"sublink": "/fee345/order_search_admin"
 		}, {
-			"subname": "绩效查询",
-			"sublink": "/fee345/list/1"
-		}, {
 			"subname": "到帐查询",
-			"sublink": "/fee345/articlecreate_select"
+			"sublink": "/fee345/fee4_search_admin"
 		}, {
 			"subname": "发票查询",
-			"sublink": "/fee345/articlecreate_select"
+			"sublink": "/fee345/fee3_search_admin"
 		}]
 	},
 	{
@@ -112,16 +109,13 @@
 		"id": 9,
 		"sublist": [{
 			"subname": "合同查询",
-			"sublink": "/article/articleadmin"
-		}, {
-			"subname": "绩效查询",
-			"sublink": "/article/articlecreate_select"
+			"sublink": "/fee345/order_search_audit"
 		}, {
 			"subname": "到帐查询",
-			"sublink": "/paid/list/1"
+			"sublink": "/fee345/fee4_search_audit"
 		}, {
 			"subname": "发票查询",
-			"sublink": "/article/articlecreate_select"
+			"sublink": "/fee345/fee3_search_audit"
 		}]
 	},
 	{

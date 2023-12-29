@@ -37,6 +37,7 @@ class Orders(db.Model,Basecls):
     Fee51 = db.Column(db.Float, default=0)
     Fee61 = db.Column(db.Float, default=0)
     Fee22 = db.Column(db.Float, default=0)
+    Fee32 = db.Column(db.Float, default=0)
     Fee42 = db.Column(db.Float, default=0)
     Fee52=db.Column(db.Float,default=0)
     Fee62 = db.Column(db.Float, default=0)

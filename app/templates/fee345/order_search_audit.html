@@ -3,7 +3,7 @@
 {% block content %}
 <ul class="breadcrumb top_row">
     <li><a href="{{ url_for('index') }}">Home</a></li>
-    <li class="active">合同管理</li>
+    <li class="active">合同查询</li>
 </ul>
 
 <div class="container">
@@ -29,7 +29,7 @@
 
 </div>
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-11">
         {% if posts %}
         <table class="table table-striped">
             <thead>
@@ -37,10 +37,11 @@
                 <th style="width:60px">ID</th>
                 <th>合同名称</th>
                 <th style="width:150px">合同编号</th>
-                <th style="width:100px">状态</th>
-                <th style="width:120px">刊登金额</th>
-                <th style="width:220px">处理时间</th>
-                <th style="width:80px">操作</th>
+                <th style="width:80px">状态</th>
+                <th style="width:110px">到帐金额</th>
+                <th style="width:110px">发票金额</th>
+                <th style="width:150px">处理时间</th>
+                <th style="width:200px">操作</th>
             </tr>
             </thead>
 
@@ -50,15 +51,18 @@
                 <td>{{ post.title }}</td>
                 <td>{{ post.ordernumber }}</td>
                 <td>{{ post.status }}</td>
-                <td>{{ post.Fee21 }}</td>
-                <td>{{ post.update_datetime }}</td>
+                <td>{{ post.Fee41 }}</td>
+                <td>{{ post.Fee31 }}</td>
+                <td>{{ post.update_datetime | short_time }}</td>
                 <td>
                     {% if post.status=="己审" or post.status=="完成": %}
-                    <span class="badge"><a href="{{ url_for('fee2.fee2_audit',oid=post.id) }}">
-                    审核
-                </a></span>
+                    <span class="badge"><a href="{{ url_for('fee345.fee4_audit',oid=post.id) }}">
+                    到帐审核</a></span>
+                    <span class="badge"><a href="{{ url_for('fee345.fee3_audit',oid=post.id) }}">
+                    发票审核</a></span>
                     {% else :%}
-                    <span class="badge">审核</span>
+                    <span class="badge">到帐输入</span>
+                    <span class="badge">发票输入</span>
                     {% endif %}
                 </td>
             </tr>

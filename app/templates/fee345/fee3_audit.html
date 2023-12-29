@@ -4,7 +4,7 @@
 <ul class="breadcrumb top_row">
     <li><a href="{{ url_for('index') }}">Home</a></li>
     <li><a href="{{ url_for('fee2.order_search_audit') }}">合同查询</a></li>
-    <li class="active">刊登金额审核</li>
+    <li class="active">发票金额审核</li>
 </ul>
 <div class="row">
     <div class="col-md-8">
@@ -18,25 +18,25 @@
                 <td>合同编号</td>
                 <td style="width:220px;">{{ order.ordernumber }}</td>
                 <td style="width:240px;">合同金额:{{ order.Fee11 }}</td>
-                <td>合同字数:{{ order.wordnumber }}</td>
+                <td>刊登金额余额：{{ order.Fee21 }}</td>
             </tr>
             <tr>
                 <td>签约日期:</td>
                 <td>{{ order.contract_date }}</td>
                 <td style="width:150px;">经办人:{{ order.name }}</td>
-                <td>刊登金额当月发生额：{{ order.Fee22 }}</td>
+                <td>发票金额余额：{{ order.Fee31 }}</td>
             </tr>
             <tr>
                 <td>所属部门:</td>
                 <td>{{ order.name }}</td>
                 <td>合同状态:{{ order.status }}</td>
-                <td>刊登金额余额：{{ order.Fee21 }}</td>
+                <td>发票金额当月发生额：{{ order.Fee32 }}</td>
             </tr>
             <tr>
                 <td>录入员:{{ order.iuser_id | replace_username }}</td>
                 <td>审核员:{{ order.cuser_id | replace_username }}</td>
                 <td>刊登面积：{{ order.area }}</td>
-                <td>己发字数:{{ order.wordcount }}</td>
+                <td>到帐金额：{{ order.Fee41 }}</td>
             </tr>
 
 
@@ -58,7 +58,7 @@
                 <td style="width:80px">状态</td>
                 <td style="width:95px">录入</td>
                 <td style="width:95px">审核</td>
-                <td style="width:90px">绩效ID</td>
+                <td style="width:90px">附件</td>
                 <td style="width:160px">发生日期</td>
                 <td style="width:130px">审核</td>
             </tr>
@@ -74,14 +74,18 @@
                 <td>{{ item.status }}</td>
                 <td>{{ item.iuser_id | replace_username }}</td>
                 <td>{{ item.cuser_id | replace_username }}</td>
-                <td>{{ item.fee5_id }}</td>
+                <td>{% if item.filename is none %} None {% else %} <a href="/files/{{ item.path}}{{item.filename}}"
+                                                                      target="_blank">file</a> {% endif %}
+                </td>
                 <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
                 <td>
                     {% if item.status=="stay" : %}
-                    <span class="badge"><a href="{{ url_for('fee2.fee2_audit_on',fid=item.id,oid=item.order_id) }}" target="_blank">
+                    <span class="badge"><a href="{{ url_for('fee345.fee3_audit_on',fid=item.id,oid=item.order_id) }}"
+                                           target="_blank">
                     同意
                 </a></span>
-                    <span class="badge"><a href="{{ url_for('fee2.fee2_audit_off',fid=item.id,oid=item.order_id) }}" target="_blank">
+                    <span class="badge"><a href="{{ url_for('fee345.fee3_audit_off',fid=item.id,oid=item.order_id) }}"
+                                           target="_blank">
                     拒绝
                 </a></span>
                     {% else :%}

@@ -140,7 +140,7 @@ def fee2_audit_on(oid,fid):
             fee2.status='on'
             fee2.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核刊登金额同意，orderid=' + oid, type='contract')
+            ins_logs(uid, '审核刊登金额同意，orderid=' + oid, type='fee2')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
@@ -159,7 +159,7 @@ def fee2_audit_off(oid,fid):
             fee2.status='off'
             fee2.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核刊登金额拒绝，fee2id=' + fid, type='contract')
+            ins_logs(uid, '审核刊登金额拒绝，fee2id=' + fid, type='fee2')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
