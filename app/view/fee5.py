@@ -10,7 +10,7 @@ from app.models.contract import Customers, Orders
 from app.models.other import Files
 from app.models.bill import Wordnumbers, Fee1, Fee2, Fee3, Fee4, Fee5
 from app.forms.customer import CustomerForm
-from app.forms.fee import Fee2Form, AuditForm, Fee3Form
+from app.forms.fee import Fee2Form, AuditForm, Fee3Form,Fee5Form
 from app.forms.order import OrderForm, OrderSearchForm, OrderupfileForm
 import datetime
 
@@ -37,3 +37,37 @@ def order_search_admin():
     # pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
     result = pagination.items
     return render_template('fee5/order_search_admin.html', page=page, pagination=pagination, posts=result, form=form)
+
+# 绩效金额输入
+@fee5View.route('/fee5_input/<int:oid>', methods=["GET", "POST"])
+@is_login
+def fee5_input(oid):
+    uid = session.get('user_id')
+    form = Fee5Form()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        fee5 = Fee5()
+        fee5.order_id = oid
+        fee5.feedate = form.fee_date.data
+        fee5.status = 'stay'
+        fee5.fee = form.fee.data
+        fee5.scale = form.scale.data
+        fee5.prize = form.prize.data
+        fee5.iuser_id = uid
+        total = order.Fee51 + form.fee.data
+        fee5.notes = form.notes.data
+
+        if total >= 0:
+            try:
+                db.session.add(fee5)
+                db.session.commit()
+                flash('录入成功.', 'success')
+                ins_logs(uid, '绩效金额录入,id=' + str(oid), type='fee5')
+            except Exception as e:
+                current_app.logger.error(e)
+                flash('录入失败')
+        else:
+            flash('余额不能小于0!')
+    result_fee5=Fee5.query.filter(Fee5.order_id==oid).all()
+    result_fee2 = Fee2.query.filter(Fee2.order_id == oid,Fee2.status=='on').all()
+    return render_template('fee5/fee5_input.html', form=form, order=order, result_fee5=result_fee5, result_fee2=result_fee2)

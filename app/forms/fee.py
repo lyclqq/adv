@@ -44,6 +44,23 @@ class Fee3Form(FlaskForm):
                             render_kw={'class': 'form-control','height':'60px'})
     submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
 
+class Fee5Form(FlaskForm):
+
+    fee =FloatField('发生金额',validators=[NumberRange(min=-9999999, max=9999999, message='金额只能为-9999999至9999999')],
+                         render_kw={'class': 'form-control', 'placeholder': '金额只能为-9999999至9999999'},default=0)
+    scale = FloatField('奖金百分比',
+                     validators=[NumberRange(min=0, max=100, message='只能为0至100')],
+                     render_kw={'class': 'form-control', 'placeholder': '只能为0至100'}, default=0)
+    prize =FloatField('奖金额',validators=[NumberRange(min=-999999, max=999999, message='金额只能为-999999至999999')],
+                         render_kw={'class': 'form-control', 'placeholder': '金额只能为-999999至999999'},default=0)
+    notes=TextAreaField(label='备注:',
+        widget=widgets.TextInput(),
+        render_kw={'class': 'form-control',
+                   "placeholder":"备注"})
+    fee_date  = DateField('发生日期', format='%Y-%m-%d',validators=[DataRequired('日期不能为空')],
+                            render_kw={'class': 'form-control','height':'60px'})
+    submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
+
 class AuditForm(FlaskForm):
     notes=TextAreaField(label='备注:',
         widget=widgets.TextInput(),
