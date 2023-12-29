@@ -79,3 +79,13 @@ def fee5_input(oid):
     result_fee2 = Fee2.query.filter(Fee2.order_id == oid,Fee2.status=='on',Fee2.fee5_id==0).all()
     result_fee5=Fee5.query.filter(Fee5.order_id==oid).order_by(Fee5.id.desc()).all()
     return render_template('fee5/fee5_input.html', form=form, order=order, result_fee2=result_fee2,result_fee5=result_fee5)
+
+#发票金额列表
+@fee5View.route('/fee5_search_admin')
+@is_login
+def fee5_search_admin():
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    pagerows = current_app.config['PAGEROWS']
+    pagination = Fee5.query.order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee5/fee5_search_admin.html', pagination=pagination,page=page)
