@@ -61,41 +61,8 @@ def order_search_audit():
     result = pagination.items
     return render_template('fee345/order_search_audit.html', page=page, pagination=pagination, posts=result, form=form)
 
-# 刊登金额输入
-@fee345View.route('/fee5_input/<int:oid>', methods=["GET", "POST"])
-@is_login
-def fee5_input(oid):
-    uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
-    form = Fee2Form()
-    order = Orders.query.filter(Orders.id == oid).first_or_404()
-    if form.validate_on_submit():
-        fee2 = Fee2()
-        fee2.order_id = oid
-        fee2.feedate = form.fee_date.data
-        fee2.status = 'stay'
-        fee2.fee = form.fee.data
-        fee2.area = form.area.data
-        fee2.iuser_id = uid
-        total = order.Fee21 + form.fee.data
-        fee2.notes = form.notes.data
 
-        if total >= 0:
-            try:
-                db.session.add(fee2)
-                db.session.commit()
-                flash('录入成功.', 'success')
-                ins_logs(uid, '刊登金额录入,id=' + str(oid), type='fee2')
-            except Exception as e:
-                current_app.logger.error(e)
-                flash('录入失败')
-        else:
-            flash('余额不能小于0!')
-    pagination = Fee2.query.filter(Fee2.order_id == oid).order_by(Fee2.id.desc()).paginate(page, per_page=8)
-    return render_template('fee345/fee3_input.html', form=form, order=order, pagination=pagination, page=page)
-
-
-# 刊登金额输入
+# 到帐金额输入
 @fee345View.route('/fee4_input/<int:oid>', methods=["GET", "POST"])
 @is_login
 def fee4_input(oid):

@@ -128,5 +128,16 @@
 			"subname": "统计图",
 			"sublink": "/report/articlecreate_select"
 		}]
+	},
+	{
+		"menuname": "绩效管理",
+		"id": 10,
+		"sublist": [{
+			"subname": "合同查询",
+			"sublink": "/fee5/order_search_admin"
+		}, {
+			"subname": "绩效查询",
+			"sublink": "/fee5/fee5_search_admin"
+		}]
 	}
 ]
