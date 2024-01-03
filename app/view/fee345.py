@@ -266,7 +266,7 @@ def fee3_audit_off(oid,fid):
 @is_login
 def fee4_audit_on(oid,fid):
     uid = session.get('user_id')
-    fee4=Fee4.query.filter(Fee3.id==fid).first_or_404()
+    fee4=Fee4.query.filter(Fee4.id==fid).first_or_404()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     total=order.Fee41+fee4.fee
     if fee4.status=='stay' and total>=0:

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    <div class="m-2 p-3 ">
+        <ul class="breadcrumb top_row">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('fee2.order_search_audit') }}">合同查询</a></li>
+            <li class="active">绩效金额审核</li>
+        </ul>
+        <br>
+        <table class="table table-hover shadow table-bordered align-middle">
+            <tbody>
+            <tr>
+                <td style="width:180px;">合同名称</td>
+                <td colspan="3">{{ order.title }}</td>
+            </tr>
+            <tr>
+                <td>合同编号</td>
+                <td style="width:220px;">{{ order.ordernumber }}</td>
+                <td style="width:240px;">合同金额:{{ order.Fee11 }}</td>
+                <td>刊登金额余额：{{ order.Fee21 }}</td>
+            </tr>
+            <tr>
+                <td>签约日期:</td>
+                <td>{{ order.contract_date }}</td>
+                <td style="width:150px;">经办人:{{ order.name }}</td>
+                <td>发票金额：{{ order.Fee31 }}</td>
+            </tr>
+            <tr>
+                <td>所属部门:</td>
+                <td>{{ order.name }}</td>
+                <td>合同状态:{{ order.status }}</td>
+                <td>到帐金额余额：{{ order.Fee41 }}</td>
+            </tr>
+            <tr>
+                <td>录入员:{{ order.iuser_id | replace_username }}</td>
+                <td>审核员:{{ order.cuser_id | replace_username }}</td>
+                <td>己发奖金：{{ order.Fee61 }}</td>
+                <td>绩效余额：{{ order.Fee51 }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table table-hover shadow table-bordered align-middle">
+            <thead>
+            <tr>
+                <td class="text-bg-secondary" style="width:60px">id</td>
+                <td class="text-bg-secondary" style="width:240px">输入时间</td>
+                <td class="text-bg-secondary">备注</td>
+                <td class="text-bg-secondary" style="width:120px">发生额</td>
+                <td class="text-bg-secondary" style="width:80px">状态</td>
+                <td class="text-bg-secondary" style="width:95px">录入</td>
+                <td class="text-bg-secondary" style="width:95px">审核</td>
+                <td class="text-bg-secondary" style="width:80px">比例</td>
+                <td class="text-bg-secondary" style="width:80px">奖金</td>
+                <td class="text-bg-secondary" style="width:160px">发生日期</td>
+                <td class="text-bg-secondary" style="width:150px">审核</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% if pagination.items %}
+                {% for item in pagination.items %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.create_datetime | short_time}}</td>
+                        <td>{{ item.notes }}</td>
+                        <td>{{ item.fee }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>{{ item.iuser_id | replace_username }}</td>
+                        <td>{{ item.cuser_id | replace_username }}</td>
+                        <td>{{ item.scale }}</td>
+                        <td>{{ item.prize }}</td>
+                        <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% if item.status=="stay" %}
+                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee5.fee5_audit_on',fid=item.id,oid=item.order_id) }}"
+                                   target="_blank">同意</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee5.fee5_audit_off',fid=item.id,oid=item.order_id) }}"
+                                   target="_blank">拒绝</a>
+                            {% else %}
+                                <span class="badge">同意</span>
+                                <span class="badge">拒绝</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="11">{{ render_pagination(pagination,align='center') }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11">没有查到相关数据</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

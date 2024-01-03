@@ -123,3 +123,48 @@ def fee5_audit(oid):
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     pagination = Fee5.query.filter(Fee5.order_id==oid).order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee5/fee5_audit.html', order=order,page=page,pagination=pagination)
+
+#绩效金额审核同意
+@fee5View.route('/fee5_audit_on/<int:oid>/<int:fid>')
+@is_login
+def fee5_audit_on(oid,fid):
+    uid = session.get('user_id')
+    fee5=Fee5.query.filter(Fee5.id==fid).first_or_404()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    total=order.Fee51+fee5.fee
+    if fee5.status=='stay' and total>=0:
+        try:
+            order.update_datetime=datetime.datetime.now()
+            order.Fee51=total
+            order.Fee52=order.Fee52+fee5.fee
+            order.Fee61=order.Fee61+fee5.prize
+            db.session.add(order)
+            fee5.status='on'
+            fee5.cuser_id=uid
+            db.session.commit()
+            ins_logs(uid, '审核绩效金额同意，orderid=' + oid, type='fee5')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    else:
+        flash('不符合条件！')
+    return redirect(url_for('fee5.fee5_audit',oid=oid))
+
+#绩效金额审核拒绝
+@fee5View.route('/fee5_audit_off/<int:oid>/<int:fid>')
+@is_login
+def fee5_audit_off(oid,fid):
+    uid = session.get('user_id')
+    fee5=Fee5.query.filter(Fee5.id==fid).first_or_404()
+    if fee5.status=='stay' :
+        try:
+            fee5.status='off'
+            fee5.cuser_id=uid
+            db.session.commit()
+            ins_logs(uid, '审核到帐金额拒绝，fee5id=' + fid, type='fee5')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    else:
+        flash('不符合条件！')
+    return redirect(url_for('fee5.fee5_audit',oid=oid))
