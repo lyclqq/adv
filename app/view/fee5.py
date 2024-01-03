@@ -168,3 +168,13 @@ def fee5_audit_off(oid,fid):
     else:
         flash('不符合条件！')
     return redirect(url_for('fee5.fee5_audit',oid=oid))
+
+#到帐金额查询
+@fee5View.route('/fee5_search_audit')
+@is_login
+def fee5_search_audit():
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    pagerows = current_app.config['PAGEROWS']
+    pagination = Fee5.query.order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee5/fee5_search_audit.html', pagination=pagination,page=page)
