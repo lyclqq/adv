@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    <div class="m-2 p-3 ">
+        <ul class="breadcrumb top_row">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="active">绩效金额查询</li>
+        </ul>
+        <br>
+
+        <table class="table table-hover shadow table-bordered align-middle">
+            <thead>
+            <tr>
+                <td class="text-bg-secondary" style="width:60px">id</td>
+                <td class="text-bg-secondary" style="width:240px">输入时间</td>
+                <td class="text-bg-secondary">合同名称</td>
+                <td class="text-bg-secondary" style="width:120px">发生额</td>
+                <td class="text-bg-secondary" style="width:80px">状态</td>
+                <td class="text-bg-secondary" style="width:80px">奖金</td>
+                <td class="text-bg-secondary" style="width:100px">录入</td>
+                <td class="text-bg-secondary" style="width:100px">审核</td>
+                <td class="text-bg-secondary" style="width:160px">发生日期</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% if pagination.items %}
+                {% for item in pagination.items %}
+                    <tr title="{{ item.notes }}">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.create_datetime }}</td>
+                        <td>{{ item.order_id | replace_ordername }}</td>
+                        <td>{{ item.fee }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>{{ item.prize }}</td>
+                        <td>{{ item.iuser_id | replace_username }}</td>
+                        <td>{{ item.cuser_id | replace_username }}</td>
+                        <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+                    </tr>
+                {% endfor %}
+
+            {% else %}
+                <tr>
+                    <td colspan="10">没有查到相关数据</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="page-footer">{{ render_pagination(pagination,align='center') }}</div>
+        </div>
+    </div>
+{% endblock %}

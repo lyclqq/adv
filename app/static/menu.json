@@ -131,13 +131,24 @@
 	},
 	{
 		"menuname": "绩效管理",
-		"id": 10,
+		"id": 11,
 		"sublist": [{
 			"subname": "合同查询",
 			"sublink": "/fee5/order_search_admin"
 		}, {
 			"subname": "绩效查询",
 			"sublink": "/fee5/fee5_search_admin"
+		}]
+	},
+	{
+		"menuname": "绩效审核",
+		"id": 12,
+		"sublist": [{
+			"subname": "合同查询",
+			"sublink": "/fee5/order_search_audit"
+		}, {
+			"subname": "绩效查询",
+			"sublink": "/fee5/fee5_search_audit"
 		}]
 	}
 ]
