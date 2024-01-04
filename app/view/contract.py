@@ -317,6 +317,10 @@ def fee1_input(oid):
     page = request.args.get('page', 1, type=int)
     form = Fee1Form()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if order.status != '己审' and order.status!='完成':
+        form.submit.render_kw={'class':'form-control','disabled':'true'}
+    else:
+        form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
         try:
             fee1 = Fee1()
