@@ -8,7 +8,7 @@
             <li class="active">字数输入</li>
         </ul>
         <br>
-        <table class="table table-hover shadow table-bordered align-middle">
+ <table class="table table-hover shadow table-bordered align-middle">
             <tbody>
             <tr>
                 <td style="width:180px;">合同名称</td>
@@ -16,9 +16,27 @@
             </tr>
             <tr>
                 <td>合同编号</td>
-                <td>{{ order.ordernumber }}</td>
-                <td>己发字数：{{ order.wordcount }}</td>
-                <td>合同字数：{{ order.wordnumber }}</td>
+                <td style="width:220px;">{{ order.ordernumber }}</td>
+                <td style="width:240px;">合同金额:{{ order.Fee11 }}</td>
+                <td>刊登金额余额：{{ order.Fee21 }}</td>
+            </tr>
+            <tr>
+                <td>签约日期:</td>
+                <td>{{ order.contract_date }}</td>
+                <td style="width:150px;">经办人:{{ order.name }}</td>
+                <td>发票金额：{{ order.Fee31 }}</td>
+            </tr>
+            <tr>
+                <td>所属部门:</td>
+                <td>{{ order.name }}</td>
+                <td>合同状态:{{ order.status }}</td>
+                <td>到帐金额当月发生额：{{ order.Fee42 }}</td>
+            </tr>
+            <tr>
+                <td>录入员:{{ order.iuser_id | replace_username }}</td>
+                <td>审核员:{{ order.cuser_id | replace_username }}</td>
+                <td>刊登面积：{{ order.area }}</td>
+                <td>到帐金额余额：{{ order.Fee41 }}</td>
             </tr>
             </tbody>
         </table>
@@ -28,11 +46,12 @@
             <thead>
             <tr>
                 <td class="text-bg-secondary" style="width:60px">id</td>
-                <td class="text-bg-secondary" style="width:240px">输入时间</td>
-                <td class="text-bg-secondary">发生额</td>
-                <td class="text-bg-secondary">状态</td>
-                <td class="text-bg-secondary">录入</td>
-                <td class="text-bg-secondary">审核</td>
+                <td class="text-bg-secondary" style="width:150px">输入时间</td>
+                <td class="text-bg-secondary" style="width:120px">发生额</td>
+                <td class="text-bg-secondary" >备注</td>
+                <td class="text-bg-secondary" style="width:100px">状态</td>
+                <td class="text-bg-secondary" style="width:100px">录入</td>
+                <td class="text-bg-secondary" style="width:100px">审核</td>
                 <td class="text-bg-secondary" style="width:180px">发生日期</td>
             </tr>
             </thead>
@@ -43,6 +62,7 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.create_datetime|short_time }}</td>
                         <td>{{ item.wordnumber }}</td>
+                        <td>{{ item.notes }}</td>
                         <td>{{ item.status }}</td>
                         <td>{{ item.iuser_id | replace_username }}</td>
                         <td>{{ item.cuser_id | replace_username }}</td>
@@ -50,11 +70,11 @@
                     </tr>
                 {% endfor %}
                 <tr>
-                    <td colspan="7">{{ render_pagination(pagination,align='center') }}</td>
+                    <td colspan="8">{{ render_pagination(pagination,align='center') }}</td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="7">没有查到相关数据</td>
+                    <td colspan="8">没有查到相关数据</td>
                 </tr>
             {% endif %}
             </tbody>
