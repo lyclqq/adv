@@ -8,17 +8,35 @@
             <li class="active">发票金额输入</li>
         </ul>
 
-        <table class="table table-hover shadow table-bordered align-middle">
+ <table class="table table-hover shadow table-bordered align-middle">
             <tbody>
             <tr>
-                <td colspan="2">合同名称:{{ order.title }}</td>
-                <td colspan="2">合同编号:{{ order.ordernumber }}</td>
+                <td style="width:180px;">合同名称</td>
+                <td colspan="3">{{ order.title }}</td>
             </tr>
             <tr>
+                <td>合同编号</td>
+                <td style="width:220px;">{{ order.ordernumber }}</td>
+                <td style="width:240px;">合同金额:{{ order.Fee11 }}</td>
+                <td>刊登金额余额：{{ order.Fee21 }}</td>
+            </tr>
+            <tr>
+                <td>签约日期:</td>
+                <td>{{ order.contract_date }}</td>
+                <td style="width:150px;">经办人:{{ order.name }}</td>
                 <td>发票金额：{{ order.Fee31 }}</td>
-                <td>到帐金额：{{ order.Fee41 }}</td>
-                <td>刊登金额：{{ order.Fee21 }}</td>
-                <td>合同金额：{{ order.Fee11 }}</td>
+            </tr>
+            <tr>
+                <td>所属部门:</td>
+                <td>{{ order.name }}</td>
+                <td>合同状态:{{ order.status }}</td>
+                <td>发票金额当月发生额：{{ order.Fee32 }}</td>
+            </tr>
+            <tr>
+                <td>录入员:{{ order.iuser_id | replace_username }}</td>
+                <td>审核员:{{ order.cuser_id | replace_username }}</td>
+                <td>刊登面积：{{ order.area }}</td>
+                <td>到帐金额余额：{{ order.Fee41 }}</td>
             </tr>
             </tbody>
         </table>
@@ -27,8 +45,9 @@
             <thead>
             <tr>
                 <td class="text-bg-secondary" style="width:60px">id</td>
-                <td class="text-bg-secondary" style="width:240px">输入时间</td>
-                <td class="text-bg-secondary">发生额</td>
+                <td class="text-bg-secondary" style="width:150px">输入时间</td>
+                <td class="text-bg-secondary" style="width:120px">发生额</td>
+                <td class="text-bg-secondary">备注</td>
                 <td class="text-bg-secondary" style="width:80px">状态</td>
                 <td class="text-bg-secondary" style="width:80px">附件</td>
                 <td class="text-bg-secondary" style="width:120px">录入</td>
@@ -43,6 +62,7 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.create_datetime|short_time }}</td>
                         <td>{{ item.fee }}</td>
+                        <td>{{ item.notes }}</td>
                         <td>{{ item.status }}</td>
                         <td>{% if item.filename is none %} None {% else %} <a href="/files/{{ item.path }}{{ item.filename }}"
                                                                               target="_blank">file</a> {% endif %}

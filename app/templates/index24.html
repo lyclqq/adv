@@ -49,7 +49,7 @@
                         let chart = echarts.init(document.getElementById('bar3'), 'white', {renderer: 'canvas'});
                         $.ajax({
                             type: "GET",
-                            url: "http://127.0.0.1:5000/report/barChart",
+                            url: "/report/barChart",
                             dataType: 'json',
                             success: function (result) {
                                 chart.setOption(result);
