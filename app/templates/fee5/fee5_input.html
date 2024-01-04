@@ -1,4 +1,4 @@
-{% extends '/base.html' %}
+{% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
 
@@ -198,7 +198,7 @@ $("#btn").click(function() {
             {% for item in result_fee5 %}
             <tr>
                 <td>{{ item.id }}</td>
-                <td>{{ item.create_datetime }}</td>
+                <td>{{ item.create_datetime|short_time }}</td>
                 <td>{{ item.notes}}</td>
                 <td>{{ item.fee}}</td>
                 <td>{{ item.status }}</td>

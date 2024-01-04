@@ -4,6 +4,9 @@ from pyecharts.faker import Faker
 from pyecharts.globals import CurrentConfig
 from pyecharts import options as opts
 from pyecharts.charts import Bar, Pie
+from sqlalchemy import func
+
+from app.models.contract import Orders
 
 # 关于 CurrentConfig，可参考 [基本使用-全局变量]
 CurrentConfig.GLOBAL_ENV = Environment(loader=FileSystemLoader("app/templates/pyecharts"))
@@ -18,12 +21,20 @@ def report_test():
 
 
 def bar_base() -> Bar:
+    sum11 = func.sum(Orders.Fee11).label('fee11')
+    sum41 = func.sum(Orders.Fee41).label('fee41')
+    fee_sum = Orders.query.with_entities(Orders.group_id, sum11, sum41).group_by(Orders.group_id).all()
+    #for f in fee_sum:
+    #    print(f.group_id, f.sum11, f.sum41)
+    x = ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子", "hehe"]
+    y1 = [5, 20, 36, 10, 75, 90, 44]
+    y2 = [15, 25, 16, 55, 48, 8, 60]
     c = (
         Bar()
-        .add_xaxis(["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子", "hehe"])
-        .add_yaxis("商家A", [5, 20, 36, 10, 75, 90, 44])
-        .add_yaxis("商家B", [15, 25, 16, 55, 48, 8, 60])
-        .set_global_opts(title_opts=opts.TitleOpts(title="Bar-基本示例", subtitle="我是副标题"))
+        .add_xaxis(x)
+        .add_yaxis("商家A", y1)
+        .add_yaxis("商家B", y2)
+        .set_global_opts(title_opts=opts.TitleOpts(title="Bar-基本示例", subtitle=""))
     )
     return c
 

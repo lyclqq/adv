@@ -25,7 +25,7 @@
                     <tr>
                         <td>{{ post.id }}</td>
                         <td><strong>{{ post.name }}</strong></td>
-                        <td>{{ post.create_datetime }}</td>
+                        <td>{{ post.create_datetime|short_time }}</td>
                         <td>{{ post.status }}</td>
                         <td>
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.customer_edit',cuid=post.id) }}">修改</a>
