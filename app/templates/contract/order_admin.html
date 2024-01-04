@@ -31,10 +31,10 @@
                     <th class="text-bg-secondary" style="width:60px">ID</th>
                     <th class="text-bg-secondary">合同名称</th>
                     <th class="text-bg-secondary" style="width:150px">合同编号</th>
-                    <th class="text-bg-secondary" style="width:100px">状态</th>
-                    <th class="text-bg-secondary" style="width:80px">录入</th>
-                    <th class="text-bg-secondary" style="width:220px">处理时间</th>
-                    <th class="text-bg-secondary" style="width:240px">操作</th>
+                    <th class="text-bg-secondary" style="width:80px">状态</th>
+                    <th class="text-bg-secondary" style="width:90px">录入</th>
+                    <th class="text-bg-secondary" style="width:150px">处理时间</th>
+                    <th class="text-bg-secondary" style="width:350px">操作</th>
                 </tr>
                 </thead>
 
@@ -45,13 +45,14 @@
                         <td>{{ post.ordernumber }}</td>
                         <td>{{ post.status }}</td>
                         <td>{{ post.iuser_id | replace_username }}</td>
-                        <td>{{ post.update_datetime|short_time }}</td>
+                        <td>{{ post.update_datetime | short_time}}</td>
                         <td>
                             {% if post.iuser_id == session.get("user_id") or session.get("type")=="admin" %}
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">修改</a>
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_show',oid=post.id) }}">查看</a>
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_upfiles',oid=post.id) }}">上传</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_submit',oid=post.id) }}" onclick="return confirm('Are you sure?');">提交</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.fee1_input',oid=post.id) }}">补录</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_submit',oid=post.id) }}" onclick="return confirm('Are you sure?');">提交</a>
                             {% else %}
                                 <span class="badge">修改</span>
                                 <span class="badge">查看</span>

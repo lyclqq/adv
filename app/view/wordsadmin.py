@@ -37,7 +37,7 @@ def order_search():
     result=pagination.items
     return render_template('wordsadmin/order_search.html', page=page, pagination=pagination, posts=result,form=form)
 
-#合同字数
+#合同字数输入
 @wordsadminView.route('/words_order/<int:oid>',methods=["GET","POST"])
 @is_login
 def words_order(oid):
@@ -45,6 +45,10 @@ def words_order(oid):
     page = request.args.get('page', 1, type=int)
     form=WordsForm()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if order.status != '己审' and order.status!='完成':
+        form.submit.render_kw={'class':'form-control','disabled':'true'}
+    else:
+        form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
         wordnumber=Wordnumbers()
         wordnumber.order_id=oid
@@ -69,7 +73,7 @@ def words_order(oid):
                                                                                 per_page=8)
     return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination,page=page)
 
-#出版字数
+#出版字数输入
 @wordsadminView.route('/words_publish/<int:oid>',methods=["GET","POST"])
 @is_login
 def words_publish(oid):
@@ -77,6 +81,10 @@ def words_publish(oid):
     page = request.args.get('page', 1, type=int)
     form=WordsForm()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if order.status != '己审' and order.status!='完成':
+        form.submit.render_kw={'class':'form-control','disabled':'true'}
+    else:
+        form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
         wordnumber=Wordnumbers()
         wordnumber.order_id=oid

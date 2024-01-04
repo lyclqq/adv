@@ -184,3 +184,58 @@ def customer_show(cuid):
     orderlist=Orders.query.filter(Orders.cutomer_id==cuid).all()
     return render_template('orderaudit/customer_show.html', customer=customer,posts=orderlist)
 
+#合同审核页
+@orderauditView.route('/fee1_audit/<int:oid>')
+@is_login
+def fee1_audit(oid):
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    pagerows = current_app.config['PAGEROWS']
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    pagination = Fee1.query.filter(Fee1.order_id==oid).order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('orderaudit/fee1_audit.html', order=order,page=page,pagination=pagination)
+
+#合同金额审核同意
+@orderauditView.route('/fee1_audit_on/<int:oid>/<int:fid>')
+@is_login
+def fee1_audit_on(oid,fid):
+    uid = session.get('user_id')
+    fee1=Fee1.query.filter(Fee1.id==fid).first_or_404()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    total=order.Fee11+fee1.fee
+    if fee1.status=='stay' and total>=0:
+        try:
+            order.update_datetime=datetime.datetime.now()
+            order.Fee11=total
+            db.session.add(order)
+            fee1.status='on'
+            fee1.cuser_id=uid
+            db.session.add(fee1)
+            db.session.commit()
+            ins_logs(uid, '审核合同金额同意，orderid=' + oid, type='orderaudit')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    else:
+        flash('不符合条件！')
+    return redirect(url_for('order_audit.fee1_audit',oid=oid))
+
+#合同金额审核不同意
+@orderauditView.route('/fee1_audit_off/<int:oid>/<int:fid>')
+@is_login
+def fee1_audit_off(oid,fid):
+    uid = session.get('user_id')
+    fee1=Fee1.query.filter(Fee1.id==fid).first_or_404()
+    if fee1.status=='stay' :
+        try:
+            fee1.status='off'
+            fee1.cuser_id=uid
+            db.session.commit()
+            ins_logs(uid, '审核合同金额不同意，orderid=' + oid, type='orderaudit')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('提交失败')
+    else:
+        flash('不符合条件！')
+    return redirect(url_for('order_audit.fee1_audit',oid=oid))
+

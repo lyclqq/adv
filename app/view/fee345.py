@@ -70,6 +70,10 @@ def fee4_input(oid):
     page = request.args.get('page', 1, type=int)
     form = Fee3Form()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if order.status != '己审' and order.status!='完成':
+        form.submit.render_kw={'class':'form-control','disabled':'true'}
+    else:
+        form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
         try:
             fee4 = Fee4()
@@ -116,6 +120,10 @@ def fee3_input(oid):
     page = request.args.get('page', 1, type=int)
     form = Fee3Form()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if order.status != '己审' and order.status!='完成':
+        form.submit.render_kw={'class':'form-control','disabled':'true'}
+    else:
+        form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
         try:
             fee3 = Fee3()
@@ -266,7 +274,7 @@ def fee3_audit_off(oid,fid):
 @is_login
 def fee4_audit_on(oid,fid):
     uid = session.get('user_id')
-    fee4=Fee4.query.filter(Fee3.id==fid).first_or_404()
+    fee4=Fee4.query.filter(Fee4.id==fid).first_or_404()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     total=order.Fee41+fee4.fee
     if fee4.status=='stay' and total>=0:

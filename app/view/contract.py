@@ -6,9 +6,11 @@ import os
 from functools import wraps
 from app.common import is_login,ins_logs
 from app import db
+from app.models.bill import Fee1
 from app.models.contract import Customers,Orders
 from app.models.other import Files
 from app.forms.customer import CustomerForm
+from app.forms.fee import Fee1Form
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
 import datetime
 
@@ -305,3 +307,36 @@ def order_upfiles(oid):
             flash('上传失败')
     orderfiles = Files.query.filter(Files.order_id == oid).all()
     return render_template('contract/order_upfile.html', order=order,form=form,posts=orderfiles)
+
+
+# 合同金额输入
+@contractView.route('/fee1_input/<int:oid>', methods=["GET", "POST"])
+@is_login
+def fee1_input(oid):
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    form = Fee1Form()
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if order.status != '己审' and order.status!='完成':
+        form.submit.render_kw={'class':'form-control','disabled':'true'}
+    else:
+        form.submit.render_kw = {'class': 'form-control'}
+    if form.validate_on_submit():
+        try:
+            fee1 = Fee1()
+            fee1.order_id = oid
+            fee1.status = 'stay'
+            fee1.iuser_id = uid
+            fee1.feedate = form.fee_date.data
+            fee1.fee = form.fee.data
+            fee1.notes = form.notes.data
+            db.session.add(fee1)
+            db.session.commit()
+            flash('录入成功.', 'success')
+            ins_logs(uid, '合同金额录入,id=' + str(oid), type='contract')
+
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('录入失败')
+    pagination = Fee1.query.filter(Fee1.order_id == oid).order_by(Fee1.id.desc()).paginate(page, per_page=8)
+    return render_template('contract/fee1_input.html', form=form, order=order, pagination=pagination,page=page)

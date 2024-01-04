@@ -4,9 +4,10 @@
     <div class="m-2 p-3 ">
         <ul class="breadcrumb top_row">
             <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('fee2.order_search_audit') }}">合同查询</a></li>
-            <li class="active">发票金额审核</li>
+            <li><a href="{{ url_for('contract_admin.order_admin') }}">合同查询</a></li>
+            <li class="active">合同金额输入</li>
         </ul>
+
         <table class="table table-hover shadow table-bordered align-middle">
             <tbody>
             <tr>
@@ -23,35 +24,34 @@
                 <td>签约日期:</td>
                 <td>{{ order.contract_date }}</td>
                 <td style="width:150px;">经办人:{{ order.name }}</td>
-                <td>发票金额余额：{{ order.Fee31 }}</td>
+                <td>发票金额：{{ order.Fee31 }}</td>
             </tr>
             <tr>
                 <td>所属部门:</td>
                 <td>{{ order.name }}</td>
                 <td>合同状态:{{ order.status }}</td>
-                <td>发票金额当月发生额：{{ order.Fee32 }}</td>
+                <td>到帐金额余额：{{ order.Fee41 }}</td>
             </tr>
             <tr>
                 <td>录入员:{{ order.iuser_id | replace_username }}</td>
                 <td>审核员:{{ order.cuser_id | replace_username }}</td>
-                <td>刊登面积：{{ order.area }}</td>
-                <td>到帐金额：{{ order.Fee41 }}</td>
+                <td>己发奖金：{{ order.Fee61 }}</td>
+                <td>绩效余额：{{ order.Fee51 }}</td>
             </tr>
             </tbody>
         </table>
+        <br>
         <table class="table table-hover shadow table-bordered align-middle">
             <thead>
             <tr>
                 <td class="text-bg-secondary" style="width:60px">id</td>
                 <td class="text-bg-secondary" style="width:240px">输入时间</td>
                 <td class="text-bg-secondary">备注</td>
-                <td class="text-bg-secondary" style="width:120px">发生额</td>
                 <td class="text-bg-secondary" style="width:80px">状态</td>
-                <td class="text-bg-secondary" style="width:95px">录入</td>
-                <td class="text-bg-secondary" style="width:95px">审核</td>
-                <td class="text-bg-secondary" style="width:90px">附件</td>
-                <td class="text-bg-secondary" style="width:160px">发生日期</td>
-                <td class="text-bg-secondary" style="width:130px">审核</td>
+                <td class="text-bg-secondary" style="width:80px">发生额</td>
+                <td class="text-bg-secondary" style="width:120px">录入</td>
+                <td class="text-bg-secondary" style="width:120px">审核</td>
+                <td class="text-bg-secondary" style="width:180px">发生日期</td>
             </tr>
             </thead>
             <tbody>
@@ -59,38 +59,50 @@
                 {% for item in pagination.items %}
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.create_datetime|short_time }}</td>
+                        <td>{{ item.create_datetime }}</td>
                         <td>{{ item.notes }}</td>
-                        <td>{{ item.fee }}</td>
                         <td>{{ item.status }}</td>
+                        <td>{{ item.fee }}</td>
                         <td>{{ item.iuser_id | replace_username }}</td>
                         <td>{{ item.cuser_id | replace_username }}</td>
-                        <td>{% if item.filename is none %} None {% else %} <a href="/files/{{ item.path }}{{ item.filename }}"
-                                                                              target="_blank">file</a> {% endif %}
-                        </td>
                         <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
-                        <td>
-                            {% if item.status=="stay" %}
-                                <a href="{{ url_for('fee345.fee3_audit_on',fid=item.id,oid=item.order_id) }}"
-                                   >同意</a>
-                                <a href="{{ url_for('fee345.fee3_audit_off',fid=item.id,oid=item.order_id) }}"
-                                   >拒绝</a>
-                            {% else %}
-                                <span class="badge">同意</span>
-                                <span class="badge">拒绝</span>
-                            {% endif %}
-                        </td>
                     </tr>
                 {% endfor %}
                 <tr>
-                    <td colspan="10">{{ render_pagination(pagination,align='center') }}</td>
+                    <td colspan="9">{{ render_pagination(pagination,align='center') }}</td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="10">没有查到相关数据</td>
+                    <td colspan="9">没有查到相关数据</td>
                 </tr>
             {% endif %}
             </tbody>
         </table>
+        <br>
+        <form action="" role="form" method="post" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <fieldset>
+                <legend>合同金额输入</legend>
+                <div class="form-control">
+                    {{ form.fee.label }}
+                    {{ form.fee() }}
+                    {% for message in form.fee.errors %}
+                        <small class="error">{{ message }}</small>
+                    {% endfor %}
+                </div>
+                <div class="form-control">
+                    {{ form.fee_date.label }}
+                    {{ form.fee_date() }}
+                    {% for message in form.fee_date.errors %}
+                        <small class="error">{{ message }}</small>
+                    {% endfor %}
+                </div>
+                <div class="form-control">
+                    {{ form.notes.label }}
+                    {{ form.notes() }}
+                </div>
+            </fieldset>
+            {{ form.submit }}
+        </form>
     </div>
 {% endblock %}
