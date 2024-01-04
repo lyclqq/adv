@@ -126,7 +126,7 @@
 			"sublink": "/report/test"
 		}, {
 			"subname": "统计图",
-			"sublink": "/report/articlecreate_select"
+			"sublink": "/report/list"
 		}]
 	},
 	{

@@ -1,23 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask,render_template,url_for,redirect,make_response,session,request,flash,send_from_directory,g,current_app
-from flask_session import Session
-from flask_wtf.csrf import CSRFProtect
-from flask_sqlalchemy import SQLAlchemy
-from io import BytesIO
-from config import Config
 from app import create_app,db,getKey,getVerifyCode
 import datetime
 import os
 from io import BytesIO
 from app.common import is_login,getrolemenu
 from flask_ckeditor import upload_fail, upload_success
-from app.models.other import Reports,Files
-from app.models.bill import Fee1,Fee2,Fee3,Fee4,Fee5,Wordnumbers
 from app.models.system import Users,Logs,Groups
 from app.models.contract import Orders,Customers
 from app.forms.user import LoginForm
-from sqlalchemy import or_, and_, not_
+
 
 app=create_app('develop')
 
@@ -27,6 +20,7 @@ app=create_app('develop')
 def page_not_found(e):
     return '页面没找到'
 
+
 #查用户名
 def replace_username(userid):
     if userid==0:
@@ -34,7 +28,9 @@ def replace_username(userid):
     user=Users.query.filter(Users.id==userid).first()
     return user.username
 
+
 app.add_template_filter(replace_username)
+
 
 #查合同名
 def replace_ordername(orderid):
@@ -43,12 +39,17 @@ def replace_ordername(orderid):
     order=Orders.query.filter(Orders.id==orderid).first()
     return order.title
 
+
 app.add_template_filter(replace_ordername)
+
 
 #短日期时间格式
 def short_time(value):
-	return value.strftime('%m-%d %H:%M')
+    return value.strftime('%m-%d %H:%M')
+
+
 app.add_template_filter(short_time)
+
 
 #生成验证码
 @app.route('/imgCode')
@@ -63,6 +64,7 @@ def imgcode():
     session['imageCode']=imgKey
     return response
 
+
 #登出
 @app.route('/logout')
 @is_login
@@ -73,6 +75,7 @@ def logout():
     session.pop("usermenu")
     return redirect(url_for('login'))
 
+
 @app.route('/temp')
 def temp():
     keywords='ab,bc,dsf,bb'
@@ -80,6 +83,7 @@ def temp():
     result=Orders.query.filter(Orders.name.in_(keys)).all()
     print(result)
     return render_template('temp.html',temp='Hello')
+
 
 @app.route('/files/<int:dirname>/<filename>')
 @app.route('/Files/<int:dirname>/<filename>')
@@ -111,6 +115,7 @@ def upload():
     f.save(os.path.join(path, newfilename+'.'+extension))
     url = url_for('uploaded_files', filename=datetime.datetime.now().strftime("%Y")+'/'+newfilename+'.'+extension)
     return upload_success(url=url)
+
 
 #登陆
 @app.route('/login',methods=["GET","POST"])
@@ -152,6 +157,7 @@ def login():
     session["type"]=admin.type
     # 7.重定向到首页展示
     return redirect("/index")
+
 
 #首页
 @app.route('/index',endpoint='index')
