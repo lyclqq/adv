@@ -27,7 +27,7 @@
                 {% for item in pagination.items %}
                     <tr title="{{ item.notes }}">
                         <td>{{ item.id }}</td>
-                        <td>{{ item.create_datetime }}</td>
+                        <td>{{ item.create_datetime|short_time }}</td>
                         <td>{{ item.order_id | replace_ordername }}</td>
                         <td>{{ item.fee }}</td>
                         <td>{{ item.status }}</td>

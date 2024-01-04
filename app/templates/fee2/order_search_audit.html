@@ -41,7 +41,7 @@
                         <td>{{ post.ordernumber }}</td>
                         <td>{{ post.status }}</td>
                         <td>{{ post.Fee21 }}</td>
-                        <td>{{ post.update_datetime }}</td>
+                        <td>{{ post.update_datetime|short_time }}</td>
                         <td>
                             {% if post.status=="己审" or post.status=="完成" %}
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee2.fee2_audit',oid=post.id) }}">审核</a>

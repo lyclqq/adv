@@ -41,7 +41,7 @@
                 {% for item in pagination.items %}
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.create_datetime }}</td>
+                        <td>{{ item.create_datetime|short_time }}</td>
                         <td>{{ item.fee }}</td>
                         <td>{{ item.status }}</td>
                         <td>{% if item.filename is none %} None {% else %} <a href="/files/{{ item.path }}{{ item.filename }}"
