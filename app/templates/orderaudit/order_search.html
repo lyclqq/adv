@@ -30,9 +30,9 @@
                     <th class="text-bg-secondary">合同名称</th>
                     <th class="text-bg-secondary" style="width:150px">合同编号</th>
                     <th class="text-bg-secondary" style="width:80px">状态</th>
-                    <th class="text-bg-secondary" style="width:80px">录入</th>
-                    <th class="text-bg-secondary" style="width:220px">处理时间</th>
-                    <th class="text-bg-secondary" style="width:200px">操作</th>
+                    <th class="text-bg-secondary" style="width:90px">录入</th>
+                    <th class="text-bg-secondary" style="width:150px">处理时间</th>
+                    <th class="text-bg-secondary" style="width:320px">操作</th>
                 </tr>
                 </thead>
 
@@ -43,10 +43,11 @@
                         <td>{{ post.ordernumber }}</td>
                         <td>{{ post.status }}</td>
                         <td>{{ post.iuser_id | replace_username }}</td>
-                        <td>{{ post.update_datetime }}</td>
+                        <td>{{ post.update_datetime | short_time}}</td>
                         <td>
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.order_audit',oid=post.id) }}">合同审核</a>
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.files_list',oid=post.id) }}">附件审核</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.order_audit',oid=post.id) }}" target="_blank">合同审核</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.files_list',oid=post.id) }}" target="_blank">附件审核</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.fee1_audit',oid=post.id) }}" target="_blank">金额审核</a>
                         </td>
                     </tr>
                 {% endfor %}
