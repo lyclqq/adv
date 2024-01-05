@@ -43,7 +43,7 @@ class Groups(db.Model):
     status = db.Column(db.String(10))
     notes = db.Column(db.String(250))
     flag=db.Column(db.Float,default=0)
-
+    orders = db.relationship('Orders', backref='group', lazy='dynamic')
 
 #日志
 class Logs(db.Model,Basecls):

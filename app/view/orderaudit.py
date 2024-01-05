@@ -100,7 +100,7 @@ def order_audit(oid):
             db.session.add(order)
         try:
             db.session.commit()
-            flash('审核成功.', 'success')
+            flash('审核完成.', 'success')
             ins_logs(uid, '合同审核,id=' + str(oid), type='order_audit')
         except Exception as e:
             current_app.logger.error(e)

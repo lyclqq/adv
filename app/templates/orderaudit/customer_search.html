@@ -3,7 +3,7 @@
 {% block content %}
     <div class="m-2 p-3 ">
         <ul class="breadcrumb top_row">
-            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li>合同审核</li>
             <li class="active">客户查询</li>
         </ul>
 
@@ -11,7 +11,7 @@
             <table>
                 <tr>
                     <td>{{ form.csrf_token }}</td>
-                    <td>{{ form.title.label }}</td>
+                    <td>客户名称</td>
                     <td class="p-2">{{ form.title() }}</td>
                     <td>{{ form.submit }}</td>
                 </tr>

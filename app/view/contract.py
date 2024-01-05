@@ -139,6 +139,7 @@ def order_create(cuid):
         order.title=form.title.data
         order.notes=form.notes.data
         order.Fee11=form.fee1.data
+        order.cutomer_id=cuid
         order.iuser_id=uid
         order.contract_date=form.contract_date.data
         order.wordnumber=form.words.data
