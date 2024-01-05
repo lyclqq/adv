@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    <div class="m-2 p-3 ">
+        <script src=" {{ url_for('static',filename='js/user.js') }}"></script>
+        <h3>月初始化</h3>
+        <!---新增窗口--->
+        <br>
+        <div class="row col-8">
+
+        <form action="" role="form" method="post">
+            {{ form.csrf_token }}
+            <fieldset>
+                <div class="form-control">
+                    {{ form.today.label }}
+                    {{ form.today }}
+                </div>
+                <div class="form-control">
+                    {{ form.fee_date.label }}
+                    {{ form.fee_date }}
+                    {% for message in form.fee_date.errors %}
+                        <small class="error">{{ message }}</small>
+                    {% endfor %}
+                </div>
+
+            </fieldset>
+            {{ form.submit }}
+        </form>
+        </div>
+
+
+    </div>
+{% endblock %}

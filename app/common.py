@@ -5,6 +5,7 @@ import os
 from functools import wraps
 from app.models.system import Logs
 from app import db
+import datetime
 #登陆验证
 def is_login(view_func):
     @wraps(view_func)
@@ -19,7 +20,7 @@ def is_login(view_func):
         return view_func(*args,**kwargs)
     return wrapper
 
-def getmenu(usermenu='00000000'):
+def getmenu(usermenu='00000000000000'):
     #从menu.json文件读取所有菜单
     strpath=os.getcwd()+"\\app\\static\\menu.json"
     with open(strpath, 'r', encoding='utf-8_sig') as f:
@@ -41,7 +42,7 @@ def getrolemenu(rolename):
         if item.get("role")==rolename:
             return item.get("menu")
 
-    return "000000000000"
+    return "00000000000000"
 
 #写日志
 def ins_logs(userid,notes,type='system'):
@@ -59,3 +60,9 @@ def ins_logs(userid,notes,type='system'):
     except Exception as e:
         current_app.logger.error(e)
     return tf
+
+#比较月份
+def month_difference(date1, date2):
+    date1 = datetime.datetime.strptime(date1, "%Y%m%d")
+    diff = date2.year * 12 + date2.month - (date1.year * 12 + date1.month)
+    return diff
