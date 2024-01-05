@@ -46,8 +46,8 @@
                         <td>{{ post.wordnumber }}</td>
                         <td>{{ post.wordcount }}</td>
                         <td>
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('words_admin.words_publish',oid=post.id) }}" target="_blank">己发字数</a>
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('words_admin.words_order',oid=post.id) }}" target="_blank">合同字数</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('words_admin.words_publish',oid=post.id) }}" >己发字数</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('words_admin.words_order',oid=post.id) }}" >合同字数</a>
                         </td>
                     </tr>
                 {% endfor %}

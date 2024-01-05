@@ -281,8 +281,9 @@ def order_upfiles(oid):
                     flash('只能上传pdf、word和excel文件!')
                 else:
                     oldfilename = f.filename
-                    if form.notes.data is not None:
-                        oldfilename=form.notes.data
+                    if form.notes.data.strip()!='':
+                        oldfilename=form.notes.data.strip()
+                        print('notes is '+form.notes.data)
                     newfilename = session.get('username') + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
                     path = os.path.join(current_app.config['UPLOADED_PATH'], datetime.datetime.now().strftime("%Y") + os.sep)
 
@@ -305,7 +306,7 @@ def order_upfiles(oid):
         except Exception as e:
             current_app.logger.error(e)
             flash('上传失败')
-    orderfiles = Files.query.filter(Files.order_id == oid).all()
+    orderfiles = Files.query.filter(Files.order_id == oid,Files.status!='off').all()
     return render_template('contract/order_upfile.html', order=order,form=form,posts=orderfiles)
 
 

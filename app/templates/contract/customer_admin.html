@@ -1,45 +1,53 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
-    <div class="m-2 p-3 ">
+<div class="m-2 p-3 ">
 
-        <ul class="breadcrumb top_row">
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li class="active">客户管理</li>
-        </ul>
+    <ul class="breadcrumb top_row">
+        <li><a href="{{ url_for('index') }}">Home</a></li>
+        <li class="active">客户管理</li>
+    </ul>
 
-        <br>
-        {% if posts %}
-            <table class="table table-hover shadow table-bordered align-middle">
-                <thead>
-                <tr>
-                    <td class="text-bg-secondary">客户ID</td>
-                    <td class="text-bg-secondary">客户名称</td>
-                    <td class="text-bg-secondary">创建时间</td>
-                    <td class="text-bg-secondary">状态</td>
-                    <td class="text-bg-secondary">操作</td>
-                </tr>
-                </thead>
-                <tbody>
-                {% for post in posts %}
-                    <tr>
-                        <td>{{ post.id }}</td>
-                        <td><strong>{{ post.name }}</strong></td>
-                        <td>{{ post.create_datetime|short_time }}</td>
-                        <td>{{ post.status }}</td>
-                        <td>
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.customer_edit',cuid=post.id) }}">修改</a>
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_create',cuid=post.id) }}">新增合同</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <br>
-            <div class="page-footer">{{ render_pagination(pagination,align='center') }} </div>
-        {% else %}
-            <div class="page-footer">没有数据</div>
-        {% endif %}
+    <br>
+    {% if posts %}
+    <table class="table table-hover shadow table-bordered align-middle">
+        <thead>
+        <tr>
+            <td class="text-bg-secondary">客户ID</td>
+            <td class="text-bg-secondary">客户名称</td>
+            <td class="text-bg-secondary">创建时间</td>
+            <td class="text-bg-secondary">状态</td>
+            <td class="text-bg-secondary">操作</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+        <tr>
+            <td>{{ post.id }}</td>
+            <td><strong>{{ post.name }}</strong></td>
+            <td>{{ post.create_datetime }}</td>
+            <td>{{ post.status }}</td>
+            <td>
+                {% if post.status == "off" %}
+                <span class="badge">修改</span>
+                <span class="badge">新增合同</span>
+                {% else %}
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('contract_admin.customer_edit',cuid=post.id) }}">修改</a>
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('contract_admin.order_create',cuid=post.id) }}">新增合同</a>
+                {% endif %}
 
-    </div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <div class="page-footer">{{ render_pagination(pagination,align='center') }}</div>
+    {% else %}
+    <div class="page-footer">没有数据</div>
+    {% endif %}
+
+</div>
 {% endblock %}

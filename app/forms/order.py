@@ -57,7 +57,7 @@ class OrderSearchForm(FlaskForm):
 class OrderupfileForm(FlaskForm):
     title = StringField(label='合同标题:',
         render_kw={'class': 'form-control','readonly':True,
-                   "placeholder":"输入合同标题"}
+                   "placeholder":"合同标题"}
     )
     notes= StringField(label='附件标题:',
         render_kw={'class': 'form-control',
