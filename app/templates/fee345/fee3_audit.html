@@ -72,9 +72,9 @@
                         <td>
                             {% if item.status=="stay" %}
                                 <a href="{{ url_for('fee345.fee3_audit_on',fid=item.id,oid=item.order_id) }}"
-                                   >同意</a>
+                                    onclick="return confirm('Are you sure?');">同意</a>
                                 <a href="{{ url_for('fee345.fee3_audit_off',fid=item.id,oid=item.order_id) }}"
-                                   >拒绝</a>
+                                    onclick="return confirm('Are you sure?');">拒绝</a>
                             {% else %}
                                 <span class="badge">同意</span>
                                 <span class="badge">拒绝</span>
