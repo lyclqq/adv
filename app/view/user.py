@@ -6,6 +6,8 @@ from app.common import is_login, ins_logs,month_difference
 from app.forms.user import PwdForm,MonthForm
 from app.models.system import Users, Groups
 from app.models.contract import Orders
+from app.models.other import History
+from sqlalchemy.sql import func
 
 # 用户管理
 userView = Blueprint('user', __name__)
@@ -162,7 +164,21 @@ def setmonth():
     if form.validate_on_submit():
         month=month_difference(form.today.data+'01',form.fee_date.data)
         if month==1:
-            Orders.query.update({'fee22': 0,'fee32':0,'fee42':0,'fee52':0,'fee62':0})
+            fee21=db.session.query(Orders).with_entities(func.sum(Orders.Fee21)).scalar()
+            fee22 = db.session.query(Orders).with_entities(func.sum(Orders.Fee22)).scalar()
+            history=History()
+            history.title=form.fee_date.data
+            history.fee_date = form.fee_date.data
+            history.fee=fee22
+            history.type='Fee22'
+            db.session.add(history)
+            history=History()
+            history.title=form.fee_date.data
+            history.fee_date=form.fee_date.data
+            history.fee=fee21
+            history.type='Fee21'
+            db.session.add(history)
+            #Orders.query.update({'fee22': 0,'fee32':0,'fee42':0,'fee52':0,'fee62':0})
             db.session.commit()
             flash('初使化成功!')
         else:
