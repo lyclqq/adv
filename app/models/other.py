@@ -24,3 +24,11 @@ class Reports(db.Model,Basecls):
     filename=db.Column(db.String(200))
     path=db.Column(db.String(20))
     type = db.Column(db.String(20))
+
+#历史统计数据
+class History(db.Model,Basecls):
+    __tablename__ = 'history'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(50))
+    type = db.Column(db.String(10))
+    fee=db.Column(db.Float,default=0)

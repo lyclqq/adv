@@ -52,3 +52,6 @@ class PwdForm(FlaskForm):
                    "placeholder": "输入用户密码"}
     )
     submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
+
+class MonthForm(FlaskForm):
+    submit = SubmitField('提交', render_kw={'class': 'btn btn-block btn-info'})
