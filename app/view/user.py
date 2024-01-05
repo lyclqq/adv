@@ -148,3 +148,21 @@ def reset_pwd():
         current_app.logger.error(e)
         re = '{"result":"wrong"}'
     return re
+
+
+@userView.route('/month', methods=["GET", "POST"])
+@is_login
+def month():
+    form = PwdForm()
+    form.username.data = session.get("username")
+    if form.validate_on_submit():
+        if form.password1.data == form.password2.data and len(form.password1.data) > 5:
+            userid = int(session.get('user_id'))
+            user = Users.query.get(userid)
+            user.set_password(form.password1.data)
+            db.session.add(user)
+            db.session.commit()
+            flash('密码修改成功')
+        else:
+            flash('密码不能太短')
+    return render_template('admin/pwd.html', form=form)

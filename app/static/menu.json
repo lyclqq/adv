@@ -10,6 +10,9 @@
 		}, {
 			"subname": "日志管理",
 			"sublink": "/log/list/1"
+		}, {
+			"subname": "系统月初始",
+			"sublink": "/user/month"
 		}]
 	},
 	{

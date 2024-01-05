@@ -43,8 +43,6 @@ def create_app(config_name):
     # 使用CSRFProtect保护app
     CSRFProtect(app)
 
-    from app.view.system import systemView
-    app.register_blueprint(systemView,url_prefix='/system') #系统管理菜单
     from app.view.user import userView #个人相关
     app.register_blueprint(userView,url_prefix='/user')
     from app.view.contract import contractView #合同管理
@@ -66,7 +64,7 @@ def create_app(config_name):
     from app.view.dept import dept_bp
     app.register_blueprint(dept_bp, url_prefix='/')  # 日志
     from app.view.report import report_bp
-    app.register_blueprint(report_bp, url_prefix='/')  # 日志
+    app.register_blueprint(report_bp, url_prefix='/')  # 报表
     return app
 
 #日志文件
