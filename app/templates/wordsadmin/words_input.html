@@ -8,16 +8,17 @@
         <li class="active">字数输入</li>
     </ul>
     <br>
+
     <table class="table table-hover shadow table-bordered align-middle">
         <tbody>
         <tr>
-            <td style="width:250px;">合同名称</td>
+            <td style="width:260px;">合同名称</td>
             <td colspan="3">{{ order.title }}</td>
         </tr>
         <tr>
             <td>合同编号:{{ order.ordernumber }}</td>
-            <td style="width:250px;">签约日期:{{ order.contract_date }}</td>
-            <td style="width:250px;">经办人:{{ order.name }}</td>
+            <td style="width:260px;">签约日期:{{ order.contract_date }}</td>
+            <td style="width:260px;">经办人:{{ order.name }}</td>
             <td>所属部门:{{ order.group.groupname }}</td>
         </tr>
         <tr>

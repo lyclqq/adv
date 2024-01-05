@@ -1,34 +1,65 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
-    <div class="m-2 p-3 ">
-        <ul class="breadcrumb top_row">
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('order_audit.order_search') }}">合同查询</a></li>
-            <li class="active">附件审核</li>
-        </ul>
-        <br>
-        <fieldset>
-            <legend>附件审核</legend>
-            <div class="form-control">
-                合同名称:
-                {{ order.title }}
-            </div>
-            <div>
-                {% if posts %}
-                    附件：
-                    <ul class="list-group">
-                        {% for post in posts %}
-                            <li class="list-group-item"><a href="/files/{{ post.path }}{{ post.filename }}" target="_blank">{{ post.notes }}({{ post.status }})</a>
-                                <a href="{{ url_for('order_audit.file_status',fid=post.id) }}">状态</a>
-                                <a href="{{ url_for('order_audit.file_del',fid=post.id) }}">删除</a></li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    没有附件
-                {% endif %}
-            </div>
-        </fieldset>
+<div class="m-2 p-3 ">
+    <ul class="breadcrumb top_row">
+        <li>合同审核</li>
+        <li><a href="{{ url_for('order_audit.order_search') }}">合同查询</a></li>
+        <li class="active">附件审核</li>
+    </ul>
+    <br>
 
-    </div>
+
+        <div class="form-control">
+            <table class="table table-hover shadow table-bordered align-middle">
+                <tbody>
+                <tr>
+                    <td style="width:260px;">合同名称</td>
+                    <td colspan="3">{{ order.title }}</td>
+                </tr>
+                <tr>
+                    <td>合同编号:{{ order.ordernumber }}</td>
+                    <td style="width:260px;">签约日期:{{ order.contract_date }}</td>
+                    <td style="width:260px;">经办人:{{ order.name }}</td>
+                    <td>所属部门:{{ order.group.groupname }}</td>
+                </tr>
+                <tr>
+                    <td>录入员:{{ order.iuser_id | replace_username }}</td>
+                    <td>审核员:{{ order.cuser_id | replace_username }}</td>
+                    <td>合同状态:{{ order.status }}</td>
+                    <td>最后处理时间：{{ order.update_datetime }}</td>
+                </tr>
+                <tr>
+                    <td>合同金额:{{ order.Fee11 }}</td>
+                    <td>刊登金额：{{ order.Fee21 }}</td>
+                    <td>发票金额：{{ order.Fee31 }}</td>
+                    <td>己发绩效：{{ order.Fee51 }}</td>
+                </tr>
+                <tr>
+                    <td>合同字数：{{ order.wordnumber }}</td>
+                    <td>己发字数：{{ order.wordcount }}</td>
+                    <td>刊登面积：{{ order.area }}</td>
+                    <td>己发奖金：{{ order.Fee61 }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+        <div>
+            {% if posts %}
+            附件：
+            <ul class="list-group">
+                {% for post in posts %}
+                <li class="list-group-item"><a href="/files/{{ post.path }}{{ post.filename }}" target="_blank">{{
+                    post.notes }}({{ post.status }})</a>
+                    <a href="{{ url_for('order_audit.file_status',fid=post.id) }}">状态</a>
+                    <a href="{{ url_for('order_audit.file_del',fid=post.id) }}">删除</a></li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            没有附件
+            {% endif %}
+        </div>
+        </div>
+
+</div>
 {% endblock %}
