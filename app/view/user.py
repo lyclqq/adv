@@ -158,8 +158,8 @@ def reset_pwd():
 def setmonth():
     form = MonthForm()
     strpath = os.getcwd() + "\\app\\static\\system.json"
-    with open(strpath, 'r', encoding='utf-8') as f:
-        today = json.load(f)
+    with open(strpath, 'r', encoding='utf-8') as f1:
+        today = json.load(f1)
         form.today.data=today['month']
     if form.validate_on_submit():
         month=month_difference(form.today.data+'01',form.fee_date.data)
@@ -178,8 +178,11 @@ def setmonth():
             history.fee=fee21
             history.type='Fee21'
             db.session.add(history)
-            #Orders.query.update({'fee22': 0,'fee32':0,'fee42':0,'fee52':0,'fee62':0})
+            Orders.query.update({'fee22': 0,'fee32':0,'fee42':0,'fee52':0,'fee62':0})
             db.session.commit()
+            with open(strpath, "w") as f2:
+                today['month']=form.fee_date.data.strftime('%Y%m')
+                json.dump(today, f2)
             flash('初使化成功!')
         else:
             flash('所选月份不对!')

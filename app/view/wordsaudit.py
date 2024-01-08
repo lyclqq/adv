@@ -37,7 +37,7 @@ def order_search():
     result=pagination.items
     return render_template('wordsaudit/order_search.html', page=page, pagination=pagination, posts=result,form=form)
 
-#合同字数
+#合同字数审核
 @wordsauditView.route('/words_order/<int:oid>',methods=["GET","POST"])
 @is_login
 def words_order(oid):
@@ -55,11 +55,14 @@ def words_order(oid):
         wordnumber.iuser_id = uid
         words=order.wordnumber+form.words.data
         db.session.add(wordnumber)
+        order.wordnumber = words
+        order.update_datetime = datetime.datetime.now()
+        db.session.add(order)
         try:
             if words>=0:
                 db.session.commit()
                 flash('录入成功.', 'success')
-                ins_logs(uid, '合同字数录入,id=' + str(oid), type='words_admin')
+                ins_logs(uid, '合同字数审核,id=' + str(oid), type='words_audit')
             else:
                 flash('字数余额不能小于0!')
         except Exception as e:
@@ -69,7 +72,7 @@ def words_order(oid):
                                                                                 per_page=8)
     return render_template('wordsaudit/words_show.html', form=form,order=order,pagination=pagination,page=page)
 
-#出版字数
+#出版字数审核
 @wordsauditView.route('/words_publish/<int:oid>',methods=["GET","POST"])
 @is_login
 def words_publish(oid):
@@ -78,25 +81,31 @@ def words_publish(oid):
     form=WordsForm()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if form.validate_on_submit():
-        wordnumber=Wordnumbers()
-        wordnumber.order_id=oid
-        wordnumber.feedate = form.fee_date.data
-        wordnumber.status = 'off'
-        wordnumber.wordnumber=form.words.data
-        wordnumber.type = 'publish'
-        wordnumber.iuser_id=uid
-        words=order.wordcount+form.words.data
-        db.session.add(wordnumber)
-        if words>=0:
-            try:
+        try:
+            wordnumber=Wordnumbers()
+            wordnumber.order_id=oid
+            wordnumber.feedate = form.fee_date.data
+            wordnumber.status = 'off'
+            wordnumber.wordnumber=form.words.data
+            wordnumber.type = 'publish'
+            wordnumber.iuser_id=uid
+            words=order.wordcount+form.words.data
+            db.session.add(wordnumber)
+            order.wordcount=words
+            order.update_datetime = datetime.datetime.now()
+            db.session.add(order)
+            if words>=0 and words<=order.wordnumber:
+
                 db.session.commit()
-                flash('录入成功.', 'success')
-                ins_logs(uid, '出版字数录入,id=' + str(oid), type='words_admin')
-            except Exception as e:
-                current_app.logger.error(e)
-                flash('录入失败')
-        else:
-            flash('字数余额不能小于0!')
+                flash('审核成功.', 'success')
+                ins_logs(uid, '出版字数审核,id=' + str(oid), type='words_audit')
+
+            else:
+                db.session.rollback()
+                flash('字数余额不能小于0，且不能多于合同字数!')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('录入失败')
     pagination = Wordnumbers.query.filter(Wordnumbers.type == 'publish',Wordnumbers.order_id==oid).order_by(Wordnumbers.id.desc()).paginate(page, per_page=8)
     return render_template('wordsaudit/words_show.html', form=form,order=order,pagination=pagination,page=page)
 
