@@ -126,10 +126,10 @@
 		"id": 10,
 		"sublist": [{
 			"subname": "报表生成",
-			"sublink": "/report/test"
+			"sublink": "/report/list"
 		}, {
 			"subname": "统计图",
-			"sublink": "/report/articlecreate_select"
+			"sublink": "/report/chart"
 		}]
 	},
 	{

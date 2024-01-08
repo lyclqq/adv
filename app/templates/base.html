@@ -31,7 +31,11 @@
                     {% if session['usermenu'][loop.index0]=='1' %}
                         <li class="nav-item">
                             <div class="btn-group dropend w-100">
-                                <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">{{ m.menuname }}</span>
+                                <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
+                                        {{ m.menuname }}
+                                    </a>
+                                </span>
                                 {% if m.sublist %}
                                     <ul class="dropdown-menu">
                                         {% for l in m.sublist %}
@@ -88,7 +92,7 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Access-Control-Allow-Origin': '*',
-                    'X-CSRFToken':$('#csrf_token').val()
+                    'X-CSRFToken': $('#csrf_token').val()
                 }
             }
 
