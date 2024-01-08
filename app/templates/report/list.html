@@ -4,7 +4,13 @@
     <div class="m-2 p-3 ">
         <h3>统计信息</h3>
         <br>
-
+        <div style="text-align:left;">
+            <a class="btn btn-outline-secondary " href="/report/gen" role="button" target="_blank">生成报表</a>
+            &nbsp;
+            <a class="btn btn-outline-secondary " href="/report/down" role="button" target="_blank">导出报表</a>
+        </div>
+        <br>
+        <!--
         <table class="table table-hover shadow table-bordered ">
             <thead>
             <tr>
@@ -21,11 +27,16 @@
                     <td>{{ re.dates }}</td>
                     <td>{{ re.type }}</td>
                     <td>{{ re.fees }}</td>
-                    <td>{{ re.bid }}、{{ re.fee106 }}、{{ re.ratio }}、{{ re.perf }}、{{ re.fee }}、{{ re.feedate }}、{{ re.id }}
+                    <td>
+                        {{ re.bid }}、{{ re.fee106 }}、
+                        {{ re.ratio }}、{{ re.perf }}、
+                        {{ re.fee }}、{{ re.feedate }}、{{ re.id }}
+
                     </td>
 
                 </tr>
             {% endfor %}
         </table>
+        -->
     </div>
 {% endblock %}
