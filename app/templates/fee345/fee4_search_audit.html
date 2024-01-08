@@ -37,7 +37,7 @@
                             {% if item.status=="stay" %}
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee345.fee4_audit',oid=item.order_id) }}" target="_blank">审核</a>
                             {% else %}
-                                <span class="badge">审核</span>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">审核</button>
                             {% endif %}
                         </td>
                     </tr>

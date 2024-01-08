@@ -77,8 +77,8 @@
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.fee1_audit_off',fid=item.id,oid=item.order_id) }}"
                                 >拒绝</a>
                             {% else %}
-                                <span class="badge">同意</span>
-                                <span class="badge">拒绝</span>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">同意</button>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">拒绝</button>
                             {% endif %}
                         </td>
                     </tr>

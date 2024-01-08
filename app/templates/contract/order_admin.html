@@ -54,10 +54,10 @@
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.fee1_input',oid=post.id) }}">补录</a>
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_submit',oid=post.id) }}" onclick="return confirm('Are you sure?');">提交</a>
                             {% else %}
-                                <span class="badge">修改</span>
-                                <span class="badge">查看</span>
-                                <span class="badge">上传</span>
-                                <span class="badge">提交</span>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">修改</button>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">查看</button>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">上传</button>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">提交</button>
                             {% endif %}
                         </td>
                     </tr>

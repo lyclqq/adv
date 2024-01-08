@@ -29,8 +29,8 @@
             <td>{{ post.status }}</td>
             <td>
                 {% if post.status == "off" %}
-                <span class="badge">修改</span>
-                <span class="badge">新增合同</span>
+                    <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">修改</button>
+                    <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">新增合同</button>
                 {% else %}
                 <a class="btn btn-sm btn-outline-secondary"
                    href="{{ url_for('contract_admin.customer_edit',cuid=post.id) }}">修改</a>

@@ -52,7 +52,7 @@
                             {% if post.status=="己审" or post.status=="完成" %}
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee5.fee5_audit',oid=post.id) }}">绩效审核</a>
                             {% else %}
-                                <span class="badge">绩效审核</span>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">绩效审核</button>
                             {% endif %}
                         </td>
                     </tr>

@@ -1,216 +1,202 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
+    <div class="m-2 p-3 ">
+        <ul class="breadcrumb top_row">
+            <li>绩效管理</li>
+            <li><a href="{{ url_for('fee5.order_search_admin') }}">合同查询</a></li>
+            <li class="active">绩效金额输入</li>
+        </ul>
+        <br>
+        <table class="table table-hover shadow table-bordered align-middle">
+            <tbody>
+            <tr>
+                <td style="width:260px;">合同名称</td>
+                <td colspan="3">{{ order.title }}</td>
+            </tr>
+            <tr>
+                <td>合同编号:{{ order.ordernumber }}</td>
+                <td style="width:260px;">签约日期:{{ order.contract_date }}</td>
+                <td style="width:260px;">经办人:{{ order.name }}</td>
+                <td>所属部门:{{ order.group.groupname }}</td>
+            </tr>
+            <tr>
+                <td>录入员:{{ order.iuser_id | replace_username }}</td>
+                <td>审核员:{{ order.cuser_id | replace_username }}</td>
+                <td>合同状态:{{ order.status }}</td>
+                <td>最后处理时间：{{ order.update_datetime }}</td>
+            </tr>
+            <tr>
+                <td>合同金额:{{ order.Fee11 }}</td>
+                <td>刊登金额：{{ order.Fee21 }}</td>
+                <td>发票金额：{{ order.Fee31 }}</td>
+                <td>己发绩效：{{ order.Fee51 }}</td>
+            </tr>
+            <tr>
+                <td>合同字数：{{ order.wordnumber }}</td>
+                <td>己发字数：{{ order.wordcount }}</td>
+                <td>刊登面积：{{ order.area }}</td>
+                <td>己发奖金：{{ order.Fee61 }}</td>
+            </tr>
+            </tbody>
+        </table>
 
-<ul class="breadcrumb top_row">
-    <li>绩效管理</li>
-    <li><a href="{{ url_for('fee5.order_search_admin') }}">合同查询</a></li>
-    <li class="active">绩效金额输入</li>
-</ul>
-<div class="row">
-               <table class="table table-hover shadow table-bordered align-middle">
-                <tbody>
-                <tr>
-                    <td style="width:260px;">合同名称</td>
-                    <td colspan="3">{{ order.title }}</td>
-                </tr>
-                <tr>
-                    <td>合同编号:{{ order.ordernumber }}</td>
-                    <td style="width:260px;">签约日期:{{ order.contract_date }}</td>
-                    <td style="width:260px;">经办人:{{ order.name }}</td>
-                    <td>所属部门:{{ order.group.groupname }}</td>
-                </tr>
-                <tr>
-                    <td>录入员:{{ order.iuser_id | replace_username }}</td>
-                    <td>审核员:{{ order.cuser_id | replace_username }}</td>
-                    <td>合同状态:{{ order.status }}</td>
-                    <td>最后处理时间：{{ order.update_datetime }}</td>
-                </tr>
-                <tr>
-                    <td>合同金额:{{ order.Fee11 }}</td>
-                    <td>刊登金额：{{ order.Fee21 }}</td>
-                    <td>发票金额：{{ order.Fee31 }}</td>
-                    <td>己发绩效：{{ order.Fee51 }}</td>
-                </tr>
-                <tr>
-                    <td>合同字数：{{ order.wordnumber }}</td>
-                    <td>己发字数：{{ order.wordcount }}</td>
-                    <td>刊登面积：{{ order.area }}</td>
-                    <td>己发奖金：{{ order.Fee61 }}</td>
-                </tr>
-                </tbody>
-            </table>
-</div>
-<form action="" role="form" method="post">
-    {{ form.csrf_token }}
-    <div class="row">
-        <div class="col-md-8">
-            <table class="table table-bordered">
+        <form action="" role="form" method="post">
+            {{ form.csrf_token }}
+            <table class="table table-hover shadow table-bordered align-middle">
                 <thead>
                 <tr>
                     <td colspan="10">刊登金额明细</td>
                 <tr>
-                    <td style="width:60px">id</td>
-                    <td style="width:240px">输入时间</td>
-                    <td>金额</td>
-                    <td style="width:80px">状态</td>
-                    <td style="width:100px">绩效id</td>
-                    <td style="width:180px">发生日期</td>
-                    <td style="width:80px">选定</td>
+                    <td class="text-bg-secondary" style="width:60px">id</td>
+                    <td class="text-bg-secondary" style="width:240px">输入时间</td>
+                    <td class="text-bg-secondary">金额</td>
+                    <td class="text-bg-secondary" style="width:80px">状态</td>
+                    <td class="text-bg-secondary" style="width:100px">绩效id</td>
+                    <td class="text-bg-secondary" style="width:180px">发生日期</td>
+                    <td class="text-bg-secondary" style="width:80px">选定</td>
                 </tr>
                 </thead>
                 <tbody>
 
                 {% for item in result_fee2 %}
-                <tr>
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.create_datetime }}</td>
-                    <td>{{ item.fee}}</td>
-                    <td>{{ item.status }}</td>
-                    <td>{{ item.fee5_id }}</td>
-                    <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
-                    <td><input name="Fee2_{{ item.id }}" type="checkbox" value="{{ item.fee }}"/></td>
-                </tr>
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.create_datetime }}</td>
+                        <td>{{ item.fee }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>{{ item.fee5_id }}</td>
+                        <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+                        <td><input name="Fee2_{{ item.id }}" type="checkbox" value="{{ item.fee }}"/></td>
+                    </tr>
                 {% endfor %}
 
                 </tbody>
             </table>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-8">
-
-            <fieldset>
-                <table>
-                    <tr>
-                        <td>绩效金额输入</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            {{ form.fee.label }}
-                        </td>
-                        <td>
-                            {{ form.fee() }}
-                            {%for message in form.fee.errors%}
-                            <small class="error">{{message}}</small>
-                            {%endfor%}
-                        </td>
-                        <td>
-                            {{ form.scale.label }}
-                        </td>
-                        <td>
-                            {{ form.scale() }}
-                            {%for message in form.scale.errors%}
-                            <small class="error">{{message}}</small>
-                            {%endfor%}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            {{ form.prize.label }}
-                        </td>
-                        <td>
-                            {{ form.prize() }}
-                            {%for message in form.prize.errors%}
-                            <small class="error">{{message}}</small>
-                            {%endfor%}
-                        </td>
-                        <td>
-                            {{ form.fee_date.label }}
-                        </td>
-                        <td>
-                            {{ form.fee_date() }}
-                            {%for message in form.fee_date.errors%}
-                            <small class="error">{{message}}</small>
-                            {%endfor%}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>{{ form.notes.label }}</td>
-                        <td colspan="3">{{ form.notes() }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">{{ form.submit }}</td>
-                        <td><input type="button" id="btn" name="btn" value="计算" onclick="show()"/></td>
-                    </tr>
-                </table>
-            </fieldset>
-
-        </div>
-    </div>
-</form>
-
-<script>
-$("#btn").click(function() {
-    var sum=0
-    $('form input').each(function(index,element){
-        if (element.name.slice(0,5)=='Fee2_')
-        {
-            if (element.checked==true)
-            {
-                sum=sum+parseFloat(element.value);
-            }
-
-        }
-    });
-    var scale=$('#scale').val()
-
-    if (!isNaN(scale))
-    {
-        prize=scale*sum/100
-
-    }
-    $('#fee').prop('value',sum)
-    $('#prize').prop('value',prize)
-
-    alert('核定绩效总额为:'+sum+',奖金为：'+prize);
-});
+            <br>
 
 
-</script>
-<div class="row">
-    <div class="col-md-11">
-        <table class="table table-bordered">
+            <table class="table table-hover shadow table-bordered align-middle">
+                <tr>
+                    <td>绩效金额输入</td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.fee.label }}
+                    </td>
+                    <td>
+                        {{ form.fee() }}
+                        {% for message in form.fee.errors %}
+                            <small class="error">{{ message }}</small>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ form.scale.label }}
+                    </td>
+                    <td>
+                        {{ form.scale() }}
+                        {% for message in form.scale.errors %}
+                            <small class="error">{{ message }}</small>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.prize.label }}
+                    </td>
+                    <td>
+                        {{ form.prize() }}
+                        {% for message in form.prize.errors %}
+                            <small class="error">{{ message }}</small>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ form.fee_date.label }}
+                    </td>
+                    <td>
+                        {{ form.fee_date() }}
+                        {% for message in form.fee_date.errors %}
+                            <small class="error">{{ message }}</small>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{ form.notes.label }}</td>
+                    <td colspan="3">{{ form.notes() }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">{{ form.submit }}</td>
+                    <td colspan="2"><input type="button" id="btn" name="btn" value="计算" onclick="show()"/></td>
+                </tr>
+            </table>
+
+        </form>
+
+        <script>
+            $("#btn").click(function () {
+                let sum = 0
+                $('form input').each(function (index, element) {
+                    if (element.name.slice(0, 5) === 'Fee2_') {
+                        if (element.checked === true) {
+                            sum = sum + parseFloat(element.value);
+                        }
+
+                    }
+                });
+                let scale = $('#scale').val()
+                let prize;
+                if (!isNaN(scale)) {
+                    prize = scale * sum / 100
+
+                }
+                $('#fee').prop('value', sum)
+                $('#prize').prop('value', prize)
+
+                alert('核定绩效总额为:' + sum + ',奖金为：' + prize);
+            });
+
+
+        </script>
+        <br>
+        <table class="table table-hover shadow table-bordered align-middle">
             <thead>
             <tr>
                 <td colspan="10">绩效发放明细</td>
             <tr>
-                <td style="width:60px">id</td>
-                <td style="width:240px">输入时间</td>
-                <td>备注</td>
-                <td>核算额</td>
-                <td style="width:80px">状态</td>
-                <td style="width:100px">比例</td>
-                <td style="width:120px">录入</td>
-                <td style="width:120px">审核</td>
-                <td style="width:120px">奖金</td>
-                <td style="width:180px">发生日期</td>
+                <td class="text-bg-secondary" style="width:60px">id</td>
+                <td class="text-bg-secondary" style="width:240px">输入时间</td>
+                <td class="text-bg-secondary">备注</td>
+                <td class="text-bg-secondary">核算额</td>
+                <td class="text-bg-secondary" style="width:80px">状态</td>
+                <td class="text-bg-secondary" style="width:100px">比例</td>
+                <td class="text-bg-secondary" style="width:120px">录入</td>
+                <td class="text-bg-secondary" style="width:120px">审核</td>
+                <td class="text-bg-secondary" style="width:120px">奖金</td>
+                <td class="text-bg-secondary" style="width:180px">发生日期</td>
             </tr>
             </thead>
             <tbody>
             {% if result_fee5 %}
-            {% for item in result_fee5 %}
-            <tr>
-                <td>{{ item.id }}</td>
-                <td>{{ item.create_datetime|short_time }}</td>
-                <td>{{ item.notes}}</td>
-                <td>{{ item.fee}}</td>
-                <td>{{ item.status }}</td>
-                <td>{{ item.scale }}</td>
-                <td>{{ item.iuser_id | replace_username }}</td>
-                <td>{{ item.cuser_id | replace_username }}</td>
-                <td>{{ item.prize }}</td>
-                <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
-            </tr>
-            {% endfor %}
+                {% for item in result_fee5 %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.create_datetime|short_time }}</td>
+                        <td>{{ item.notes }}</td>
+                        <td>{{ item.fee }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>{{ item.scale }}</td>
+                        <td>{{ item.iuser_id | replace_username }}</td>
+                        <td>{{ item.cuser_id | replace_username }}</td>
+                        <td>{{ item.prize }}</td>
+                        <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+                    </tr>
+                {% endfor %}
             {% else %}
-            <tr>
-                <td colspan="10">没有查到相关数据</td>
-            </tr>
+                <tr>
+                    <td colspan="10">没有查到相关数据</td>
+                </tr>
             {% endif %}
             </tbody>
         </table>
     </div>
-</div>
-
 {% endblock %}

@@ -51,8 +51,8 @@
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee345.fee4_input',oid=post.id) }}">到帐输入</a>
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee345.fee3_input',oid=post.id) }}">发票输入</a>
                             {% else %}
-                                <span class="badge">到帐输入</span>
-                                <span class="badge">发票输入</span>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">到帐输入</button>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">发票输入</button>
                             {% endif %}
                         </td>
                     </tr>
