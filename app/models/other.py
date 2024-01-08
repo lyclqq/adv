@@ -32,3 +32,4 @@ class History(db.Model,Basecls):
     title = db.Column(db.String(50))
     type = db.Column(db.String(10))
     fee=db.Column(db.Float,default=0)
+    fee_date=db.Column(db.Date)

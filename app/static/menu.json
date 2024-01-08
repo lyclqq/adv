@@ -12,7 +12,7 @@
 			"sublink": "/log/list/1"
 		}, {
 			"subname": "系统月初始",
-			"sublink": "/user/month"
+			"sublink": "/user/setmonth"
 		}]
 	},
 	{

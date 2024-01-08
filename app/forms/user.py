@@ -54,4 +54,9 @@ class PwdForm(FlaskForm):
     submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
 
 class MonthForm(FlaskForm):
+    today=StringField(label='当前月份:',
+        render_kw={'class': 'form-control','readonly':'true'}
+    )
+    fee_date  = DateField('下一月份', format='%Y-%m',validators=[DataRequired('不能为空')],
+                            render_kw={'class': 'form-control','height':'60px','type':'month'})
     submit = SubmitField('提交', render_kw={'class': 'btn btn-block btn-info'})
