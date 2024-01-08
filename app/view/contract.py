@@ -24,7 +24,7 @@ def customer_admin():
     customers=Customers()
     page = request.args.get('page', 1, type=int)
 
-    pagination = customers.query.filter(Customers.status!='delete').order_by(Customers.create_datetime.desc()).paginate(
+    pagination = customers.query.filter(Customers.status!='off').order_by(Customers.create_datetime.desc()).paginate(
         page, per_page=current_app.config['PAGEROWS'])
 
     result = pagination.items

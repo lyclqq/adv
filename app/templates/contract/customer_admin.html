@@ -28,16 +28,16 @@
             <td>{{ post.create_datetime }}</td>
             <td>{{ post.status }}</td>
             <td>
-                {% if post.status == "off" %}
-                <span class="badge">修改</span>
-                <span class="badge">新增合同</span>
-                {% else %}
+                {% if post.status == "stay" %}
                 <a class="btn btn-sm btn-outline-secondary"
                    href="{{ url_for('contract_admin.customer_edit',cuid=post.id) }}">修改</a>
+
+                {% else %}
+                <span class="badge">修改</span>
+
+                {% endif %}
                 <a class="btn btn-sm btn-outline-secondary"
                    href="{{ url_for('contract_admin.order_create',cuid=post.id) }}">新增合同</a>
-                {% endif %}
-
             </td>
         </tr>
         {% endfor %}
