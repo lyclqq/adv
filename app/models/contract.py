@@ -20,7 +20,7 @@ class Customers(db.Model,Basecls):
             pagination = Customers.query.order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
         else:
             keys=keywords.split(',')
-            rule = or_(*[Orders.title.like('%' + w + '%') for w in keys])
+            rule = and_(*[Orders.title.like('%' + w + '%') for w in keys])
             pagination = Customers.query.filter(rule).order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
         return pagination
 
@@ -67,7 +67,7 @@ class Orders(db.Model,Basecls):
                     Orders.id.desc()).paginate(page, per_page=pagerows)
             return pagination
         keys=keywords.split(',')
-        rule = or_(*[Orders.title.like('%'+w+'%') for w in keys])
+        rule = and_(*[Orders.title.like('%'+w+'%') for w in keys])
         if status =='全部':
             pagination = Orders.query.filter(rule).order_by(Orders.id.desc()).paginate(page,per_page=pagerows)
         else:

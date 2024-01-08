@@ -243,7 +243,7 @@ def order_edit(oid):
 def order_show(oid):
     uid = session.get('user_id')
     order=Orders.query.filter(Orders.id==oid).first_or_404()
-    orderfiles=Files.query.filter(Files.order_id==oid).all()
+    orderfiles=Files.query.filter(Files.order_id==oid,Files.status!='off').all()
     return render_template('contract/order_show.html', order=order,posts=orderfiles)
 
 
