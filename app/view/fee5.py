@@ -145,6 +145,7 @@ def fee5_audit_on(oid,fid):
             db.session.add(order)
             fee5.status='on'
             fee5.cuser_id=uid
+            db.session.add(fee5)
             db.session.commit()
             ins_logs(uid, '审核绩效金额同意，orderid=' + oid, type='fee5')
         except Exception as e:
