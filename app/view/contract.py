@@ -182,6 +182,7 @@ def order_customer_create():
             order.cutomer_id=customer.id
             order.group_id=groupid
             order.wordnumber=form.words.data
+            order.ordernumber=form.ordernumber.data
             db.session.add(order)
             db.session.commit()
             ins_logs(uid, '新增合同' , type='contract')
