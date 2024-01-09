@@ -148,7 +148,7 @@ def get_report_data():
                                     "(select order_id,"
                                     "group_concat(concat_ws(',',feedate) order by feedate asc) as 'dates',"
                                     "type,sum(fee) as 'fees',0 as 'bid',round(sum(fee)/1.06,2) as 'fee106',"
-                                    "0.16 as 'ratio',round(sum(fee)/1.06,2)*0.16 as 'perf' "
+                                    "0.16 as 'ratio',round(sum(fee)/1.06*0.16,0) as 'perf' "
                                     "from fee2 group by order_id,type order by order_id,type) "
                                     "a,fee4,fee3 "
                                     "where  a.order_id=fee4.order_id and fee4.order_id=fee3.order_id")
@@ -162,6 +162,8 @@ report_file_path = os.path.join('static', 'files', 'report')
 def set_cell_style(bold=False, center=True):
     #
     font = xlwt.Font()
+    font.name = '仿宋_GB2312'
+    font.height = HEIGHT_BASE * 16
     if bold:
         font.bold = True
     #
@@ -192,14 +194,18 @@ def as_report(filename):
     return rp
 
 
+HEIGHT_BASE = 20
+WIDTH_BASE = 256
+
+
 def list_to_excel(data):
     # Reports.query.all()
     workbook = xlwt.Workbook()
     sheet = workbook.add_sheet("sheet1", cell_overwrite_ok=True)
     sheet.write_merge(1, 1, 0, 13, '4月绩效', set_cell_style(True))
     sheet.row(1).height_mismatch = True
-    sheet.row(1).height = 20 * 30
-
+    sheet.row(1).height = HEIGHT_BASE * 30
+    #
     sheet.write(2, 0, '序号', set_cell_style())
     sheet.write(2, 1, '刊登（播）单位', set_cell_style())
     sheet.write(2, 2, '刊登日期', set_cell_style())
@@ -215,7 +221,7 @@ def list_to_excel(data):
     sheet.write(2, 12, '经营人员', set_cell_style())
     sheet.write(2, 13, '备注', set_cell_style())
     sheet.row(2).height_mismatch = True
-    sheet.row(2).height = 20 * 30
+    sheet.row(2).height = HEIGHT_BASE * 30
     #
     fees_sum = 0
     fee106_sum = 0
@@ -230,15 +236,15 @@ def list_to_excel(data):
         sheet.write(2 + i, 4, re.fees, set_cell_style())
         sheet.write(2 + i, 5, re.bid, set_cell_style())
         sheet.write(2 + i, 6, re.fee106, set_cell_style())
-        sheet.write(2 + i, 7, re.ratio, set_cell_style())
-        sheet.write(2 + i, 8, re.perf, set_cell_style())
-        sheet.write(2 + i, 9, re.fee, set_cell_style())
-        sheet.write(2 + i, 10, re.feedate, set_cell_style())
+        sheet.write(2 + i, 7, re.fee, set_cell_style())
+        sheet.write(2 + i, 8, re.feedate, set_cell_style())
+        sheet.write(2 + i, 9, re.ratio, set_cell_style())
+        sheet.write(2 + i, 10, re.perf, set_cell_style())
         sheet.write(2 + i, 11, re.id, set_cell_style())
         sheet.write(2 + i, 12, '', set_cell_style())
         sheet.write(2 + i, 13, '', set_cell_style())
         sheet.row(2 + i).height_mismatch = True
-        sheet.row(2 + i).height = 20 * 20
+        sheet.row(2 + i).height = HEIGHT_BASE * 20
         i += 1
         #
         fees_sum = fees_sum + re.fees
@@ -253,29 +259,33 @@ def list_to_excel(data):
     sheet.write(i + 3, 7, fee_sum, set_cell_style())
     sheet.write(i + 3, 10, perf_sum, set_cell_style())
     sheet.row(i + 3).height_mismatch = True
-    sheet.row(i + 3).height = 20 * 20
+    sheet.row(i + 3).height = HEIGHT_BASE * 20
     #
     sheet.write(i + 4, 0, '制表人：', set_cell_style(False, False))
     sheet.write(i + 4, 2, '广告部复核人：', set_cell_style(False, False))
     sheet.write(i + 4, 5, '广告部分管绩效负责人:', set_cell_style(False, False))
     sheet.write(i + 4, 9, '广告部负责人:', set_cell_style(False, False))
     sheet.row(i + 4).height_mismatch = True
-    sheet.row(i + 4).height = 20 * 20
+    sheet.row(i + 4).height = HEIGHT_BASE * 20
     #
     sheet.write(i + 6, 0, '事业部负责人：', set_cell_style(False, False))
     sheet.write(i + 6, 5, '计划财务部稽核人：', set_cell_style(False, False))
     sheet.write(i + 6, 9, '计划财务部负责人：', set_cell_style(False, False))
     sheet.row(i + 6).height_mismatch = True
-    sheet.row(i + 6).height = 20 * 20
+    sheet.row(i + 6).height = HEIGHT_BASE * 20
     #
     sheet.write(i + 8, 0, '经管办复核人：', set_cell_style(False, False))
     sheet.write(i + 8, 2, '经管办稽核人：', set_cell_style(False, False))
     sheet.write(i + 8, 5, '经管办分管负责人：', set_cell_style(False, False))
     sheet.write(i + 8, 9, '经管办负责人：', set_cell_style(False, False))
     sheet.row(i + 8).height_mismatch = True
-    sheet.row(i + 8).height = 20 * 20
+    sheet.row(i + 8).height = HEIGHT_BASE * 20
     #
     filename = generate(size=10) + '.xls'
+    # 列宽
+    for i in range(1, 13):
+        sheet.col(i).width = WIDTH_BASE * 20
+    #
     workbook.save(current_app.root_path + os.sep + report_file_path + os.sep + filename)
     rp = as_report(filename)
     db.session.add(rp)
