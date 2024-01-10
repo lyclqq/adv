@@ -2,7 +2,7 @@ import json
 import os
 from flask import Blueprint, render_template, session, flash, request, current_app
 from app import db
-from app.common import is_login, ins_logs,month_difference
+from app.common import is_login, ins_logs,month_difference,get_SystemMonth
 from app.forms.user import PwdForm,MonthForm
 from app.models.system import Users, Groups
 from app.models.contract import Orders
@@ -157,33 +157,38 @@ def reset_pwd():
 @is_login
 def setmonth():
     form = MonthForm()
-    strpath = os.getcwd() + "\\app\\static\\system.json"
-    with open(strpath, 'r', encoding='utf-8') as f1:
-        today = json.load(f1)
-        form.today.data=today['month']
+    form.today.data=get_SystemMonth()
     if form.validate_on_submit():
         month=month_difference(form.today.data+'01',form.fee_date.data)
         if month==1:
-            fee21=db.session.query(Orders).with_entities(func.sum(Orders.Fee21)).scalar()
-            fee22 = db.session.query(Orders).with_entities(func.sum(Orders.Fee22)).scalar()
-            history=History()
-            history.title=form.fee_date.data
-            history.fee_date = form.fee_date.data
-            history.fee=fee22
-            history.type='Fee22'
-            db.session.add(history)
-            history=History()
-            history.title=form.fee_date.data
-            history.fee_date=form.fee_date.data
-            history.fee=fee21
-            history.type='Fee21'
-            db.session.add(history)
-            Orders.query.update({'fee22': 0,'fee32':0,'fee42':0,'fee52':0,'fee62':0})
-            db.session.commit()
-            with open(strpath, "w") as f2:
-                today['month']=form.fee_date.data.strftime('%Y%m')
-                json.dump(today, f2)
-            flash('初使化成功!')
+            try:
+                fee21=db.session.query(Orders).with_entities(func.sum(Orders.Fee21)).scalar()
+                fee22 = db.session.query(Orders).with_entities(func.sum(Orders.Fee22)).scalar()
+                history=History()
+                history.title=form.fee_date.data
+                history.fee_date = form.fee_date.data
+                history.fee=fee22
+                history.type='Fee22'
+                db.session.add(history)
+                history=History()
+                history.title=form.fee_date.data
+                history.fee_date=form.fee_date.data
+                history.fee=fee21
+                history.type='Fee21'
+                db.session.add(history)
+                Orders.query.update({'fee22': 0,'fee32':0,'fee42':0,'fee52':0,'fee62':0})
+                db.session.commit()
+                strpath = os.getcwd() + "\\app\\static\\system.json"
+                with open(strpath, "w") as f1:
+                    sys=json.load(f1)
+                    sys['month']=form.fee_date.data.strftime('%Y%m')
+                with open(strpath, "w") as f2:
+
+                    json.dump(sys, f2)
+                flash('初使化成功!')
+            except Exception as e:
+                current_app.logger.error(e)
+                flash('初使化失败')
         else:
             flash('所选月份不对!')
     return render_template('user/month.html', form=form)

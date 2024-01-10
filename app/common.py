@@ -66,3 +66,10 @@ def month_difference(date1, date2):
     date1 = datetime.datetime.strptime(date1, "%Y%m%d")
     diff = date2.year * 12 + date2.month - (date1.year * 12 + date1.month)
     return diff
+
+#获取系统当前年月
+def get_SystemMonth():
+    strpath = os.getcwd() + "\\app\\static\\system.json"
+    with open(strpath, 'r', encoding='utf-8_sig') as f:
+        sys = json.load(f)
+    return sys['month']
