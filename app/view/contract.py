@@ -9,7 +9,7 @@ from app import db
 from app.models.bill import Fee1
 from app.models.contract import Customers,Orders
 from app.models.other import Files
-from app.forms.customer import CustomerForm
+from app.forms.customer import CustomerForm,CustomersearchForm
 from app.forms.fee import Fee1Form
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
 import datetime
@@ -17,18 +17,20 @@ import datetime
 contractView=Blueprint('contract_admin',__name__)
 
 #客户管理
-@contractView.route('/customer_admin',endpoint='customer_admin')
+@contractView.route('/customer_admin',endpoint='customer_admin',methods=["GET","POST"])
 @is_login
 def customer_admin():
     uid = session.get('user_id')
     customers=Customers()
     page = request.args.get('page', 1, type=int)
-
-    pagination = customers.query.filter(Customers.status!='off').order_by(Customers.create_datetime.desc()).paginate(
-        page, per_page=current_app.config['PAGEROWS'])
-
+    form=CustomersearchForm()
+    title=None
+    if form.validate_on_submit():
+        page=1
+        title=form.name.data
+    pagination=customers.search_customers( keywords=title,page=page,all=False)
     result = pagination.items
-    return render_template('contract/customer_admin.html', page=page, pagination=pagination, posts=result)
+    return render_template('contract/customer_admin.html', page=page, pagination=pagination, posts=result,form=form)
 
 #合同管理
 @contractView.route('/order_admin',methods=["GET","POST"])

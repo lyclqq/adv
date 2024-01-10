@@ -14,14 +14,20 @@ class Customers(db.Model,Basecls):
     orders = db.relationship('Orders', backref='customer', lazy='dynamic')
 
  #分页查询，支持多关键字
-    def search_customers(self,keywords,page=1):
-        pagerows=current_app.config['PAGEROWS']
+    def search_customers(self,keywords,page=1,all=True):
+        pagerows = current_app.config['PAGEROWS']
         if keywords is None:
-            pagination = Customers.query.order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
+            if all != True:
+                pagination = Customers.query.filter(Customers.status != 'off').order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
+            else:
+                pagination = Customers.query.order_by(Customers.id.desc()).paginate( page, per_page=pagerows)
         else:
             keys=keywords.split(',')
-            rule = and_(*[Orders.title.like('%' + w + '%') for w in keys])
-            pagination = Customers.query.filter(rule).order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
+            rule = and_(*[Customers.name.like('%' + w + '%') for w in keys])
+            if all !=True:
+                pagination = Customers.query.filter(rule,Customers.status != 'off').order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
+            else:
+                pagination = Customers.query.filter(rule).order_by(Customers.id.desc()).paginate(page, per_page=pagerows)
         return pagination
 
 #合同表

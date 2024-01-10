@@ -25,3 +25,14 @@ class CustomerForm(FlaskForm):
     submit = SubmitField('提交',render_kw={'class':'form-control'})
 
 
+class CustomersearchForm(FlaskForm):
+    name = StringField(label='客户名称:',
+        validators=[
+            DataRequired(message='客户名称不能为空'),
+            Length(min=1, message='客户名称长度必须大于%(min)d')
+        ],
+        widget=widgets.TextInput(),
+        render_kw={'class': 'form-control',
+                   "placeholder":"输入客户名称"}
+    )
+    submit = SubmitField('提交', render_kw={'class': 'form-control'})
