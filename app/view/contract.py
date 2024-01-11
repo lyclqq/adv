@@ -4,11 +4,12 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-from app.common import is_login,ins_logs
+from app.common import is_login,ins_logs,month_difference
 from app import db
 from app.models.bill import Fee1
 from app.models.contract import Customers,Orders
 from app.models.other import Files
+from app.models.system import Systeminfo
 from app.forms.customer import CustomerForm,CustomersearchForm
 from app.forms.fee import Fee1Form
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
@@ -328,18 +329,21 @@ def fee1_input(oid):
         form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
         try:
-            fee1 = Fee1()
-            fee1.order_id = oid
-            fee1.status = 'stay'
-            fee1.iuser_id = uid
-            fee1.feedate = form.fee_date.data
-            fee1.fee = form.fee.data
-            fee1.notes = form.notes.data
-            db.session.add(fee1)
-            db.session.commit()
-            flash('录入成功.', 'success')
-            ins_logs(uid, '合同金额录入,id=' + str(oid), type='contract')
-
+            systeminfo=Systeminfo.query.filter(Systeminfo.id==1).first()
+            if month_difference(systeminfo.systemmonth,form.fee_date.data)>=1:
+                flash('不能晚于系统当月！.', 'success')
+            else:
+                fee1 = Fee1()
+                fee1.order_id = oid
+                fee1.status = 'stay'
+                fee1.iuser_id = uid
+                fee1.feedate = form.fee_date.data
+                fee1.fee = form.fee.data
+                fee1.notes = form.notes.data
+                db.session.add(fee1)
+                db.session.commit()
+                flash('录入成功.', 'success')
+                ins_logs(uid, '合同金额录入,id=' + str(oid), type='contract')
         except Exception as e:
             current_app.logger.error(e)
             flash('录入失败')

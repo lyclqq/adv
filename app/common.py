@@ -63,7 +63,10 @@ def ins_logs(userid,notes,type='system'):
 
 #比较月份
 def month_difference(date1, date2):
-    date1 = datetime.datetime.strptime(date1, "%Y-%m-%d")
+    if type(date1)!=datetime.date:
+        date1=datetime.datetime.strptime(date1, "%Y-%m-%d")
+    if type(date2)!=datetime.date:
+        date2=datetime.datetime.strptime(date2, "%Y-%m-%d")
     diff = date2.year * 12 + date2.month - (date1.year * 12 + date1.month)
     return diff
 

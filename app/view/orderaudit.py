@@ -4,7 +4,7 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-from app.common import is_login,ins_logs
+from app.common import is_login,ins_logs,month_difference
 from app import db
 from app.models.contract import Customers,Orders
 from app.models.other import Files

@@ -4,10 +4,10 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-from app.common import is_login,ins_logs
+from app.common import is_login,ins_logs,month_difference
 from app import db
 from app.models.contract import Customers,Orders
-from app.models.other import Files
+from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers
 from app.forms.customer import CustomerForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
@@ -50,25 +50,26 @@ def words_order(oid):
     else:
         form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
-        wordnumber=Wordnumbers()
-        wordnumber.order_id=oid
-        wordnumber.feedate = form.fee_date.data
-        wordnumber.status = 'stay'
-        wordnumber.wordnumber=form.words.data
-        wordnumber.type = 'order'
-        wordnumber.iuser_id = uid
-        words=order.wordnumber+form.words.data
-        db.session.add(wordnumber)
-        try:
-            if words>=0:
+        systeminfo = Systeminfo.query.filter(Systeminfo.id == 1).first()
+        if month_difference(systeminfo.systemmonth, form.fee_date.data) >= 1:
+            flash('不能晚于系统当月！.', 'success')
+        else:
+            try:
+                wordnumber=Wordnumbers()
+                wordnumber.order_id=oid
+                wordnumber.feedate = form.fee_date.data
+                wordnumber.status = 'stay'
+                wordnumber.wordnumber=form.words.data
+                wordnumber.type = 'order'
+                wordnumber.iuser_id = uid
+                db.session.add(wordnumber)
+
                 db.session.commit()
                 flash('录入成功.', 'success')
                 ins_logs(uid, '合同字数录入,id=' + str(oid), type='words_admin')
-            else:
-                flash('字数余额不能小于0!')
-        except Exception as e:
-            current_app.logger.error(e)
-            flash('录入失败')
+            except Exception as e:
+                current_app.logger.error(e)
+                flash('录入失败')
     pagination = Wordnumbers.query.filter(Wordnumbers.type == 'order',Wordnumbers.order_id==oid).order_by(Wordnumbers.id.desc()).paginate(page,
                                                                                 per_page=8)
     return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination,page=page)

@@ -194,7 +194,7 @@ def setmonth():
                 db.session.add(history)
                 Orders.query.update({'Fee22': 0,'Fee32':0,'Fee42':0,'Fee52':0,'Fee62':0})
                 if form.fee_date.data.year-systoday.year==1:
-                    Orders.query.update({'Fee23': 0, 'Fee33': 0, 'Fee43': 0, 'Fee53': 0})
+                    Orders.query.update({'Fee13':0,'Fee23': 0, 'Fee33': 0, 'Fee43': 0, 'Fee53': 0})
                 systeminfo.systemmonth= form.fee_date.data.strftime('%Y%m%d')
                 db.session.add(systeminfo)
                 db.session.commit()
