@@ -137,23 +137,27 @@ def order_create(cuid):
     form.customername.readonly=True
     form.customername.data=customer.name
     if form.validate_on_submit():
-        order=Orders()
-        order.name=form.name.data
-        order.title=form.title.data
-        order.notes=form.notes.data
-        order.Fee11=form.fee1.data
-        order.cutomer_id=cuid
-        order.iuser_id=uid
-        order.contract_date=form.contract_date.data
-        order.wordnumber=form.words.data
-        order.status='未审'
-        order.group_id = groupid
         try:
-            db.session.add(order)
-            db.session.commit()
-            ins_logs(uid, '新增合同' , type='contract')
-            flash('新增成功')
-            return redirect(url_for('contract_admin.order_admin'))
+            systeminfo = Systeminfo.query.filter(Systeminfo.id == 1).first()
+            if month_difference(systeminfo.systemmonth, form.fee_date.data) >= 1:
+                flash('不能晚于系统当月！.', 'success')
+            else:
+                order = Orders()
+                order.name = form.name.data
+                order.title = form.title.data
+                order.notes = form.notes.data
+                order.Fee11 = form.fee1.data
+                order.cutomer_id = cuid
+                order.iuser_id = uid
+                order.contract_date = form.contract_date.data
+                order.wordnumber = form.words.data
+                order.status = '未审'
+                order.group_id = groupid
+                db.session.add(order)
+                db.session.commit()
+                ins_logs(uid, '新增合同' , type='contract')
+                flash('新增成功')
+                return redirect(url_for('contract_admin.order_admin'))
         except Exception as e:
             current_app.logger.error(e)
             flash('新增失败')
@@ -225,7 +229,6 @@ def order_edit(oid):
             current_app.logger.error(e)
             flash('修改失败')
     else:
-        print('the errors is '+str(form.errors))
         form.notes.data=order.notes
         form.title.data=order.title
         form.ordernumber.data=order.ordernumber
@@ -288,7 +291,6 @@ def order_upfiles(oid):
                     oldfilename = f.filename
                     if form.notes.data.strip()!='':
                         oldfilename=form.notes.data.strip()
-                        print('notes is '+form.notes.data)
                     newfilename = session.get('username') + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
                     path = os.path.join(current_app.config['UPLOADED_PATH'], datetime.datetime.now().strftime("%Y") + os.sep)
 
