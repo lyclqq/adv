@@ -139,7 +139,7 @@ def order_create(cuid):
     if form.validate_on_submit():
         try:
             systeminfo = Systeminfo.query.filter(Systeminfo.id == 1).first()
-            if month_difference(systeminfo.systemmonth, form.fee_date.data) >= 1:
+            if month_difference(systeminfo.systemmonth, form.contract_date.data) >= 1:
                 flash('不能晚于系统当月！.', 'success')
             else:
                 order = Orders()
@@ -173,28 +173,32 @@ def order_customer_create():
     form.customername.render_kw={'class': 'form-control','readonly':False}
     if form.validate_on_submit():
         try:
-            customer=Customers()
-            customer.name=form.customername.data
-            customer.status='stay'
-            db.session.add(customer)
-            db.session.commit()
-            order=Orders()
-            order.name=form.name.data
-            order.title=form.title.data
-            order.notes=form.notes.data
-            order.Fee11=form.fee1.data
-            order.iuser_id=uid
-            order.contract_date=form.contract_date.data
-            order.status='未审'
-            order.cutomer_id=customer.id
-            order.group_id=groupid
-            order.wordnumber=form.words.data
-            order.ordernumber=form.ordernumber.data
-            db.session.add(order)
-            db.session.commit()
-            ins_logs(uid, '新增合同' , type='contract')
-            flash('新增成功')
-            return redirect(url_for('contract_admin.order_admin'))
+            systeminfo = Systeminfo.query.filter(Systeminfo.id == 1).first()
+            if month_difference(systeminfo.systemmonth, form.contract_date.data) >= 1:
+                flash('不能晚于系统当月！.', 'success')
+            else:
+                customer=Customers()
+                customer.name=form.customername.data
+                customer.status='stay'
+                db.session.add(customer)
+                db.session.commit()
+                order=Orders()
+                order.name=form.name.data
+                order.title=form.title.data
+                order.notes=form.notes.data
+                order.Fee11=form.fee1.data
+                order.iuser_id=uid
+                order.contract_date=form.contract_date.data
+                order.status='未审'
+                order.cutomer_id=customer.id
+                order.group_id=groupid
+                order.wordnumber=form.words.data
+                order.ordernumber=form.ordernumber.data
+                db.session.add(order)
+                db.session.commit()
+                ins_logs(uid, '新增合同' , type='contract')
+                flash('新增成功')
+                return redirect(url_for('contract_admin.order_admin'))
         except Exception as e:
             current_app.logger.error(e)
             flash('新增失败')
