@@ -71,7 +71,7 @@ def fee2_input(oid):
                     db.session.add(fee2)
                     db.session.commit()
                     flash('录入成功.', 'success')
-                    ins_logs(uid, '刊登金额录入,id=' + str(oid), type='fee2')
+                    ins_logs(uid, '刊登金额录入,orderid=' + str(oid), type='fee2')
 
                 else:
                     flash('余额不能小于0!')
@@ -154,7 +154,7 @@ def fee2_audit_on(oid,fid):
             fee2.status='on'
             fee2.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核到帐金额同意，orderid=' + str(oid), type='fee2')
+            ins_logs(uid, '审核刊登金额同意，orderid=' + str(oid), type='fee2')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
@@ -173,7 +173,7 @@ def fee2_audit_off(oid,fid):
             fee2.status='off'
             fee2.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核刊登金额拒绝，fee2id=' + str(fid), type='fee2')
+            ins_logs(uid, '审核刊登金额拒绝，fee2id=' + str(fid)+'，orderid=' + str(oid), type='fee2')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')

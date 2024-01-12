@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, current_app, url_for, redirect, se
 import json
 import os
 from functools import wraps
-from app.common import is_login, ins_logs,month_difference
+from app.common import is_login, ins_logs,month_difference,get_month
 from app import db
 from app.models.contract import Customers, Orders
 from app.models.system import Systeminfo
@@ -241,11 +241,15 @@ def fee3_audit_on(oid,fid):
     fee3=Fee3.query.filter(Fee3.id==fid).first_or_404()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     total=order.Fee31+fee3.fee
-    if fee3.status=='stay' and total>=0:
+    if fee3.status=='stay' and total>=0 and order.Fee11>=total:
         try:
             order.update_datetime=datetime.datetime.now()
+            systemtoday=get_month()
+            if month_difference(systemtoday,fee3.feedate)==0:#当月
+                order.Fee32=order.Fee32+fee3.fee
+            if systemtoday.year==fee3.feedate.year: #当年
+                order.Fee33 = order.Fee33 + fee3.fee
             order.Fee31=total
-            order.Fee32=order.Fee32+fee3.fee
             db.session.add(order)
             fee3.status='on'
             fee3.cuser_id=uid
@@ -285,11 +289,15 @@ def fee4_audit_on(oid,fid):
     fee4=Fee4.query.filter(Fee4.id==fid).first_or_404()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     total=order.Fee41+fee4.fee
-    if fee4.status=='stay' and total>=0:
+    if fee4.status=='stay' and total>=0 and order.Fee11>=total:
         try:
             order.update_datetime=datetime.datetime.now()
             order.Fee41=total
-            order.Fee42=order.Fee42+fee4.fee
+            systemtoday=get_month()
+            if month_difference(systemtoday,fee4.feedate)==0:#当月
+                order.Fee42=order.Fee42+fee4.fee
+            if systemtoday.year==fee4.feedate.year: #当年
+                order.Fee43 = order.Fee43 + fee4.fee
             db.session.add(order)
             fee4.status='on'
             fee4.cuser_id=uid
