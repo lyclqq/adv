@@ -44,7 +44,7 @@ def order_search_admin():
 def fee5_input(oid):
     uid = session.get('user_id')
     form = Fee5Form()
-    form.scale.data= current_app.config['SCALE']
+    form.scale.data= get_scale()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if order.status != '己审' and order.status!='完成':
         form.submit.render_kw={'class':'form-control','disabled':'true'}
@@ -187,3 +187,8 @@ def fee5_search_audit():
     pagerows = current_app.config['PAGEROWS']
     pagination = Fee5.query.order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee5/fee5_search_audit.html', pagination=pagination,page=page)
+
+#读取税率
+def get_scale():
+    systeminfo=Systeminfo.query.filter(Systeminfo.id==1).first()
+    return systeminfo.propor
