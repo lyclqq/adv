@@ -310,7 +310,7 @@ def fee4_audit_on(oid,fid):
         flash('不符合条件！')
     return redirect(url_for('fee345.fee4_audit',oid=oid,fid=fid))
 
-#刊登金额审核拒绝
+#到帐金额审核拒绝
 @fee345View.route('/fee4_audit_off/<int:oid>/<int:fid>')
 @is_login
 def fee4_audit_off(oid,fid):
