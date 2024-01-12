@@ -4,7 +4,7 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-from app.common import is_login,ins_logs,month_difference
+from app.common import is_login,ins_logs,month_difference,get_month
 from app import db
 from app.models.contract import Customers,Orders
 from app.models.system import Systeminfo
@@ -132,7 +132,7 @@ def order_search_audit():
     result=pagination.items
     return render_template('fee2/order_search_audit.html', page=page, pagination=pagination, posts=result,form=form)
 
-#刊登金额审核同意
+#进登金额审核同意
 @fee2View.route('/fee2_audit_on/<int:oid>/<int:fid>')
 @is_login
 def fee2_audit_on(oid,fid):
@@ -144,13 +144,17 @@ def fee2_audit_on(oid,fid):
         try:
             order.update_datetime=datetime.datetime.now()
             order.Fee21=total
-            order.Fee22=order.Fee22+fee2.fee
+            systemtoday=get_month()
+            if month_difference(systemtoday,fee2.feedate)==0:#当月
+                order.Fee22=order.Fee22+fee2.fee
+            if systemtoday.year==fee2.feedate.year: #当年
+                order.Fee23 = order.Fee23 + fee2.fee
             order.area=order.area+fee2.area
             db.session.add(order)
             fee2.status='on'
             fee2.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核刊登金额同意，orderid=' + oid, type='fee2')
+            ins_logs(uid, '审核到帐金额同意，orderid=' + oid, type='fee2')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')

@@ -70,3 +70,8 @@ def month_difference(date1, date2):
     diff = date2.year * 12 + date2.month - (date1.year * 12 + date1.month)
     return diff
 
+#获取系统当月
+def get_month():
+    systeminfo=Systeminfo.query.filter(Systeminfo.id==1).first()
+    return systeminfo.systemmonth
+

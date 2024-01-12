@@ -72,6 +72,7 @@ def order_audit(oid):
         if order.status=='待审' and form.status.data=='己审' :
             order.status = form.status.data
             order.update_datetime = datetime.datetime.now()
+            order.Fee13=order.Fee11
             db.session.add(order)
             #print('customer is '+str(order.cutomer_id))
             customer = Customers.query.filter(Customers.id == order.cutomer_id).first_or_404()
@@ -207,6 +208,7 @@ def fee1_audit_on(oid,fid):
         try:
             order.update_datetime=datetime.datetime.now()
             order.Fee11=total
+            order.Fee13=order.Fee13+fee1.fee
             db.session.add(order)
             fee1.status='on'
             fee1.cuser_id=uid
