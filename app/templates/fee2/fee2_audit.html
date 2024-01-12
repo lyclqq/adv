@@ -50,9 +50,10 @@
             <thead>
             <tr>
                 <td class="text-bg-secondary" style="width:60px">id</td>
-                <td class="text-bg-secondary" style="width:180px">输入时间</td>
+                <td class="text-bg-secondary" style="width:150px">输入时间</td>
                 <td class="text-bg-secondary">备注</td>
                 <td class="text-bg-secondary" style="width:120px">发生额</td>
+                <td class="text-bg-secondary" style="width:80px">面积</td>
                 <td class="text-bg-secondary" style="width:80px">状态</td>
                 <td class="text-bg-secondary" style="width:95px">录入</td>
                 <td class="text-bg-secondary" style="width:95px">审核</td>
@@ -69,6 +70,7 @@
                         <td>{{ item.create_datetime|short_time }}</td>
                         <td>{{ item.notes }}</td>
                         <td>{{ item.fee }}</td>
+                        <td>{{ item.area }}</td>
                         <td>{{ item.status }}</td>
                         <td>{{ item.iuser_id | replace_username }}</td>
                         <td>{{ item.cuser_id | replace_username }}</td>

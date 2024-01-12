@@ -29,9 +29,10 @@
                     <th class="text-bg-secondary" style="width:60px">ID</th>
                     <th class="text-bg-secondary">合同名称</th>
                     <th class="text-bg-secondary" style="width:150px">合同编号</th>
-                    <th class="text-bg-secondary" style="width:100px">状态</th>
+                    <th class="text-bg-secondary" style="width:80px">状态</th>
                     <th class="text-bg-secondary" style="width:120px">刊登金额</th>
-                    <th class="text-bg-secondary" style="width:220px">处理时间</th>
+                    <th class="text-bg-secondary" style="width:120px">刊登面积</th>
+                    <th class="text-bg-secondary" style="width:150px">处理时间</th>
                     <th class="text-bg-secondary" style="width:80px">操作</th>
                 </tr>
                 </thead>
@@ -43,6 +44,8 @@
                         <td>{{ post.ordernumber }}</td>
                         <td>{{ post.status }}</td>
                         <td>{{ post.Fee21 }}</td>
+                        <td>{{ post.area }}</td>
+
                         <td>{{ post.update_datetime|short_time }}</td>
                         <td>
                             {% if post.status=="己审" or post.status=="完成" %}

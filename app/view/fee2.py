@@ -140,7 +140,7 @@ def fee2_audit_on(oid,fid):
     fee2=Fee2.query.filter(Fee2.id==fid).first_or_404()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     total=order.Fee21+fee2.fee
-    if fee2.status=='stay' and total>=0:
+    if fee2.status=='stay' and total>=0 and order.Fee11>=total:
         try:
             order.update_datetime=datetime.datetime.now()
             order.Fee21=total
@@ -154,7 +154,7 @@ def fee2_audit_on(oid,fid):
             fee2.status='on'
             fee2.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核到帐金额同意，orderid=' + oid, type='fee2')
+            ins_logs(uid, '审核到帐金额同意，orderid=' + str(oid), type='fee2')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
@@ -173,7 +173,7 @@ def fee2_audit_off(oid,fid):
             fee2.status='off'
             fee2.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核刊登金额拒绝，fee2id=' + fid, type='fee2')
+            ins_logs(uid, '审核刊登金额拒绝，fee2id=' + str(fid), type='fee2')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
