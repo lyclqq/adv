@@ -76,12 +76,8 @@
                         <td>{{ item.prize }}</td>
                         <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
                         <td>
-                            {% if item.status=="stay" %}
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee5.fee5_audit_show',fid=item.id,oid=item.order_id) }}"
-                                    onclick="return confirm('Are you sure?');">审核</a>
-                            {% else %}
-                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">审核</button>
-                            {% endif %}
+                                    >审核</a>
                         </td>
                     </tr>
                 {% endfor %}

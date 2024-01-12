@@ -152,13 +152,13 @@ def fee5_audit_on(oid,fid):
             fee5.cuser_id=uid
             db.session.add(fee5)
             db.session.commit()
-            ins_logs(uid, '审核绩效金额同意，orderid=' + oid, type='fee5')
+            ins_logs(uid, '审核绩效金额同意，orderid=' + str(oid), type='fee5')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
     else:
         flash('不符合条件！')
-    return redirect(url_for('fee5.fee5_audit',oid=oid))
+    return redirect(url_for('fee5.fee5_audit_show',oid=oid,fid=fid))
 
 #绩效金额审核拒绝
 @fee5View.route('/fee5_audit_off/<int:oid>/<int:fid>')
@@ -171,7 +171,7 @@ def fee5_audit_off(oid,fid):
             fee5.status='off'
             fee5.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核到帐金额拒绝，fee5id=' + fid, type='fee5')
+            ins_logs(uid, '审核绩效金额拒绝，fee5id=' + str(fid), type='fee5')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
