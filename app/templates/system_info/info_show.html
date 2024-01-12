@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="m-2 p-3 ">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">税率信息</li>
+        </ol>
+        <br>
+        <div class="alert alert-success" role="alert">
+            <strong>{{ si.systemmonth.strftime("%Y-%m") }}</strong>:
+            {% if edit==1 %}
+                <form action="/info/update" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <input type="hidden" name="id" value="{{ si.id }}">
+                    <input type="number" name="propor" value="{{ si.propor }}" step="0.01" max="100" min="0.01"/>
+                    <button class="btn btn-sm btn-secondary">修改</button>
+                </form>
+            {% else %}
+                {{ si.propor }}
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}
