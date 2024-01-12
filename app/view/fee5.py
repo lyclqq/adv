@@ -4,10 +4,10 @@ from flask import Blueprint, render_template, current_app, url_for, redirect, se
 import json
 import os
 from functools import wraps
-from app.common import is_login, ins_logs
+from app.common import is_login, ins_logs,month_difference
 from app import db
 from app.models.contract import Customers, Orders
-from app.models.other import Files
+from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers, Fee1, Fee2, Fee3, Fee4, Fee5
 from app.forms.customer import CustomerForm
 from app.forms.fee import Fee2Form, AuditForm, Fee3Form,Fee5Form
@@ -52,29 +52,33 @@ def fee5_input(oid):
         form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
         try:
-            fee2_sum=0
-            fee5 = Fee5()
-            fee5.order_id = oid
-            fee5.status = 'stay'
-            fee5.iuser_id = uid
-            db.session.add(fee5)
-            for item in request.form:
-                if item[:5]=='Fee2_':
-                    str_fee2id=item[5:]
-                    fee2=Fee2.query.filter(Fee2.id==str_fee2id).first()
-                    if fee2 is not None and fee2.status=='on' and fee2.fee5_id==0:
-                        fee2_sum=fee2_sum+fee2.fee
-                        fee2.fee5_id=fee5.id
-                        db.session.add(fee2)
-            fee5.feedate = form.fee_date.data
-            fee5.fee = form.fee.data
-            fee5.scale = form.scale.data
-            fee5.prize = form.prize.data
-            fee5.notes = form.notes.data
-            db.session.add(fee5)
-            db.session.commit()
-            flash('录入成功.', 'success')
-            ins_logs(uid, '绩效金额录入,id=' + str(oid), type='fee5')
+            systeminfo = Systeminfo.query.filter(Systeminfo.id == 1).first()
+            if month_difference(systeminfo.systemmonth, form.fee_date.data) >= 1:
+                flash('不能晚于系统当月！.', 'success')
+            else:
+                fee2_sum=0
+                fee5 = Fee5()
+                fee5.order_id = oid
+                fee5.status = 'stay'
+                fee5.iuser_id = uid
+                db.session.add(fee5)
+                for item in request.form:
+                    if item[:5]=='Fee2_':
+                        str_fee2id=item[5:]
+                        fee2=Fee2.query.filter(Fee2.id==str_fee2id).first()
+                        if fee2 is not None and fee2.status=='on' and fee2.fee5_id==0:
+                            fee2_sum=fee2_sum+fee2.fee
+                            fee2.fee5_id=fee5.id
+                            db.session.add(fee2)
+                fee5.feedate = form.fee_date.data
+                fee5.fee = form.fee.data
+                fee5.scale = form.scale.data
+                fee5.prize = form.prize.data
+                fee5.notes = form.notes.data
+                db.session.add(fee5)
+                db.session.commit()
+                flash('录入成功.', 'success')
+                ins_logs(uid, '绩效金额录入,id=' + str(oid), type='fee5')
 
         except Exception as e:
             current_app.logger.error(e)

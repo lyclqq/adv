@@ -4,10 +4,10 @@ from flask import Blueprint, render_template, current_app, url_for, redirect, se
 import json
 import os
 from functools import wraps
-from app.common import is_login, ins_logs
+from app.common import is_login, ins_logs,month_difference
 from app import db
 from app.models.contract import Customers, Orders
-from app.models.other import Files
+from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers, Fee1, Fee2, Fee3, Fee4, Fee5
 from app.forms.customer import CustomerForm
 from app.forms.fee import Fee2Form, AuditForm, Fee3Form
@@ -76,35 +76,39 @@ def fee4_input(oid):
         form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
         try:
-            fee4 = Fee4()
-            fee4.order_id = oid
-            fee4.feedate = form.fee_date.data
-            fee4.status = 'stay'
-            fee4.fee = form.fee.data
-            fee4.iuser_id = uid
-            total = order.Fee41 + form.fee.data
-            fee4.notes = form.notes.data
-            if total >= 0:
-                f = request.files.get('upfile')
-                if f:
-                    extension = f.filename.split('.')[-1].lower()
-                    if extension not in ['doc', 'xls', 'docx', 'xlsx', 'pdf']:
-                        flash('只能上传pdf、word和excel文件!')
-                    else:
-                        newfilename = session.get('username') + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-                        path = os.path.join(current_app.config['UPLOADED_PATH'],
-                                        datetime.datetime.now().strftime("%Y") + os.sep)
-                        if not os.path.exists(path):
-                            os.mkdir(path)
-                        f.save(os.path.join(path, newfilename + '.' + extension))
-                        fee4.path=datetime.datetime.now().strftime("%Y") + os.sep
-                        fee4.filename=newfilename+'.'+extension
-                db.session.add(fee4)
-                db.session.commit()
-                flash('录入成功.', 'success')
-                ins_logs(uid, '到帐金额录入,id=' + str(oid), type='fee345')
+            systeminfo = Systeminfo.query.filter(Systeminfo.id == 1).first()
+            if month_difference(systeminfo.systemmonth, form.fee_date.data) >= 1:
+                flash('不能晚于系统当月！.', 'success')
             else:
-                flash('余额不能小于0!')
+                fee4 = Fee4()
+                fee4.order_id = oid
+                fee4.feedate = form.fee_date.data
+                fee4.status = 'stay'
+                fee4.fee = form.fee.data
+                fee4.iuser_id = uid
+                total = order.Fee41 + form.fee.data
+                fee4.notes = form.notes.data
+                if total >= 0:
+                    f = request.files.get('upfile')
+                    if f:
+                        extension = f.filename.split('.')[-1].lower()
+                        if extension not in ['doc', 'xls', 'docx', 'xlsx', 'pdf']:
+                            flash('只能上传pdf、word和excel文件!')
+                        else:
+                            newfilename = session.get('username') + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+                            path = os.path.join(current_app.config['UPLOADED_PATH'],
+                                            datetime.datetime.now().strftime("%Y") + os.sep)
+                            if not os.path.exists(path):
+                                os.mkdir(path)
+                            f.save(os.path.join(path, newfilename + '.' + extension))
+                            fee4.path=datetime.datetime.now().strftime("%Y") + os.sep
+                            fee4.filename=newfilename+'.'+extension
+                    db.session.add(fee4)
+                    db.session.commit()
+                    flash('录入成功.', 'success')
+                    ins_logs(uid, '到帐金额录入,id=' + str(oid), type='fee345')
+                else:
+                    flash('余额不能小于0!')
         except Exception as e:
             current_app.logger.error(e)
             flash('录入失败')
@@ -126,35 +130,39 @@ def fee3_input(oid):
         form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
         try:
-            fee3 = Fee3()
-            fee3.order_id = oid
-            fee3.feedate = form.fee_date.data
-            fee3.status = 'stay'
-            fee3.fee = form.fee.data
-            fee3.iuser_id = uid
-            total = order.Fee31 + form.fee.data
-            fee3.notes = form.notes.data
-            if total >= 0:
-                f = request.files.get('upfile')
-                if f:
-                    extension = f.filename.split('.')[-1].lower()
-                    if extension not in ['doc', 'xls', 'docx', 'xlsx', 'pdf']:
-                        flash('只能上传pdf、word和excel文件!')
-                    else:
-                        newfilename = session.get('username') + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-                        path = os.path.join(current_app.config['UPLOADED_PATH'],
-                                        datetime.datetime.now().strftime("%Y") + os.sep)
-                        if not os.path.exists(path):
-                            os.mkdir(path)
-                        f.save(os.path.join(path, newfilename + '.' + extension))
-                        fee3.path=datetime.datetime.now().strftime("%Y") + os.sep
-                        fee3.filename=newfilename+'.'+extension
-                db.session.add(fee3)
-                db.session.commit()
-                flash('录入成功.', 'success')
-                ins_logs(uid, '发票金额录入,id=' + str(oid), type='fee345')
+            systeminfo = Systeminfo.query.filter(Systeminfo.id == 1).first()
+            if month_difference(systeminfo.systemmonth, form.fee_date.data) >= 1:
+                flash('不能晚于系统当月！.', 'success')
             else:
-                flash('余额不能小于0!')
+                fee3 = Fee3()
+                fee3.order_id = oid
+                fee3.feedate = form.fee_date.data
+                fee3.status = 'stay'
+                fee3.fee = form.fee.data
+                fee3.iuser_id = uid
+                total = order.Fee31 + form.fee.data
+                fee3.notes = form.notes.data
+                if total >= 0:
+                    f = request.files.get('upfile')
+                    if f:
+                        extension = f.filename.split('.')[-1].lower()
+                        if extension not in ['doc', 'xls', 'docx', 'xlsx', 'pdf']:
+                            flash('只能上传pdf、word和excel文件!')
+                        else:
+                            newfilename = session.get('username') + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+                            path = os.path.join(current_app.config['UPLOADED_PATH'],
+                                            datetime.datetime.now().strftime("%Y") + os.sep)
+                            if not os.path.exists(path):
+                                os.mkdir(path)
+                            f.save(os.path.join(path, newfilename + '.' + extension))
+                            fee3.path=datetime.datetime.now().strftime("%Y") + os.sep
+                            fee3.filename=newfilename+'.'+extension
+                    db.session.add(fee3)
+                    db.session.commit()
+                    flash('录入成功.', 'success')
+                    ins_logs(uid, '发票金额录入,id=' + str(oid), type='fee345')
+                else:
+                    flash('余额不能小于0!')
         except Exception as e:
             current_app.logger.error(e)
             flash('录入失败')

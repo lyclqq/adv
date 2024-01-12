@@ -3,7 +3,7 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-from app.models.system import Logs
+from app.models.system import Logs,Systeminfo
 from app import db
 import datetime
 #登陆验证
@@ -63,6 +63,10 @@ def ins_logs(userid,notes,type='system'):
 
 #比较月份
 def month_difference(date1, date2):
-    date1 = datetime.datetime.strptime(date1, "%Y%m%d")
+    if type(date1)!=datetime.date:
+        date1=datetime.datetime.strptime(date1, "%Y-%m-%d")
+    if type(date2)!=datetime.date:
+        date2=datetime.datetime.strptime(date2, "%Y-%m-%d")
     diff = date2.year * 12 + date2.month - (date1.year * 12 + date1.month)
     return diff
+

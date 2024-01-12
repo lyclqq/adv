@@ -14,14 +14,20 @@ class Customers(db.Model,Basecls):
     orders = db.relationship('Orders', backref='customer', lazy='dynamic')
 
  #分页查询，支持多关键字
-    def search_customers(self,keywords,page=1):
-        pagerows=current_app.config['PAGEROWS']
+    def search_customers(self,keywords,page=1,all=True):
+        pagerows = current_app.config['PAGEROWS']
         if keywords is None:
-            pagination = Customers.query.order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
+            if all != True:
+                pagination = Customers.query.filter(Customers.status != 'off').order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
+            else:
+                pagination = Customers.query.order_by(Customers.id.desc()).paginate( page, per_page=pagerows)
         else:
             keys=keywords.split(',')
-            rule = or_(*[Orders.title.like('%' + w + '%') for w in keys])
-            pagination = Customers.query.filter(rule).order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
+            rule = and_(*[Customers.name.like('%' + w + '%') for w in keys])
+            if all !=True:
+                pagination = Customers.query.filter(rule,Customers.status != 'off').order_by(Customers.id.desc()).paginate(page,per_page=pagerows)
+            else:
+                pagination = Customers.query.filter(rule).order_by(Customers.id.desc()).paginate(page, per_page=pagerows)
         return pagination
 
 #合同表
@@ -31,6 +37,8 @@ class Orders(db.Model,Basecls):
     title = db.Column(db.String(200), nullable=False)
     status = db.Column(db.String(10))
     Fee11=db.Column(db.Float,default=0)
+    Fee12 = db.Column(db.Float, default=0)
+    Fee13 = db.Column(db.Float, default=0)
     Fee21 = db.Column(db.Float, default=0)
     Fee31 = db.Column(db.Float, default=0)
     Fee41 = db.Column(db.Float, default=0)
@@ -41,6 +49,10 @@ class Orders(db.Model,Basecls):
     Fee42 = db.Column(db.Float, default=0)
     Fee52=db.Column(db.Float,default=0)
     Fee62 = db.Column(db.Float, default=0)
+    Fee23 = db.Column(db.Float, default=0)
+    Fee33 = db.Column(db.Float, default=0)
+    Fee43 = db.Column(db.Float, default=0)
+    Fee53=db.Column(db.Float,default=0)
     wordnumber=db.Column(db.Integer,default=0)
     wordcount=db.Column(db.Integer, default=0)
     publiccount=db.Column(db.Integer, default=0)
@@ -67,7 +79,7 @@ class Orders(db.Model,Basecls):
                     Orders.id.desc()).paginate(page, per_page=pagerows)
             return pagination
         keys=keywords.split(',')
-        rule = or_(*[Orders.title.like('%'+w+'%') for w in keys])
+        rule = and_(*[Orders.title.like('%'+w+'%') for w in keys])
         if status =='全部':
             pagination = Orders.query.filter(rule).order_by(Orders.id.desc()).paginate(page,per_page=pagerows)
         else:

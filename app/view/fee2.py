@@ -4,10 +4,10 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-from app.common import is_login,ins_logs
+from app.common import is_login,ins_logs,month_difference
 from app import db
 from app.models.contract import Customers,Orders
-from app.models.other import Files
+from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers,Fee1,Fee2
 from app.forms.customer import CustomerForm
 from app.forms.fee import Fee2Form,AuditForm
@@ -51,27 +51,33 @@ def fee2_input(oid):
     else:
         form.submit.render_kw = {'class': 'form-control'}
     if form.validate_on_submit():
-        fee2=Fee2()
-        fee2.order_id=oid
-        fee2.feedate = form.fee_date.data
-        fee2.status = 'stay'
-        fee2.fee=form.fee.data
-        fee2.area=form.area.data
-        fee2.iuser_id=uid
-        total=order.Fee21+form.fee.data
-        fee2.notes=form.notes.data
+        try:
+            systeminfo = Systeminfo.query.filter(Systeminfo.id == 1).first()
+            if month_difference(systeminfo.systemmonth, form.fee_date.data) >= 1:
+                flash('不能晚于系统当月！.', 'success')
+            else:
+                fee2=Fee2()
+                fee2.order_id=oid
+                fee2.feedate = form.fee_date.data
+                fee2.status = 'stay'
+                fee2.fee=form.fee.data
+                fee2.area=form.area.data
+                fee2.iuser_id=uid
+                total=order.Fee21+form.fee.data
+                fee2.notes=form.notes.data
 
-        if total>=0:
-            try:
-                db.session.add(fee2)
-                db.session.commit()
-                flash('录入成功.', 'success')
-                ins_logs(uid, '刊登金额录入,id=' + str(oid), type='fee2')
-            except Exception as e:
-                current_app.logger.error(e)
-                flash('录入失败')
-        else:
-            flash('余额不能小于0!')
+                if total>=0:
+
+                    db.session.add(fee2)
+                    db.session.commit()
+                    flash('录入成功.', 'success')
+                    ins_logs(uid, '刊登金额录入,id=' + str(oid), type='fee2')
+
+                else:
+                    flash('余额不能小于0!')
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('录入失败')
     pagination = Fee2.query.filter(Fee2.order_id==oid).order_by(Fee2.id.desc()).paginate(page, per_page=8)
     return render_template('fee2/fee2_input.html', form=form,order=order,pagination=pagination,page=page)
 

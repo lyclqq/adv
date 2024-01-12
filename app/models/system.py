@@ -53,3 +53,11 @@ class Logs(db.Model,Basecls):
     type = db.Column(db.String(20))
     ip = db.Column(db.String(20))
     notes = db.Column(db.String(250))
+
+
+#系统信息
+class Systeminfo(db.Model):
+    __tablename__ = 'systeminfo'
+    id = db.Column(db.Integer, primary_key=True)
+    systemmonth = db.Column(db.Date)
+    propor=db.Column(db.Float)

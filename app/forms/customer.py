@@ -25,3 +25,10 @@ class CustomerForm(FlaskForm):
     submit = SubmitField('提交',render_kw={'class':'form-control'})
 
 
+class CustomersearchForm(FlaskForm):
+    name = StringField(label='客户名称:',
+        widget=widgets.TextInput(),
+        render_kw={'class': 'form-control',
+                   "placeholder":"输入客户名称"}
+    )
+    submit = SubmitField('提交', render_kw={'class': 'form-control'})
