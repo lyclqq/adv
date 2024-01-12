@@ -189,6 +189,15 @@ def fee5_search_audit():
     pagination = Fee5.query.order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee5/fee5_search_audit.html', pagination=pagination,page=page)
 
+#绩效金额审核详情
+@fee5View.route('/fee5_audit_show/<int:oid>/<int:fid>')
+@is_login
+def fee5_audit_show(oid,fid):
+    uid = session.get('user_id')
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    fee5=Fee5.query.filter(Fee5.id==fid).first_or_404()
+    fee2=Fee2.query.filter(Fee2.fee5_id==fid).all()
+    return render_template('fee5/fee5_audit_show.html', order=order,fee5=fee5,fee2=fee2)
 #读取税率
 def get_scale():
     systeminfo=Systeminfo.query.filter(Systeminfo.id==1).first()
