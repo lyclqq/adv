@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="m-2 p-3 ">
+
         <ol class="breadcrumb">
             <li class="breadcrumb-item">税率信息</li>
+            {% if edit==1 %}
+                <li class="breadcrumb-item active" aria-current="page">税率修改</li>
+            {% else %}
+                <li class="breadcrumb-item active" aria-current="page">税率查看</li>
+            {% endif %}
         </ol>
+
         <br>
         <div class="alert alert-success" role="alert">
             <strong>{{ si.systemmonth.strftime("%Y-%m") }}</strong>:
