@@ -48,7 +48,7 @@
                             {% if post.status=="己审" or post.status=="完成" %}
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee2.fee2_input',oid=post.id) }}">输入</a>
                             {% else %}
-                                <span class="badge">输入</span>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">输入</button>
                             {% endif %}
                         </td>
                     </tr>

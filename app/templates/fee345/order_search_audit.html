@@ -51,8 +51,8 @@
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee345.fee4_audit',oid=post.id) }}">到帐审核</a>
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee345.fee3_audit',oid=post.id) }}">发票审核</a>
                             {% else %}
-                                <span class="badge">到帐审核</span>
-                                <span class="badge">发票审核</span>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">到帐审核</button>
+                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">发票审核</button>
                             {% endif %}
                         </td>
                     </tr>
