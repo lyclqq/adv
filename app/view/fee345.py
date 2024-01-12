@@ -254,7 +254,7 @@ def fee3_audit_on(oid,fid):
             fee3.status='on'
             fee3.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核发票金额同意，orderid=' + oid, type='fee345')
+            ins_logs(uid, '审核发票金额同意，orderid=' + str(oid), type='fee345')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
@@ -273,7 +273,7 @@ def fee3_audit_off(oid,fid):
             fee3.status='off'
             fee3.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核发票金额拒绝，fee3id=' + fid, type='fee345')
+            ins_logs(uid, '审核发票金额拒绝，fee3id=' + str(fid), type='fee345')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
@@ -302,7 +302,7 @@ def fee4_audit_on(oid,fid):
             fee4.status='on'
             fee4.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核到帐金额同意，orderid=' + oid, type='fee345')
+            ins_logs(uid, '审核到帐金额同意，orderid=' + str(oid), type='fee345')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
@@ -321,7 +321,7 @@ def fee4_audit_off(oid,fid):
             fee4.status='off'
             fee4.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核到帐金额拒绝，fee4id=' + fid, type='fee345')
+            ins_logs(uid, '审核到帐金额拒绝，fee4id=' + str(fid), type='fee345')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
