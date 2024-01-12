@@ -45,6 +45,7 @@ def fee5_input(oid):
     uid = session.get('user_id')
     form = Fee5Form()
     form.scale.data= get_scale()
+
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if order.status != '己审' and order.status!='完成':
         form.submit.render_kw={'class':'form-control','disabled':'true'}
