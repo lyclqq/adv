@@ -72,7 +72,7 @@ def fee5_input(oid):
                             fee2.fee5_id=fee5.id
                             db.session.add(fee2)
                 fee5.feedate = form.fee_date.data
-                fee5.fee = form.fee.data
+                fee5.fee = fee2_sum
                 fee5.scale = form.scale.data
                 fee5.prize = form.prize.data
                 fee5.notes = form.notes.data
@@ -170,14 +170,17 @@ def fee5_audit_off(oid,fid):
         try:
             fee5.status='off'
             fee5.cuser_id=uid
+            db.session.add(fee5)
+            Fee2.query.filter(Fee2.fee5_id >= fid).update({"fee5_id": 0}, synchronize_session=False)
             db.session.commit()
-            ins_logs(uid, '审核绩效金额拒绝，fee5id=' + str(fid), type='fee5')
+            ins_logs(uid, '审核绩效金额拒绝，fee5id=' + str(fid)+',orderid='+str(oid), type='fee5')
         except Exception as e:
+            db.session.rollback()
             current_app.logger.error(e)
             flash('提交失败')
     else:
         flash('不符合条件！')
-    return redirect(url_for('fee5.fee5_audit',oid=oid))
+    return redirect(url_for('fee5.fee5_audit_show',oid=oid))
 
 #到帐金额查询
 @fee5View.route('/fee5_search_audit')
