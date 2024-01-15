@@ -4,7 +4,8 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-from app.common import is_login,ins_logs,month_difference,search_order
+from app.common import is_login,ins_logs,month_difference
+from app.view import search_orders
 from app import db
 from app.models.contract import Customers,Orders
 from app.models.system import Systeminfo
@@ -24,7 +25,7 @@ def order_search():
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
     form=OrderSearchForm()
-    pagination,form,page=search_order(searchform=form,page=page)
+    pagination,page=search_orders(searchform=form,page=page)
 
     result=pagination.items
     return render_template('wordsadmin/order_search.html', page=page, pagination=pagination, posts=result,form=form)

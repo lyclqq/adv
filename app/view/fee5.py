@@ -4,9 +4,10 @@ from flask import Blueprint, render_template, current_app, url_for, redirect, se
 import json
 import os
 from functools import wraps
-from app.common import is_login, ins_logs,month_difference,search_order
+from app.common import is_login, ins_logs,month_difference
 from app import db
 from app.models.contract import Customers, Orders
+from app.view import search_orders
 from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers, Fee1, Fee2, Fee3, Fee4, Fee5
 from app.forms.customer import CustomerForm
@@ -23,7 +24,7 @@ def order_search_admin():
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
     form=OrderSearchForm()
-    pagination,form,page=search_order(searchform=form,page=page)
+    pagination,page=search_orders(searchform=form,page=page)
     result = pagination.items
     return render_template('fee5/order_search_admin.html', page=page, pagination=pagination, posts=result, form=form)
 
@@ -95,7 +96,7 @@ def order_search_audit():
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
     form=OrderSearchForm()
-    pagination,form,page=search_order(searchform=form,page=page)
+    pagination,page=search_orders(searchform=form,page=page)
     result = pagination.items
     return render_template('fee5/order_search_audit.html', page=page, pagination=pagination, posts=result, form=form)
 

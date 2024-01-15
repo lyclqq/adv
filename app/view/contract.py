@@ -4,7 +4,7 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-from app.common import is_login,ins_logs,month_difference,search_order
+from app.common import is_login,ins_logs,month_difference
 from app import db
 from app.models.bill import Fee1
 from app.models.contract import Customers,Orders
@@ -13,6 +13,7 @@ from app.models.system import Systeminfo
 from app.forms.customer import CustomerForm,CustomersearchForm
 from app.forms.fee import Fee1Form,FeeSearchForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
+from app.view import search_orders
 import datetime
 
 contractView=Blueprint('contract_admin',__name__)
@@ -40,7 +41,7 @@ def order_admin():
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
     form=OrderSearchForm()
-    pagination,form,page=search_order(searchform=form,page=page)
+    pagination,page=search_orders(searchform=form,page=page)
     return render_template('contract/order_admin.html', page=page, pagination=pagination, form=form)
 
 
