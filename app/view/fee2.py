@@ -10,7 +10,7 @@ from app.models.contract import Customers,Orders
 from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers,Fee1,Fee2
 from app.forms.customer import CustomerForm
-from app.forms.fee import Fee2Form,AuditForm
+from app.forms.fee import Fee2Form,AuditForm,FeeSearchForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
 from app.view import search_orders
 import datetime
@@ -160,3 +160,33 @@ def fee2_audit_off(oid,fid):
     else:
         flash('不符合条件！')
     return redirect(url_for('fee2.fee2_audit',oid=oid,fid=fid))
+
+# 刊登金额查看
+@fee2View.route('/fee2_show/<int:oid>', methods=["GET", "POST"])
+@is_login
+def fee2_show(oid):
+    uid = session.get('user_id')
+    form=FeeSearchForm()
+    pagerows = current_app.config['PAGEROWS']
+
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        page=1
+        session['fee2_status']=form.status.data
+        if form.status.data=='all':
+            pagination = Fee2.query.filter(Fee2.order_id == oid).order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
+        else:
+            pagination = Fee2.query.filter(Fee2.order_id == oid,Fee2.status==form.status.data).order_by(Fee2.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee2_status') is None:
+            fee_status='all'
+        else:
+            fee_status = session.get('fee2_status')
+        if fee_status=='all':
+            pagination = Fee2.query.filter(Fee2.order_id == oid).order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
+        else:
+            pagination = Fee2.query.filter(Fee2.order_id == oid,Fee2.status==fee_status).order_by(Fee2.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    return render_template('fee2/fee2_show.html', order=order, pagination=pagination,page=page,form=form)

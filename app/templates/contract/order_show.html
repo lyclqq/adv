@@ -38,15 +38,15 @@
         <tr>
             <td>己发字数：{{ order.wordcount }}</td>
             <td>己发奖金：{{ order.Fee61 }}</td>
-            <td>发票金额：{{ order.Fee32 }}/{{ order.Fee31 }}</td>
-            <td>己统计绩效：{{ order.Fee52 }}/{{ order.Fee51 }}</td>
+            <td><a href="{{ url_for('fee345.fee3_show',oid=order.id) }}">发票金额：{{ order.Fee32 }}/{{ order.Fee31 }}</a></td>
+            <td><a href="{{ url_for('fee5.fee5_show',oid=order.id) }}">己统计绩效：{{ order.Fee52 }}/{{ order.Fee51 }}</a></td>
         </tr>
         <tr>
             <td>赠送字数：{{ order.wordnumber }}</td>
             <td><a href="{{ url_for('contract_admin.fee1_show',oid=order.id) }}">合同金额:{{ order.Fee11 }}</a></td>
 
-            <td>刊登金额：{{ order.Fee22 }}/{{ order.Fee21 }}</td>
-            <td>到帐金额：{{ order.Fee42 }}/{{ order.Fee41 }}</td>
+            <td><a href="{{ url_for('fee2.fee2_show',oid=order.id) }}">刊登金额：{{ order.Fee22 }}/{{ order.Fee21 }}</a></td>
+            <td><a href="{{ url_for('fee345.fee4_show',oid=order.id) }}">到帐金额：{{ order.Fee42 }}/{{ order.Fee41 }}</a></td>
 
         </tr>
         <tr>

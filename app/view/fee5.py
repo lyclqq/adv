@@ -11,7 +11,7 @@ from app.view import search_orders
 from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers, Fee1, Fee2, Fee3, Fee4, Fee5
 from app.forms.customer import CustomerForm
-from app.forms.fee import Fee2Form, AuditForm, Fee3Form,Fee5Form
+from app.forms.fee import Fee2Form, AuditForm, Fee3Form,Fee5Form,FeeSearchForm
 from app.forms.order import OrderForm, OrderSearchForm, OrderupfileForm
 import datetime
 
@@ -184,3 +184,33 @@ def fee5_audit_show(oid,fid):
 def get_scale():
     systeminfo=Systeminfo.query.filter(Systeminfo.id==1).first()
     return systeminfo.propor
+
+# 刊登金额查看
+@fee5View.route('/fee5_show/<int:oid>', methods=["GET", "POST"])
+@is_login
+def fee5_show(oid):
+    uid = session.get('user_id')
+    form=FeeSearchForm()
+    pagerows = current_app.config['PAGEROWS']
+
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        page=1
+        session['fee5_status']=form.status.data
+        if form.status.data=='all':
+            pagination = Fee5.query.filter(Fee5.order_id == oid).order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
+        else:
+            pagination = Fee5.query.filter(Fee5.order_id == oid,Fee5.status==form.status.data).order_by(Fee5.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee5_status') is None:
+            fee_status='all'
+        else:
+            fee_status = session.get('fee5_status')
+        if fee_status=='all':
+            pagination = Fee5.query.filter(Fee5.order_id == oid).order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
+        else:
+            pagination = Fee5.query.filter(Fee5.order_id == oid,Fee5.status==fee_status).order_by(Fee5.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    return render_template('fee5/fee5_show.html', order=order, pagination=pagination,page=page,form=form)
