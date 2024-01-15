@@ -43,7 +43,7 @@
         </tr>
         <tr>
             <td>赠送字数：{{ order.wordnumber }}</td>
-            <td>合同金额:{{ order.Fee11 }}</td>
+            <td><a href="{{ url_for('contract_admin.fee1_show',oid=order.id) }}">合同金额:{{ order.Fee11 }}</a></td>
 
             <td>刊登金额：{{ order.Fee22 }}/{{ order.Fee21 }}</td>
             <td>到帐金额：{{ order.Fee42 }}/{{ order.Fee41 }}</td>

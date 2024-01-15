@@ -81,3 +81,8 @@ class AuditForm(FlaskForm):
     status=SelectField(label='状态：',render_kw={'class': 'form-control'},
                            choices=[('on','on' ), ('off','off' ),( 'stay','stay')])
     submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
+
+class FeeSearchForm(FlaskForm):
+    status=SelectField(label='状态：',render_kw={'class': 'form-control'},
+                           choices=[('all','all'),('on','on' ), ('off','off' ),( 'stay','stay')])
+    submit = SubmitField('查询',render_kw={'class':'btn btn-block btn-info'})

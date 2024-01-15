@@ -11,7 +11,7 @@ from app.models.contract import Customers,Orders
 from app.models.other import Files
 from app.models.system import Systeminfo
 from app.forms.customer import CustomerForm,CustomersearchForm
-from app.forms.fee import Fee1Form
+from app.forms.fee import Fee1Form,FeeSearchForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
 import datetime
 
@@ -267,11 +267,17 @@ def order_notes(oid):
     else:
         form.notes.data=order.notes
         form.title.data=order.title
+        form.title.render_kw={'class': 'form-control', 'readonly': True}
         form.ordernumber.data=order.ordernumber
+        form.ordernumber.render_kw={'class': 'form-control', 'readonly': True}
         form.contract_date.data=order.contract_date
+        form.contract_date.render_kw={'class': 'form-control', 'readonly': True}
         form.name.data=order.name
+        form.name.render_kw = {'class': 'form-control', 'readonly': True}
         form.fee1.data=order.Fee11
+        form.fee1.render_kw = {'class': 'form-control', 'readonly': True}
         form.words.data=order.wordnumber
+        form.words.render_kw = {'class': 'form-control', 'readonly': True}
     return render_template('contract/order_edit.html',form=form)
 
 #合同查看
@@ -382,3 +388,28 @@ def fee1_input(oid):
             flash('录入失败')
     pagination = Fee1.query.filter(Fee1.order_id == oid).order_by(Fee1.id.desc()).paginate(page, per_page=8)
     return render_template('contract/fee1_input.html', form=form, order=order, pagination=pagination,page=page)
+
+# 合同金额查看
+@contractView.route('/fee1_show/<int:oid>', methods=["GET", "POST"])
+@is_login
+def fee1_show(oid):
+    uid = session.get('user_id')
+    form=FeeSearchForm()
+    pagerows = current_app.config['PAGEROWS']
+
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        page=1
+        if form.status.data=='all':
+            pagination = Fee1.query.filter(Fee1.order_id == oid).order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
+        else:
+            pagination = Fee1.query.filter(Fee1.order_id == oid,Fee1.status==form.status.data).order_by(Fee1.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    else:
+        page = request.args.get('page', 1, type=int)
+        if form.status.data=='all':
+            pagination = Fee1.query.filter(Fee1.order_id == oid).order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
+        else:
+            pagination = Fee1.query.filter(Fee1.order_id == oid,Fee1.status==form.status.data).order_by(Fee1.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    return render_template('contract/fee1_show.html', order=order, pagination=pagination,page=page,form=form)
