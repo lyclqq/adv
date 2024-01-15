@@ -246,6 +246,33 @@ def order_edit(oid):
             form.submit.render_kw = {'class': 'form-control', 'disabled': True}
     return render_template('contract/order_edit.html',form=form)
 
+#合同加备注
+@contractView.route('/order_notes/<int:oid>',methods=["GET","POST"])
+@is_login
+def order_notes(oid):
+    uid = session.get('user_id')
+    order=Orders.query.filter(Orders.id==oid).first_or_404()
+    form=OrderForm()
+    form.customername.data = '1111'  # 只是为了验证加上
+    if form.validate_on_submit():
+        try:
+            order.notes=form.notes.data
+            db.session.commit()
+            ins_logs(uid, '修改合同备注，orderid='+str(oid), type='contract')
+            flash("修改成功")
+        except Exception as e:
+            current_app.logger.error(e)
+            db.session.rollback()
+            flash('修改失败')
+    else:
+        form.notes.data=order.notes
+        form.title.data=order.title
+        form.ordernumber.data=order.ordernumber
+        form.contract_date.data=order.contract_date
+        form.name.data=order.name
+        form.fee1.data=order.Fee11
+        form.words.data=order.wordnumber
+    return render_template('contract/order_edit.html',form=form)
 
 #合同查看
 @contractView.route('/order_show/<int:oid>',methods=["GET","POST"])
@@ -269,7 +296,7 @@ def order_submit(oid):
             order.status='待审'
             db.session.add(order)
             db.session.commit()
-            ins_logs(uid, '提交成功，orderid=' + oid, type='contract')
+            ins_logs(uid, '提交成功，orderid=' + str(oid), type='contract')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')

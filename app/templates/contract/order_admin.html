@@ -41,7 +41,7 @@
                 {% for post in posts %}
                     <tr>
                         <td>{{ post.id }}</td>
-                        <td>{{ post.title }}</td>
+                        <td><a  href="{{ url_for('contract_admin.order_show',oid=post.id) }}" target="_blank">{{ post.title }}</a></td>
                         <td>{{ post.ordernumber }}</td>
                         <td>{{ post.status }}</td>
                         <td>{{ post.iuser_id | replace_username }}</td>
@@ -49,7 +49,7 @@
                         <td>
                             {% if post.iuser_id == session.get("user_id") or session.get("type")=="admin" %}
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">修改</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_show',oid=post.id) }}">查看</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_notes',oid=post.id) }}">备注</a>
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_upfiles',oid=post.id) }}">上传</a>
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.fee1_input',oid=post.id) }}">补录</a>
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_submit',oid=post.id) }}" onclick="return confirm('Are you sure?');">提交</a>
