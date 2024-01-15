@@ -24,7 +24,7 @@
         </form>
 
         <br>
-        {% if posts %}
+        {% if pagination.items %}
             <table class="table table-hover shadow table-bordered align-middle">
                 <thead>
                 <tr>
@@ -38,7 +38,7 @@
                 </tr>
                 </thead>
 
-                {% for post in posts %}
+                {% for post in pagination.items %}
                     <tr>
                         <td>{{ post.id }}</td>
                         <td><a  href="{{ url_for('contract_admin.order_show',oid=post.id) }}" target="_blank">{{ post.title }}</a></td>

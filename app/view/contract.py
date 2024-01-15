@@ -4,7 +4,7 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-from app.common import is_login,ins_logs,month_difference
+from app.common import is_login,ins_logs,month_difference,search_order
 from app import db
 from app.models.bill import Fee1
 from app.models.contract import Customers,Orders
@@ -38,21 +38,10 @@ def customer_admin():
 @is_login
 def order_admin():
     uid = session.get('user_id')
-    form=OrderSearchForm()
-    form.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
-                           ('作废', '作废')]
     page = request.args.get('page', 1, type=int)
-    orders=Orders()
-    if form.validate_on_submit():
-        title=form.title.data
-        status=form.status.data
-        pagination=orders.search_orders( keywords=title,status=status,page=1)
-    else:
-        pagination=orders.search_orders(None,page=page)
-
-    #pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
-    result=pagination.items
-    return render_template('contract/order_admin.html', page=page, pagination=pagination, posts=result,form=form)
+    form=OrderSearchForm()
+    pagination,form,page=search_order(searchform=form,page=page)
+    return render_template('contract/order_admin.html', page=page, pagination=pagination, form=form)
 
 
 #客户状态
@@ -151,6 +140,7 @@ def order_create(cuid):
                 order.iuser_id = uid
                 order.contract_date = form.contract_date.data
                 order.wordnumber = form.words.data
+                order.ordernumber=form.ordernumber.data
                 order.status = '未审'
                 order.group_id = groupid
                 db.session.add(order)
@@ -194,6 +184,7 @@ def order_customer_create():
                 order.group_id=groupid
                 order.wordnumber=form.words.data
                 order.ordernumber=form.ordernumber.data
+                print('ordernumber is '+form.ordernumber.data)
                 db.session.add(order)
                 db.session.commit()
                 ins_logs(uid, '新增合同' , type='contract')

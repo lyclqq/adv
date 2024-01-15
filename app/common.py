@@ -4,7 +4,9 @@ import json
 import os
 from functools import wraps
 from app.models.system import Logs,Systeminfo
+from app.models.contract import Orders
 from app import db
+from app.forms.order import OrderSearchForm
 import datetime
 #登陆验证
 def is_login(view_func):
@@ -74,4 +76,27 @@ def month_difference(date1, date2):
 def get_month():
     systeminfo=Systeminfo.query.filter(Systeminfo.id==1).first()
     return systeminfo.systemmonth
+
+
+ #合同搜索
+def search_order(searchform,page):
+    searchform.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
+                           ('作废', '作废')]
+    orders=Orders()
+    if searchform.validate_on_submit():
+        page=1
+        title=searchform.title.data
+        status=searchform.status.data
+        session['order_title']=title
+        session['order_status']=status
+    else:
+        title = session.get('order_title')
+        status = session.get('order_status')
+        if title is not None:
+            searchform.title.data = title
+        if status is not None:
+            searchform.status.data = status
+    pagination=orders.search_orders(keywords=title,status=status,page=page)
+    return pagination,searchform,page
+
 

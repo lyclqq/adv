@@ -28,7 +28,7 @@
                 <div class="form-control">
                     {{ form.ordernumber.label }}
                     {{ form.ordernumber() }}
-                    {% for message in form.name.errors %}
+                    {% for message in form.ordernumber.errors %}
                         <small class="error">{{ message }}</small>
                     {% endfor %}
                 </div>

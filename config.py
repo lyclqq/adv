@@ -19,7 +19,6 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     # 查询时会显示原始SQL语句
     SQLALCHEMY_ECHO = True
-    SCALE=5
     CKEDITOR_SERVE_LOCAL = True
     CKEDITOR_HEIGHT = 600
     CKEDITOR_FILE_UPLOADER = 'files'
@@ -36,7 +35,7 @@ class Config(object):
     SESSION_USE_SIGNER = True #设置签名存储
     PERMANENT_SESSION_LIFETIME = timedelta(days=1) #设置session有效期,两天时间
 
-    PAGEROWS=15
+    PAGEROWS=12
 
     #默认日志级别
     LEVEL_NAME = logging.DEBUG
