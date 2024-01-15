@@ -180,7 +180,7 @@ def fee5_audit_off(oid,fid):
             flash('提交失败')
     else:
         flash('不符合条件！')
-    return redirect(url_for('fee5.fee5_audit_show',oid=oid))
+    return redirect(url_for('fee5.fee5_audit_show',oid=oid,fid=fid))
 
 #到帐金额查询
 @fee5View.route('/fee5_search_audit')
