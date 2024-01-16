@@ -21,3 +21,12 @@ def info_update():
     db.session.add(si)
     db.session.commit()
     return redirect(url_for('system_info.info_show'))
+
+
+@system_info_bp.route('info/get', methods=["GET"])
+def info_get():
+    si = Systeminfo.query.first()
+    m = si.systemmonth.strftime("%Y-%m")
+    re = '{"result":"' + m + '"}'
+    print(re)
+    return re

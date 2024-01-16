@@ -162,8 +162,7 @@ def login():
 @app.route('/index', endpoint='index')
 @is_login
 def index():
-    si = Systeminfo.query.first()
-    return render_template('index24.html', si=si)
+    return render_template('index24.html')
 
 
 if __name__ == '__main__':
