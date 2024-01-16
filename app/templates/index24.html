@@ -6,36 +6,32 @@
         <div class="d-flex flex-row justify-content-evenly pt-2">
             <div id="bar" style="width:600px; height:380px;"></div>
             <script>
-                $(
-                    function () {
-                        let chart = echarts.init(document.getElementById('bar'), 'white', {renderer: 'canvas'});
-                        $.ajax({
-                            type: "GET",
-                            url: "/report/barChart",
-                            dataType: 'json',
-                            success: function (result) {
-                                chart.setOption(result);
-                            }
-                        });
-                    }
-                )
+                $(function () {
+                    let chart = echarts.init(document.getElementById('bar'), 'white', {renderer: 'canvas'});
+                    $.ajax({
+                        type: "GET",
+                        url: "/report/barChart",
+                        dataType: 'json',
+                        success: function (result) {
+                            chart.setOption(result);
+                        }
+                    });
+                })
             </script>
 
             <div id="bar2" style="width:600px; height:380px;"></div>
             <script>
-                $(
-                    function () {
-                        let chart = echarts.init(document.getElementById('bar2'), 'white', {renderer: 'canvas'});
-                        $.ajax({
-                            type: "GET",
-                            url: "/report/line",
-                            dataType: 'json',
-                            success: function (result) {
-                                chart.setOption(result);
-                            }
-                        });
-                    }
-                )
+                $(function () {
+                    let chart = echarts.init(document.getElementById('bar2'), 'white', {renderer: 'canvas'});
+                    $.ajax({
+                        type: "GET",
+                        url: "/report/line",
+                        dataType: 'json',
+                        success: function (result) {
+                            chart.setOption(result);
+                        }
+                    });
+                })
             </script>
         </div>
 
@@ -44,37 +40,34 @@
         <div class="d-flex flex-row justify-content-evenly pt-2">
             <div id="bar3" style="width:600px; height:380px;"></div>
             <script>
-                $(
-                    function () {
-                        let chart = echarts.init(document.getElementById('bar3'), 'white', {renderer: 'canvas'});
-                        $.ajax({
-                            type: "GET",
-                            url: "/report/barChart",
-                            dataType: 'json',
-                            success: function (result) {
-                                chart.setOption(result);
-                            }
-                        });
-                    }
-                )
+                $(function () {
+                    let chart = echarts.init(document.getElementById('bar3'), 'white', {renderer: 'canvas'});
+                    $.ajax({
+                        type: "GET",
+                        url: "/report/bar",
+                        dataType: 'json',
+                        success: function (result) {
+                            chart.setOption(result);
+                        }
+                    });
+                })
             </script>
 
             <div id="bar4" style="width:600px; height:380px;"></div>
             <script>
-                $(
-                    function () {
-                        let chart = echarts.init(document.getElementById('bar4'), 'white', {renderer: 'canvas'});
-                        $.ajax({
-                            type: "GET",
-                            url: "/report/pie",
-                            dataType: 'json',
-                            success: function (result) {
-                                chart.setOption(result);
-                            }
-                        });
-                    }
-                )
+                $(function () {
+                    let chart = echarts.init(document.getElementById('bar4'), 'white', {renderer: 'canvas'});
+                    $.ajax({
+                        type: "GET",
+                        url: "/report/pie",
+                        dataType: 'json',
+                        success: function (result) {
+                            chart.setOption(result);
+                        }
+                    });
+                })
             </script>
         </div>
+
     </div>
 {% endblock %}
