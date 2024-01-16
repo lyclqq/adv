@@ -129,10 +129,11 @@ def words_public_show(oid):
             fee_status='all'
         else:
             fee_status = session.get('words_status')
+            form.status.data = fee_status
     if fee_status=='all':
         pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='publish').order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
     else:
-        pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='publish',Wordnumbers.status==fee_status).order_by(Wordnumbers.id.desc()).paginate(page,
+        pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='publish',Wordnumbers.status==fee_status).order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
 
     return render_template('wordsadmin/words_show.html', order=order, pagination=pagination,page=page,form=form)
 
@@ -153,6 +154,7 @@ def words_order_show(oid):
             fee_status='all'
         else:
             fee_status = session.get('words_status')
+            form.status.data=fee_status
     if fee_status=='all':
         pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='order').order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
     else:

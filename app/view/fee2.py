@@ -180,6 +180,7 @@ def fee2_show(oid):
             fee_status='all'
         else:
             fee_status = session.get('fee2_status')
+            form.status.data = fee_status
     if fee_status=='all':
         pagination = Fee2.query.filter(Fee2.order_id == oid).order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
     else:

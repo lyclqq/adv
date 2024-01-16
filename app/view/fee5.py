@@ -204,6 +204,7 @@ def fee5_show(oid):
             fee_status='all'
         else:
             fee_status = session.get('fee5_status')
+            form.status.data = fee_status
     if fee_status=='all':
         pagination = Fee5.query.filter(Fee5.order_id == oid).order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
     else:

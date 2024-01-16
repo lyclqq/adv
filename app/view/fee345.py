@@ -327,6 +327,7 @@ def fee3_show(oid):
             fee_status='all'
         else:
             fee_status = session.get('fee3_status')
+            form.status.data = fee_status
     if fee_status=='all':
         pagination = Fee3.query.filter(Fee3.order_id == oid).order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
     else:
@@ -352,6 +353,7 @@ def fee4_show(oid):
             fee_status='all'
         else:
             fee_status = session.get('fee4_status')
+            form.status.data = fee_status
     if fee_status=='all':
         pagination = Fee4.query.filter(Fee4.order_id == oid).order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
     else:
