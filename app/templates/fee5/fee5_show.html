@@ -6,7 +6,7 @@
         <li>合同管理</li>
         <li><a href="{{ url_for('contract_admin.order_admin') }}">合同查询</a></li>
         <li><a href="{{ url_for('contract_admin.order_show',oid=order.id) }}">合同详情</a></li>
-        <li class="active">字数详情</li>
+        <li class="active">绩效金额查询</li>
     </ul>
 
     <table class="table table-hover shadow table-bordered align-middle">
@@ -73,7 +73,9 @@
             <td class="text-bg-secondary" style="width:150px">输入时间</td>
             <td class="text-bg-secondary">备注</td>
             <td class="text-bg-secondary" style="width:80px">状态</td>
-            <td class="text-bg-secondary" style="width:100px">字数</td>
+            <td class="text-bg-secondary" style="width:110px">绩效总额</td>
+            <td class="text-bg-secondary" style="width:100px">比例</td>
+            <td class="text-bg-secondary" style="width:100px">奖金额</td>
             <td class="text-bg-secondary" style="width:120px">录入</td>
             <td class="text-bg-secondary" style="width:120px">审核</td>
             <td class="text-bg-secondary" style="width:160px">发生日期</td>
@@ -87,18 +89,20 @@
             <td>{{ item.create_datetime | short_time}}</td>
             <td>{{ item.notes }}</td>
             <td>{{ item.status }}</td>
-            <td>{{ item.wordnumber }}</td>
+            <td>{{ item.fee }}</td>
+            <td>{{ item.scale }}</td>
+            <td>{{ item.prize }}</td>
             <td>{{ item.iuser_id | replace_username }}</td>
             <td>{{ item.cuser_id | replace_username }}</td>
             <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
         </tr>
         {% endfor %}
         <tr>
-            <td colspan="8">{{ render_pagination(pagination,align='center') }}</td>
+            <td colspan="10">{{ render_pagination(pagination,align='center') }}</td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="8">没有查到相关数据</td>
+            <td colspan="10">没有查到相关数据</td>
         </tr>
         {% endif %}
         </tbody>

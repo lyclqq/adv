@@ -10,9 +10,10 @@
         <table class="table table-hover shadow table-bordered align-middle">
             <thead>
             <tr>
-                <td class="text-bg-secondary" style="width:60px">id</td>
-                <td class="text-bg-secondary" style="width:240px">输入时间</td>
+                <td class="text-bg-secondary" style="width:70px">id</td>
+                <td class="text-bg-secondary" style="width:180px">输入时间</td>
                 <td class="text-bg-secondary">合同名称</td>
+                <td class="text-bg-secondary" style="width:300px">备注</td>
                 <td class="text-bg-secondary" style="width:120px">发生额</td>
                 <td class="text-bg-secondary" style="width:80px">状态</td>
                 <td class="text-bg-secondary" style="width:80px">附件</td>
@@ -28,6 +29,7 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.create_datetime|short_time }}</td>
                         <td>{{ item.order_id | replace_ordername }}</td>
+                         <td>{{ item.notes }}</td>
                         <td>{{ item.fee }}</td>
                         <td>{{ item.status }}</td>
                         <td>

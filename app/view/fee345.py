@@ -4,13 +4,14 @@ from flask import Blueprint, render_template, current_app, url_for, redirect, se
 import json
 import os
 from functools import wraps
-from app.common import is_login, ins_logs,month_difference
+from app.common import is_login, ins_logs,month_difference,get_month
 from app import db
+from app.view import search_orders
 from app.models.contract import Customers, Orders
 from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers, Fee1, Fee2, Fee3, Fee4, Fee5
 from app.forms.customer import CustomerForm
-from app.forms.fee import Fee2Form, AuditForm, Fee3Form
+from app.forms.fee import Fee2Form, AuditForm, Fee3Form,FeeSearchForm
 from app.forms.order import OrderForm, OrderSearchForm, OrderupfileForm
 import datetime
 
@@ -22,42 +23,20 @@ fee345View = Blueprint('fee345', __name__)
 @is_login
 def order_search_admin():
     uid = session.get('user_id')
-    form = OrderSearchForm()
-    form.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
-                           ('作废', '作废')]
     page = request.args.get('page', 1, type=int)
-    orders = Orders()
-    if form.validate_on_submit():
-
-        title = form.title.data
-        status = form.status.data
-        pagination = orders.search_orders(keywords=title, status=status, page=1)
-    else:
-        pagination = orders.search_orders(None, page=page)
-
-    # pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
+    form=OrderSearchForm()
+    pagination,page=search_orders(searchform=form,page=page)
     result = pagination.items
     return render_template('fee345/order_search_admin.html', page=page, pagination=pagination, posts=result, form=form)
 
-# 合同查询为管理
+# 合同查询为审核
 @fee345View.route('/order_search_audit', methods=["GET", "POST"])
 @is_login
 def order_search_audit():
     uid = session.get('user_id')
-    form = OrderSearchForm()
-    form.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
-                           ('作废', '作废')]
     page = request.args.get('page', 1, type=int)
-    orders = Orders()
-    if form.validate_on_submit():
-
-        title = form.title.data
-        status = form.status.data
-        pagination = orders.search_orders(keywords=title, status=status, page=1)
-    else:
-        pagination = orders.search_orders(None, page=page)
-
-    # pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
+    form=OrderSearchForm()
+    pagination,page=search_orders(searchform=form,page=page)
     result = pagination.items
     return render_template('fee345/order_search_audit.html', page=page, pagination=pagination, posts=result, form=form)
 
@@ -241,16 +220,20 @@ def fee3_audit_on(oid,fid):
     fee3=Fee3.query.filter(Fee3.id==fid).first_or_404()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     total=order.Fee31+fee3.fee
-    if fee3.status=='stay' and total>=0:
+    if fee3.status=='stay' and total>=0 and order.Fee11>=total:
         try:
             order.update_datetime=datetime.datetime.now()
+            systemtoday=get_month()
+            if month_difference(systemtoday,fee3.feedate)==0:#当月
+                order.Fee32=order.Fee32+fee3.fee
+            if systemtoday.year==fee3.feedate.year: #当年
+                order.Fee33 = order.Fee33 + fee3.fee
             order.Fee31=total
-            order.Fee32=order.Fee32+fee3.fee
             db.session.add(order)
             fee3.status='on'
             fee3.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核发票金额同意，orderid=' + oid, type='fee345')
+            ins_logs(uid, '审核发票金额同意，orderid=' + str(oid), type='fee345')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
@@ -258,7 +241,7 @@ def fee3_audit_on(oid,fid):
         flash('不符合条件！')
     return redirect(url_for('fee345.fee3_audit',oid=oid,fid=fid))
 
-#刊登金额审核拒绝
+#发票金额审核拒绝
 @fee345View.route('/fee3_audit_off/<int:oid>/<int:fid>')
 @is_login
 def fee3_audit_off(oid,fid):
@@ -269,7 +252,7 @@ def fee3_audit_off(oid,fid):
             fee3.status='off'
             fee3.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核发票金额拒绝，fee3id=' + fid, type='fee345')
+            ins_logs(uid, '审核发票金额拒绝，fee3id=' + str(fid), type='fee345')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
@@ -285,16 +268,20 @@ def fee4_audit_on(oid,fid):
     fee4=Fee4.query.filter(Fee4.id==fid).first_or_404()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     total=order.Fee41+fee4.fee
-    if fee4.status=='stay' and total>=0:
+    if fee4.status=='stay' and total>=0 and order.Fee11>=total:
         try:
             order.update_datetime=datetime.datetime.now()
             order.Fee41=total
-            order.Fee42=order.Fee42+fee4.fee
+            systemtoday=get_month()
+            if month_difference(systemtoday,fee4.feedate)==0:#当月
+                order.Fee42=order.Fee42+fee4.fee
+            if systemtoday.year==fee4.feedate.year: #当年
+                order.Fee43 = order.Fee43 + fee4.fee
             db.session.add(order)
             fee4.status='on'
             fee4.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核到帐金额同意，orderid=' + oid, type='fee345')
+            ins_logs(uid, '审核到帐金额同意，orderid=' + str(oid), type='fee345')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
@@ -302,7 +289,7 @@ def fee4_audit_on(oid,fid):
         flash('不符合条件！')
     return redirect(url_for('fee345.fee4_audit',oid=oid,fid=fid))
 
-#刊登金额审核拒绝
+#到帐金额审核拒绝
 @fee345View.route('/fee4_audit_off/<int:oid>/<int:fid>')
 @is_login
 def fee4_audit_off(oid,fid):
@@ -313,10 +300,63 @@ def fee4_audit_off(oid,fid):
             fee4.status='off'
             fee4.cuser_id=uid
             db.session.commit()
-            ins_logs(uid, '审核到帐金额拒绝，fee4id=' + fid, type='fee345')
+            ins_logs(uid, '审核到帐金额拒绝，fee4id=' + str(fid), type='fee345')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
     else:
         flash('不符合条件！')
     return redirect(url_for('fee345.fee4_audit',oid=oid,fid=fid))
+
+# 发票金额查看
+@fee345View.route('/fee3_show/<int:oid>', methods=["GET", "POST"])
+@is_login
+def fee3_show(oid):
+    uid = session.get('user_id')
+    form=FeeSearchForm()
+    pagerows = current_app.config['PAGEROWS']
+
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        page=1
+        session['fee3_status']=form.status.data
+        fee_status=form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee3_status') is None:
+            fee_status='all'
+        else:
+            fee_status = session.get('fee3_status')
+            form.status.data = fee_status
+    if fee_status=='all':
+        pagination = Fee3.query.filter(Fee3.order_id == oid).order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee3.query.filter(Fee3.order_id == oid,Fee3.status==fee_status).order_by(Fee3.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    return render_template('fee345/fee3_show.html', order=order, pagination=pagination,page=page,form=form)
+
+# 到帐金额查看
+@fee345View.route('/fee4_show/<int:oid>', methods=["GET", "POST"])
+@is_login
+def fee4_show(oid):
+    uid = session.get('user_id')
+    form=FeeSearchForm()
+    pagerows = current_app.config['PAGEROWS']
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        page=1
+        session['fee4_status']=form.status.data
+        fee_status=form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee4_status') is None:
+            fee_status='all'
+        else:
+            fee_status = session.get('fee4_status')
+            form.status.data = fee_status
+    if fee_status=='all':
+        pagination = Fee4.query.filter(Fee4.order_id == oid).order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee4.query.filter(Fee4.order_id == oid,Fee4.status==fee_status).order_by(Fee4.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    return render_template('fee345/fee4_show.html', order=order, pagination=pagination,page=page,form=form)

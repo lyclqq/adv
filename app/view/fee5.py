@@ -7,10 +7,11 @@ from functools import wraps
 from app.common import is_login, ins_logs,month_difference
 from app import db
 from app.models.contract import Customers, Orders
+from app.view import search_orders
 from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers, Fee1, Fee2, Fee3, Fee4, Fee5
 from app.forms.customer import CustomerForm
-from app.forms.fee import Fee2Form, AuditForm, Fee3Form,Fee5Form
+from app.forms.fee import Fee2Form, AuditForm, Fee3Form,Fee5Form,FeeSearchForm
 from app.forms.order import OrderForm, OrderSearchForm, OrderupfileForm
 import datetime
 
@@ -21,20 +22,9 @@ fee5View = Blueprint('fee5', __name__)
 @is_login
 def order_search_admin():
     uid = session.get('user_id')
-    form = OrderSearchForm()
-    form.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
-                           ('作废', '作废')]
     page = request.args.get('page', 1, type=int)
-    orders = Orders()
-    if form.validate_on_submit():
-
-        title = form.title.data
-        status = form.status.data
-        pagination = orders.search_orders(keywords=title, status=status, page=1)
-    else:
-        pagination = orders.search_orders(None, page=page)
-
-    # pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
+    form=OrderSearchForm()
+    pagination,page=search_orders(searchform=form,page=page)
     result = pagination.items
     return render_template('fee5/order_search_admin.html', page=page, pagination=pagination, posts=result, form=form)
 
@@ -44,7 +34,8 @@ def order_search_admin():
 def fee5_input(oid):
     uid = session.get('user_id')
     form = Fee5Form()
-    form.scale.data= current_app.config['SCALE']
+    form.scale.data= get_scale()
+
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if order.status != '己审' and order.status!='完成':
         form.submit.render_kw={'class':'form-control','disabled':'true'}
@@ -71,7 +62,7 @@ def fee5_input(oid):
                             fee2.fee5_id=fee5.id
                             db.session.add(fee2)
                 fee5.feedate = form.fee_date.data
-                fee5.fee = form.fee.data
+                fee5.fee = fee2_sum
                 fee5.scale = form.scale.data
                 fee5.prize = form.prize.data
                 fee5.notes = form.notes.data
@@ -103,20 +94,9 @@ def fee5_search_admin():
 @is_login
 def order_search_audit():
     uid = session.get('user_id')
-    form = OrderSearchForm()
-    form.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
-                           ('作废', '作废')]
     page = request.args.get('page', 1, type=int)
-    orders = Orders()
-    if form.validate_on_submit():
-
-        title = form.title.data
-        status = form.status.data
-        pagination = orders.search_orders(keywords=title, status=status, page=1)
-    else:
-        pagination = orders.search_orders(None, page=page)
-
-    # pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
+    form=OrderSearchForm()
+    pagination,page=search_orders(searchform=form,page=page)
     result = pagination.items
     return render_template('fee5/order_search_audit.html', page=page, pagination=pagination, posts=result, form=form)
 
@@ -151,13 +131,13 @@ def fee5_audit_on(oid,fid):
             fee5.cuser_id=uid
             db.session.add(fee5)
             db.session.commit()
-            ins_logs(uid, '审核绩效金额同意，orderid=' + oid, type='fee5')
+            ins_logs(uid, '审核绩效金额同意，orderid=' + str(oid), type='fee5')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
     else:
         flash('不符合条件！')
-    return redirect(url_for('fee5.fee5_audit',oid=oid))
+    return redirect(url_for('fee5.fee5_audit_show',oid=oid,fid=fid))
 
 #绩效金额审核拒绝
 @fee5View.route('/fee5_audit_off/<int:oid>/<int:fid>')
@@ -169,14 +149,17 @@ def fee5_audit_off(oid,fid):
         try:
             fee5.status='off'
             fee5.cuser_id=uid
+            db.session.add(fee5)
+            Fee2.query.filter(Fee2.fee5_id >= fid).update({"fee5_id": 0}, synchronize_session=False)
             db.session.commit()
-            ins_logs(uid, '审核到帐金额拒绝，fee5id=' + fid, type='fee5')
+            ins_logs(uid, '审核绩效金额拒绝，fee5id=' + str(fid)+',orderid='+str(oid), type='fee5')
         except Exception as e:
+            db.session.rollback()
             current_app.logger.error(e)
             flash('提交失败')
     else:
         flash('不符合条件！')
-    return redirect(url_for('fee5.fee5_audit',oid=oid))
+    return redirect(url_for('fee5.fee5_audit_show',oid=oid,fid=fid))
 
 #到帐金额查询
 @fee5View.route('/fee5_search_audit')
@@ -187,3 +170,44 @@ def fee5_search_audit():
     pagerows = current_app.config['PAGEROWS']
     pagination = Fee5.query.order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee5/fee5_search_audit.html', pagination=pagination,page=page)
+
+#绩效金额审核详情
+@fee5View.route('/fee5_audit_show/<int:oid>/<int:fid>')
+@is_login
+def fee5_audit_show(oid,fid):
+    uid = session.get('user_id')
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    fee5=Fee5.query.filter(Fee5.id==fid).first_or_404()
+    fee2=Fee2.query.filter(Fee2.fee5_id==fid).all()
+    return render_template('fee5/fee5_audit_show.html', order=order,fee5=fee5,fee2=fee2)
+#读取税率
+def get_scale():
+    systeminfo=Systeminfo.query.filter(Systeminfo.id==1).first()
+    return systeminfo.propor
+
+# 刊登金额查看
+@fee5View.route('/fee5_show/<int:oid>', methods=["GET", "POST"])
+@is_login
+def fee5_show(oid):
+    uid = session.get('user_id')
+    form=FeeSearchForm()
+    pagerows = current_app.config['PAGEROWS']
+
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        page=1
+        session['fee5_status']=form.status.data
+        fee_status=form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee5_status') is None:
+            fee_status='all'
+        else:
+            fee_status = session.get('fee5_status')
+            form.status.data = fee_status
+    if fee_status=='all':
+        pagination = Fee5.query.filter(Fee5.order_id == oid).order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee5.query.filter(Fee5.order_id == oid,Fee5.status==fee_status).order_by(Fee5.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    return render_template('fee5/fee5_show.html', order=order, pagination=pagination,page=page,form=form)

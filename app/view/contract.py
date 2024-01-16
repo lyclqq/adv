@@ -11,8 +11,9 @@ from app.models.contract import Customers,Orders
 from app.models.other import Files
 from app.models.system import Systeminfo
 from app.forms.customer import CustomerForm,CustomersearchForm
-from app.forms.fee import Fee1Form
+from app.forms.fee import Fee1Form,FeeSearchForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
+from app.view import search_orders
 import datetime
 
 contractView=Blueprint('contract_admin',__name__)
@@ -38,21 +39,10 @@ def customer_admin():
 @is_login
 def order_admin():
     uid = session.get('user_id')
-    form=OrderSearchForm()
-    form.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
-                           ('作废', '作废')]
     page = request.args.get('page', 1, type=int)
-    orders=Orders()
-    if form.validate_on_submit():
-        title=form.title.data
-        status=form.status.data
-        pagination=orders.search_orders( keywords=title,status=status,page=1)
-    else:
-        pagination=orders.search_orders(None,page=page)
-
-    #pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
-    result=pagination.items
-    return render_template('contract/order_admin.html', page=page, pagination=pagination, posts=result,form=form)
+    form=OrderSearchForm()
+    pagination,page=search_orders(searchform=form,page=page)
+    return render_template('contract/order_admin.html', page=page, pagination=pagination, form=form)
 
 
 #客户状态
@@ -151,6 +141,7 @@ def order_create(cuid):
                 order.iuser_id = uid
                 order.contract_date = form.contract_date.data
                 order.wordnumber = form.words.data
+                order.ordernumber=form.ordernumber.data
                 order.status = '未审'
                 order.group_id = groupid
                 db.session.add(order)
@@ -246,6 +237,39 @@ def order_edit(oid):
             form.submit.render_kw = {'class': 'form-control', 'disabled': True}
     return render_template('contract/order_edit.html',form=form)
 
+#合同加备注
+@contractView.route('/order_notes/<int:oid>',methods=["GET","POST"])
+@is_login
+def order_notes(oid):
+    uid = session.get('user_id')
+    order=Orders.query.filter(Orders.id==oid).first_or_404()
+    form=OrderForm()
+    form.customername.data = '1111'  # 只是为了验证加上
+    if form.validate_on_submit():
+        try:
+            order.notes=form.notes.data
+            db.session.commit()
+            ins_logs(uid, '修改合同备注，orderid='+str(oid), type='contract')
+            flash("修改成功")
+        except Exception as e:
+            current_app.logger.error(e)
+            db.session.rollback()
+            flash('修改失败')
+    else:
+        form.notes.data=order.notes
+        form.title.data=order.title
+        form.title.render_kw={'class': 'form-control', 'readonly': True}
+        form.ordernumber.data=order.ordernumber
+        form.ordernumber.render_kw={'class': 'form-control', 'readonly': True}
+        form.contract_date.data=order.contract_date
+        form.contract_date.render_kw={'class': 'form-control', 'readonly': True}
+        form.name.data=order.name
+        form.name.render_kw = {'class': 'form-control', 'readonly': True}
+        form.fee1.data=order.Fee11
+        form.fee1.render_kw = {'class': 'form-control', 'readonly': True}
+        form.words.data=order.wordnumber
+        form.words.render_kw = {'class': 'form-control', 'readonly': True}
+    return render_template('contract/order_edit.html',form=form)
 
 #合同查看
 @contractView.route('/order_show/<int:oid>',methods=["GET","POST"])
@@ -269,7 +293,7 @@ def order_submit(oid):
             order.status='待审'
             db.session.add(order)
             db.session.commit()
-            ins_logs(uid, '提交成功，orderid=' + oid, type='contract')
+            ins_logs(uid, '提交成功，orderid=' + str(oid), type='contract')
         except Exception as e:
             current_app.logger.error(e)
             flash('提交失败')
@@ -355,3 +379,30 @@ def fee1_input(oid):
             flash('录入失败')
     pagination = Fee1.query.filter(Fee1.order_id == oid).order_by(Fee1.id.desc()).paginate(page, per_page=8)
     return render_template('contract/fee1_input.html', form=form, order=order, pagination=pagination,page=page)
+
+# 合同金额查看
+@contractView.route('/fee1_show/<int:oid>', methods=["GET", "POST"])
+@is_login
+def fee1_show(oid):
+    uid = session.get('user_id')
+    form=FeeSearchForm()
+    pagerows = current_app.config['PAGEROWS']
+
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        page=1
+        session['fee1_status']=form.status.data
+        fee_status=form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee1_status') is None:
+            fee_status='all'
+        else:
+            fee_status = session.get('fee1_status')
+            form.status.data = fee_status
+    if fee_status=='all':
+        pagination = Fee1.query.filter(Fee1.order_id == oid).order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee1.query.filter(Fee1.order_id == oid,Fee1.status==fee_status).order_by(Fee1.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    return render_template('contract/fee1_show.html', order=order, pagination=pagination,page=page,form=form)

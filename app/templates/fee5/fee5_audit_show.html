@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+<div class="m-2 p-3 ">
+    <ul class="breadcrumb top_row">
+        <li>绩效审核</li>
+        <li><a href="{{ url_for('fee5.order_search_audit') }}">合同查询</a></li>
+        <li class="active">绩效金额审核</li>
+    </ul>
+    <br>
+    <table class="table table-hover shadow table-bordered align-middle">
+        <tbody>
+        <tr>
+            <td style="width:240px;">合同名称</td>
+            <td colspan="3">{{ order.title }}</td>
+        </tr>
+        <tr>
+            <td>录入员:{{ order.iuser_id | replace_username }}</td>
+
+            <td style="width:280px;">签约日期:{{ order.contract_date }}</td>
+            <td style="width:330px;">合同编号:{{ order.ordernumber }}</td>
+            <td>所属部门:{{ order.group.groupname }}</td>
+        </tr>
+        <tr>
+
+            <td>己刊登面积:{{ order.area }}</td>
+            <td>合同状态:{{ order.status }}</td>
+            <td>输入时间：{{ order.create_datetime }}</td>
+
+            <td>最后处理时间：{{ order.update_datetime }}</td>
+        </tr>
+        <tr>
+            <td>己发字数：{{ order.wordcount }}</td>
+            <td>己发奖金：{{ order.Fee61 }}</td>
+            <td>发票金额：{{ order.Fee32 }}/{{ order.Fee31 }}</td>
+            <td>己统计绩效：{{ order.Fee52 }}/{{ order.Fee51 }}</td>
+        </tr>
+        <tr>
+            <td>赠送字数：{{ order.wordnumber }}</td>
+            <td>合同金额:{{ order.Fee11 }}</td>
+
+            <td>刊登金额：{{ order.Fee22 }}/{{ order.Fee21 }}</td>
+            <td>到帐金额：{{ order.Fee42 }}/{{ order.Fee41 }}</td>
+
+        </tr>
+        </tbody>
+    </table>
+    <table class="table table-hover shadow table-bordered align-middle">
+        <thead>
+        <tr>
+            <td class="text-bg-secondary" colspan="10">对应刊登情况</td>
+        <tr>
+            <td class="text-bg-secondary" style="width:60px">id</td>
+            <td class="text-bg-secondary" style="width:160px">输入时间</td>
+            <td class="text-bg-secondary">备注</td>
+            <td class="text-bg-secondary" style="width:120px">发生额</td>
+            <td class="text-bg-secondary" style="width:80px">状态</td>
+            <td class="text-bg-secondary" style="width:95px">录入</td>
+            <td class="text-bg-secondary" style="width:95px">审核</td>
+            <td class="text-bg-secondary" style="width:80px">面积</td>
+            <td class="text-bg-secondary" style="width:160px">发生日期</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% if fee2 %}
+        {% for item in fee2 %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.create_datetime | short_time}}</td>
+            <td>{{ item.notes }}</td>
+            <td>{{ item.fee }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.iuser_id | replace_username }}</td>
+            <td>{{ item.cuser_id | replace_username }}</td>
+            <td>{{ item.area }}</td>
+            <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="11">没有查到相关数据</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <table class="table table-hover shadow table-bordered align-middle">
+
+        <tbody>
+        {% if fee5 %}
+        <tr>
+            <td style="width:240px;">id:{{ fee5.id }}</td>
+            <td style="width:320px;">状态：{{ fee5.status }}</td>
+            <td>输入时间：{{ fee5.create_datetime }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">备注：{{ fee5.notes }}</td>
+        </tr>
+        <tr>
+
+
+            <td>输入员：{{ fee5.iuser_id | replace_username }}</td>
+            <td>审核员：{{ fee5.cuser_id | replace_username }}</td>
+            <td>发生日期：{{ fee5.feedate.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        <tr>
+            <td>核算金额：{{ fee5.fee }}</td>
+            <td>税率：{{ fee5.scale }}</td>
+            <td>奖金：{{ fee5.prize }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                {% if fee5.status=="stay" %}
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('fee5.fee5_audit_on',fid=fee5.id,oid=fee5.order_id) }}"
+                >同意</a>
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('fee5.fee5_audit_off',fid=fee5.id,oid=fee5.order_id) }}"
+                >拒绝</a>
+                {% else %}
+                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">同意</button>
+                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">拒绝</button>
+                {% endif %}
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('fee5.fee5_audit',oid=fee5.order_id) }}"
+                >返回合同</a>
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('fee5.fee5_search_audit') }}"
+                >返回列表</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="11">没有查到相关数据</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

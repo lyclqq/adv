@@ -4,8 +4,9 @@ from flask import Blueprint,render_template,current_app,url_for,redirect,session
 import json
 import os
 from functools import wraps
-from app.common import is_login,ins_logs,month_difference
+from app.common import is_login,ins_logs,month_difference,get_month
 from app import db
+from app.view import search_orders
 from app.models.contract import Customers,Orders
 from app.models.other import Files
 from app.models.bill import Wordnumbers,Fee1
@@ -39,20 +40,9 @@ def customer_search():
 @is_login
 def order_search():
     uid = session.get('user_id')
-    form=OrderSearchForm()
-    form.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
-                           ('作废', '作废')]
     page = request.args.get('page', 1, type=int)
-    orders=Orders()
-    if form.validate_on_submit():
-
-        title=form.title.data
-        status=form.status.data
-        pagination=orders.search_orders( keywords=title,status=status,page=1)
-    else:
-        pagination=orders.search_orders(None,page=page)
-
-    #pagination=orders.query.paginate(page, per_page=current_app.config['PAGEROWS'])
+    form=OrderSearchForm()
+    pagination,page=search_orders(searchform=form,page=page)
     result=pagination.items
     return render_template('orderaudit/order_search.html', page=page, pagination=pagination, posts=result,form=form)
 
@@ -65,44 +55,50 @@ def order_audit(oid):
     order=Orders.query.filter(Orders.id==oid).first_or_404()
     orderfiles=Files.query.filter(Files.order_id==oid).all()
     if form.validate_on_submit():
-        if order.status=='待审' and ( form.status.data=='作废' or form.status.data=='未审'):
-            order.status = form.status.data
-            order.update_datetime=datetime.datetime.now()
-            db.session.add(order)
-        if order.status=='待审' and form.status.data=='己审' :
-            order.status = form.status.data
-            order.update_datetime = datetime.datetime.now()
-            order.Fee13=order.Fee11
-            db.session.add(order)
-            #print('customer is '+str(order.cutomer_id))
-            customer = Customers.query.filter(Customers.id == order.cutomer_id).first_or_404()
-            customer.status = 'on'
-            db.session.add(customer)
-            wordnumber=Wordnumbers()
-            wordnumber.order_id=oid
-            wordnumber.feedate=order.contract_date
-            wordnumber.type='order'
-            wordnumber.wordnumber=order.wordnumber
-            wordnumber.status='on'
-            wordnumber.iuser_id=order.iuser_id
-            wordnumber.cuser_id=uid
-            db.session.add(wordnumber)
-            fee1=Fee1()
-            fee1.order_id=oid
-            fee1.feedate=order.contract_date
-            fee1.fee=order.Fee11
-            fee1.iuser_id=order.iuser_id
-            fee1.cuser_id=uid
-            fee1.status='on'
-            db.session.add(fee1)
-        if order.status=='己审' and form.status.data=='完成':
-            order.status = form.status.data
-            order.update_datetime = datetime.datetime.now()
-            db.session.add(order)
         try:
-            db.session.commit()
-            flash('审核完成.', 'success')
-            ins_logs(uid, '合同审核,id=' + str(oid), type='order_audit')
+            if order.status=='待审' and ( form.status.data=='作废' or form.status.data=='未审'):
+                order.status = form.status.data
+                order.update_datetime=datetime.datetime.now()
+                order.cuser_id = uid
+                db.session.add(order)
+            elif order.status=='待审' and form.status.data=='己审' :
+                order.status = form.status.data
+                order.update_datetime = datetime.datetime.now()
+                order.cuser_id=uid
+                systemtoday = get_month()
+                if month_difference(systemtoday,order.contract_date)==0:#当月
+                    order.Fee12=order.Fee11
+                if systemtoday.year==order.contract_date.year: #当年
+                    order.Fee13 = order.Fee11
+                db.session.add(order)
+                customer = Customers.query.filter(Customers.id == order.cutomer_id).first_or_404()
+                customer.status = 'on'
+                db.session.add(customer)
+                wordnumber=Wordnumbers()
+                wordnumber.order_id=oid
+                wordnumber.feedate=order.contract_date
+                wordnumber.type='order'
+                wordnumber.wordnumber=order.wordnumber
+                wordnumber.status='on'
+                wordnumber.iuser_id=order.iuser_id
+                wordnumber.cuser_id=uid
+                db.session.add(wordnumber)
+                fee1=Fee1()
+                fee1.order_id=oid
+                fee1.feedate=order.contract_date
+                fee1.fee=order.Fee11
+                fee1.iuser_id=order.iuser_id
+                fee1.cuser_id=uid
+                fee1.status='on'
+                db.session.add(fee1)
+            elif order.status=='己审' and form.status.data=='完成':
+                order.status = form.status.data
+                order.update_datetime = datetime.datetime.now()
+                db.session.add(order)
+
+                db.session.commit()
+            flash('操作完成.', 'success')
+            ins_logs(uid, '合同状态变更,id=' + str(oid), type='order_audit')
         except Exception as e:
             current_app.logger.error(e)
             flash('审核失败')

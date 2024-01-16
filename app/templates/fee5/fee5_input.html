@@ -166,9 +166,8 @@ $("#btn").click(function() {
 
     }
     $('#fee').prop('value',sum)
-    $('#prize').prop('value',prize)
+    $('#prize').prop('value',Math.floor(prize))
 
-    alert('核定绩效总额为:'+sum+',奖金为：'+prize);
 });
 
 
@@ -180,15 +179,15 @@ $("#btn").click(function() {
             <tr>
                 <td colspan="10">绩效发放明细</td>
             <tr>
-                <td style="width:60px">id</td>
-                <td style="width:240px">输入时间</td>
+                <td style="width:80px">id</td>
+                <td style="width:160px">输入时间</td>
                 <td>备注</td>
-                <td>核算额</td>
+                <td style="width:100px">核算额</td>
                 <td style="width:80px">状态</td>
                 <td style="width:100px">比例</td>
-                <td style="width:120px">录入</td>
-                <td style="width:120px">审核</td>
-                <td style="width:120px">奖金</td>
+                <td style="width:100px">录入</td>
+                <td style="width:100px">审核</td>
+                <td style="width:100px">奖金</td>
                 <td style="width:180px">发生日期</td>
             </tr>
             </thead>

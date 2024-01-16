@@ -49,7 +49,7 @@
             <thead>
             <tr>
                 <td class="text-bg-secondary" style="width:60px">id</td>
-                <td class="text-bg-secondary" style="width:240px">输入时间</td>
+                <td class="text-bg-secondary" style="width:160px">输入时间</td>
                 <td class="text-bg-secondary">备注</td>
                 <td class="text-bg-secondary" style="width:120px">发生额</td>
                 <td class="text-bg-secondary" style="width:80px">状态</td>
@@ -58,7 +58,7 @@
                 <td class="text-bg-secondary" style="width:80px">比例</td>
                 <td class="text-bg-secondary" style="width:80px">奖金</td>
                 <td class="text-bg-secondary" style="width:160px">发生日期</td>
-                <td class="text-bg-secondary" style="width:150px">审核</td>
+                <td class="text-bg-secondary" style="width:80px">操作</td>
             </tr>
             </thead>
             <tbody>
@@ -76,15 +76,8 @@
                         <td>{{ item.prize }}</td>
                         <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
                         <td>
-                            {% if item.status=="stay" %}
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee5.fee5_audit_on',fid=item.id,oid=item.order_id) }}"
-                                    onclick="return confirm('Are you sure?');">同意</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee5.fee5_audit_off',fid=item.id,oid=item.order_id) }}"
-                                    onclick="return confirm('Are you sure?');">拒绝</a>
-                            {% else %}
-                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">同意</button>
-                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">拒绝</button>
-                            {% endif %}
+                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee5.fee5_audit_show',fid=item.id,oid=item.order_id) }}"
+                                    >审核</a>
                         </td>
                     </tr>
                 {% endfor %}

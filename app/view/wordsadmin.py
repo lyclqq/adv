@@ -5,13 +5,14 @@ import json
 import os
 from functools import wraps
 from app.common import is_login,ins_logs,month_difference
+from app.view import search_orders
 from app import db
 from app.models.contract import Customers,Orders
 from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers
 from app.forms.customer import CustomerForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
-from app.forms.fee import WordsForm
+from app.forms.fee import WordsForm,FeeSearchForm
 import datetime
 
 wordsadminView=Blueprint('words_admin',__name__)
@@ -22,17 +23,9 @@ wordsadminView=Blueprint('words_admin',__name__)
 @is_login
 def order_search():
     uid = session.get('user_id')
-    form=OrderSearchForm()
-
     page = request.args.get('page', 1, type=int)
-    orders=Orders()
-    if form.validate_on_submit():
-        title=form.title.data
-        status=form.status.data
-        pagination=orders.search_orders( keywords=title,status=status,page=1)
-    else:
-        pagination=orders.search_orders(None,page=page)
-    form.status.choices=[('全部','全部'),('己审','己审' ), ('未审','未审' ),( '待审','待审'), ('完成', '完成'),('作废', '作废')]
+    form=OrderSearchForm()
+    pagination,page=search_orders(searchform=form,page=page)
 
     result=pagination.items
     return render_template('wordsadmin/order_search.html', page=page, pagination=pagination, posts=result,form=form)
@@ -109,7 +102,7 @@ def words_publish(oid):
     pagination = Wordnumbers.query.filter(Wordnumbers.type == 'publish',Wordnumbers.order_id==oid).order_by(Wordnumbers.id.desc()).paginate(page, per_page=8)
     return render_template('wordsadmin/words_input.html', form=form,order=order,pagination=pagination,page=page)
 
-#出版字数
+#出版字数查询
 @wordsadminView.route('/words_search/<type>')
 @is_login
 def words_search(type):
@@ -118,3 +111,53 @@ def words_search(type):
     pagerows = current_app.config['PAGEROWS']
     pagination = Wordnumbers.query.filter(Wordnumbers.type == type).order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
     return render_template('wordsadmin/words_search.html', pagination=pagination,page=page)
+
+# 出版字数详情查看
+@wordsadminView.route('/words_public_show/<int:oid>', methods=["GET", "POST"])
+@is_login
+def words_public_show(oid):
+    uid = session.get('user_id')
+    form=FeeSearchForm()
+    pagerows = current_app.config['PAGEROWS']
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        page=1
+        session['words_status']=form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('words_status') is None:
+            fee_status='all'
+        else:
+            fee_status = session.get('words_status')
+            form.status.data = fee_status
+    if fee_status=='all':
+        pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='publish').order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='publish',Wordnumbers.status==fee_status).order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
+
+    return render_template('wordsadmin/words_show.html', order=order, pagination=pagination,page=page,form=form)
+
+# 赠送字数详情查看
+@wordsadminView.route('/words_order_show/<int:oid>', methods=["GET", "POST"])
+@is_login
+def words_order_show(oid):
+    uid = session.get('user_id')
+    form=FeeSearchForm()
+    pagerows = current_app.config['PAGEROWS']
+    order = Orders.query.filter(Orders.id == oid).first_or_404()
+    if form.validate_on_submit():
+        page=1
+        session['words_status']=form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('words_status') is None:
+            fee_status='all'
+        else:
+            fee_status = session.get('words_status')
+            form.status.data=fee_status
+    if fee_status=='all':
+        pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='order').order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='order',Wordnumbers.status==fee_status).order_by(Wordnumbers.id.desc()).paginate(page,
+                                                                                                   per_page=pagerows)
+    return render_template('wordsadmin/words_show.html', order=order, pagination=pagination,page=page,form=form)

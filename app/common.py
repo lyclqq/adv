@@ -4,7 +4,9 @@ import json
 import os
 from functools import wraps
 from app.models.system import Logs,Systeminfo
+from app.models.contract import Orders
 from app import db
+from app.forms.order import OrderSearchForm
 import datetime
 #登陆验证
 def is_login(view_func):
@@ -74,4 +76,7 @@ def month_difference(date1, date2):
 def get_month():
     systeminfo=Systeminfo.query.filter(Systeminfo.id==1).first()
     return systeminfo.systemmonth
+
+
+
 

@@ -5,6 +5,7 @@ import json
 import os
 from functools import wraps
 from app.common import is_login, ins_logs
+from app.view import search_orders
 from app import db
 from app.models.contract import Customers, Orders
 from app.models.other import Files
@@ -22,18 +23,9 @@ wordsauditView = Blueprint('words_audit', __name__)
 @is_login
 def order_search():
     uid = session.get('user_id')
-    form = OrderSearchForm()
-
     page = request.args.get('page', 1, type=int)
-    orders = Orders()
-    if form.validate_on_submit():
-        title = form.title.data
-        status = form.status.data
-        pagination = orders.search_orders(keywords=title, status=status, page=1)
-    else:
-        pagination = orders.search_orders(None, page=page)
-    form.status.choices = [('全部', '全部'), ('己审', '己审'), ('未审', '未审'), ('待审', '待审'), ('完成', '完成'),
-                           ('作废', '作废')]
+    form=OrderSearchForm()
+    pagination,page=search_orders(searchform=form,page=page)
 
     result = pagination.items
     return render_template('wordsaudit/order_search.html', page=page, pagination=pagination, posts=result, form=form)

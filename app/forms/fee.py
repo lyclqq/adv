@@ -59,7 +59,7 @@ class Fee3Form(FlaskForm):
 class Fee5Form(FlaskForm):
 
     fee =FloatField('发生金额',validators=[NumberRange(min=-9999999, max=9999999, message='金额只能为-9999999至9999999')],
-                         render_kw={'class': 'form-control', 'placeholder': '金额只能为-9999999至9999999'},default=0)
+                         render_kw={'class': 'form-control', 'readonly':True},default=0)
     scale = FloatField('奖金百分比',
                      validators=[NumberRange(min=0, max=100, message='只能为0至100')],
                      render_kw={'class': 'form-control', 'placeholder': '只能为0至100'}, default=0)
@@ -81,3 +81,8 @@ class AuditForm(FlaskForm):
     status=SelectField(label='状态：',render_kw={'class': 'form-control'},
                            choices=[('on','on' ), ('off','off' ),( 'stay','stay')])
     submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
+
+class FeeSearchForm(FlaskForm):
+    status=SelectField(label='状态：',render_kw={'class': 'form-control'},
+                           choices=[('all','all'),('on','on' ), ('off','off' ),( 'stay','stay')])
+    submit = SubmitField('查询',render_kw={'class':'btn btn-block btn-info'})
