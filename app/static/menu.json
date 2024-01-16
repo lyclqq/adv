@@ -153,5 +153,16 @@
 			"subname": "绩效查询",
 			"sublink": "/fee5/fee5_search_audit"
 		}]
+	},
+	{
+		"menuname": "税率信息",
+		"id": 13,
+		"sublist": [{
+			"subname": "税率查看",
+			"sublink": "/info/show"
+		}, {
+			"subname": "税率修改",
+			"sublink": "/info/show/1"
+		}]
 	}
 ]

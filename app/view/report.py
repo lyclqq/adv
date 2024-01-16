@@ -24,7 +24,7 @@ report_bp = Blueprint('report', __name__)
 
 @report_bp.route('/report/test', methods=["GET", "POST"])
 def report_test():
-    c = bar_base()
+    c = bar2()
     return Markup(c.render_embed())
 
 
@@ -33,42 +33,57 @@ def report_chart():
     return render_template('report/chart.html')
 
 
-def bar_base() -> Bar:
-    # x = ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子", "hehe"]
-    # y1 = [5, 20, 36, 10, 75, 90, 44]
-    # y2 = [15, 25, 16, 55, 48, 8, 60]
-    x = []
-    y1 = []
-    y2 = []
-    sum11 = func.sum(Orders.Fee11).label('sum11')
-    sum41 = func.sum(Orders.Fee41).label('sum41')
-    fee_sum = Orders.query.with_entities(Orders.group_id, sum11, sum41).group_by(Orders.group_id).all()
-    for f in fee_sum:
-        gs = Groups.query.filter(Groups.id == f.group_id).first()
-        x.append(gs.groupname)
-        y1.append(f.sum11)
-        y2.append(f.sum41)
+def bar2() -> Bar:
+    x = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+    y1 = [931.43, 319.52, 975.69, 725.81, 784.84, 1524.20, 935.60, 1021.20, 1050.02, 1637.42, 1500, 1400]
+    y2 = [668.73, 563.61, 1098.05, 884.65, 828.02, 1509.48, 949.97, 1012.22, 1199.45, 1090.48, 900, 1000]
+    #
+    # x = []
+    # y1 = []
+    # y2 = []
+    # sum11 = func.sum(Orders.Fee11).label('sum11')
+    # sum41 = func.sum(Orders.Fee41).label('sum41')
+    # fee_sum = Orders.query.with_entities(Orders.group_id, sum11, sum41).group_by(Orders.group_id).all()
+    # for f in fee_sum:
+    #     gs = Groups.query.filter(Groups.id == f.group_id).first()
+    #     x.append(gs.groupname)
+    #     y1.append(f.sum11)
+    #     y2.append(f.sum41)
+    ##
     c = (
         Bar()
         .add_xaxis(x)
-        .add_yaxis("合同金额", y1)
-        .add_yaxis("到账金额", y2)
+        .add_yaxis("2022年刊登金额", y1)
+        .add_yaxis("2023年刊登金额", y2)
         .set_global_opts(title_opts=opts.TitleOpts(title="", subtitle=""))
     )
     return c
 
 
-@report_bp.route("/report/barChart")
+@report_bp.route("/report/bar")
 def get_bar_chart():
-    c = bar_base()
+    x = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+    y1 = [931.43, 319.52, 975.69, 725.81, 784.84, 1524.20, 935.60, 1021.20, 1050.02, 1637.42, 1500, 1400]
+    c = (
+        Bar()
+        .add_xaxis(x)
+        .add_yaxis("刊登金额", y1)
+        .set_global_opts(title_opts=opts.TitleOpts(title="", subtitle=""))
+    )
+    return c.dump_options_with_quotes()
+
+
+@report_bp.route("/report/barChart")
+def get_bar2_chart():
+    c = bar2()
     return c.dump_options_with_quotes()
 
 
 @report_bp.route("/report/line")
 def get_line():
-    x_data = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    y_data = [820, 932, 901, 934, 1290, 1330, 1320]
-    y2_data = [720, 632, 401, 1034, 990, 1530, 1320]
+    x_data = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+    y_data = [668.73, 1232.34, 2330.39, 3215.05, 4043.07, 5552.55, 6502.52, 7514.74, 8714.19, 9804.67, 10000, 10040]
+    y2_data = [931.43, 1250.95, 2226.64, 2952.45, 3737.29, 5261.49, 6197.09, 7218.29, 8268.31, 9905.73, 11000, 11050]
     ##
     # x_data = []
     # y_data = []
@@ -112,14 +127,21 @@ def get_line():
 
 @report_bp.route("/report/pie")
 def get_pie():
-    x_data = []
-    y_data = []
-    sum11 = func.sum(Orders.Fee11).label('sum11')
-    fee_sum = Orders.query.with_entities(Orders.group_id, sum11).group_by(Orders.group_id).all()
-    for f in fee_sum:
-        gs = Groups.query.filter(Groups.id == f.group_id).first()
-        x_data.append(gs.groupname)
-        y_data.append(f.sum11)
+    # x_data = []
+    # y_data = []
+    # sum11 = func.sum(Orders.Fee11).label('sum11')
+    # fee_sum = Orders.query.with_entities(Orders.group_id, sum11).group_by(Orders.group_id).all()
+    # for f in fee_sum:
+    #     gs = Groups.query.filter(Groups.id == f.group_id).first()
+    #     x_data.append(gs.groupname)
+    #     y_data.append(f.sum11)
+    #
+    x_data = ["新余事业部", "萍乡事业部", "抚州事业部", "工交事业部", "三农事业部", "吉安事业部", "法治事业部", "赣州事业部", "光影事业部",
+              "南昌事业部", "九江事业部", "财贸事业部", "社会事业部", "金融事业部", "宜春事业部", "体育公司", "健康事业部", "教育事业部", "鹰潭事业部",
+              "上饶事业部", "广告部", "景德镇事业部", "工会事业部", "智库事业部", "会展事业部"]
+    y_data = [148.42, 292.12, 459.31, 611.76, 648.78, 282.00, 351.70, 843.36, 230.80, 1136.38, 706.25, 464.13, 259.75, 776.81,
+              458.69, 219.50, 557.20, 591.51, 118.70, 292.50, 104.10, 114.50, 89.40, 34.00, 13.00]
+    #
     c = (
         Pie()
         .add("总合同金额", [list(z) for z in zip(
