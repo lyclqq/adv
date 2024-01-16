@@ -26,9 +26,13 @@
                 <li class="nav-item">
                     <hr>
                 </li>
-                <li class="nav-item">
-                    {{ si.systemmonth.strftime("%Y-%m") }}
+                <li class="nav-item" id="li-si">
                 </li>
+                <script>
+                    axios.get('/info/get').then(function (response) {
+                        $('#li-si').text(response.data.result)
+                    })
+                </script>
                 {% for m in session['menu'] %}
                     {% if session['usermenu'][loop.index0]=='1' %}
                         <li class="nav-item">
