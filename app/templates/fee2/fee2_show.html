@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
-    <div class="m-2 p-3 ">
-        <ul class="breadcrumb top_row">
-            <li>合同管理</li>
-            <li><a href="{{ url_for('contract_admin.order_admin') }}">合同查询</a></li>
-            <li><a href="{{ url_for('contract_admin.order_show',oid=order.id) }}">合同详情</a></li>
-            <li class="active">刊登金额查询</li>
-        </ul>
+<div class="m-2 p-3 ">
+    <ul class="breadcrumb top_row">
+        <li>合同管理</li>
+        <li><a href="{{ url_for('contract_admin.order_admin') }}">合同查询</a></li>
+        <li><a href="{{ url_for('contract_admin.order_show',oid=order.id) }}">合同详情</a></li>
+        <li class="active">刊登金额查询</li>
+    </ul>
 
     <table class="table table-hover shadow table-bordered align-middle">
         <tbody>
- <tr>
+        <tr>
             <td style="width:240px;">合同名称</td>
             <td colspan="3">{{ order.title }}</td>
         </tr>
@@ -31,75 +31,81 @@
             <td>最后处理时间：{{ order.update_datetime }}</td>
         </tr>
         <tr>
-            <td>己发字数：{{ order.wordcount }}</td>
+            <td><a href="{{ url_for('words_admin.words_public_show',oid=order.id) }}">己发字数：{{ order.wordcount }}</a>
+            </td>
             <td>己发奖金：{{ order.Fee61 }}</td>
-            <td>发票金额：{{ order.Fee32 }}/{{ order.Fee31 }}</td>
-            <td>己统计绩效：{{ order.Fee52 }}/{{ order.Fee51 }}</td>
+            <td><a href="{{ url_for('fee345.fee3_show',oid=order.id) }}">发票金额：{{ order.Fee32 }}/{{ order.Fee31
+                }}</a></td>
+            <td><a href="{{ url_for('fee5.fee5_show',oid=order.id) }}">己统计绩效：{{ order.Fee52 }}/{{ order.Fee51
+                }}</a></td>
         </tr>
         <tr>
-            <td>赠送字数：{{ order.wordnumber }}</td>
-            <td>合同金额:{{ order.Fee11 }}</td>
+            <td><a href="{{ url_for('words_admin.words_order_show',oid=order.id) }}">赠送字数：{{ order.wordnumber }}</a>
+            </td>
+            <td><a href="{{ url_for('contract_admin.fee1_show',oid=order.id) }}">合同金额:{{ order.Fee11 }}</a></td>
 
-            <td>刊登金额：{{ order.Fee22 }}/{{ order.Fee21 }}</td>
-            <td>到帐金额：{{ order.Fee42 }}/{{ order.Fee41 }}</td>
+            <td><a href="{{ url_for('fee2.fee2_show',oid=order.id) }}">刊登金额：{{ order.Fee22 }}/{{ order.Fee21 }}</a>
+            </td>
+            <td><a href="{{ url_for('fee345.fee4_show',oid=order.id) }}">到帐金额：{{ order.Fee42 }}/{{ order.Fee41
+                }}</a></td>
 
         </tr>
         </tbody>
     </table>
 
-        <br>
-                <form action="" role="form" method="post">
-            {{ form.csrf_token }}
-            <table>
-                <tr>
-                    <td>{{ form.status.label }}</td>
-                    <td class="p-2">{{ form.status() }}</td>
-                    <td class="p-2">{{ form.submit }}</td>
-                </tr>
-            </table>
-        </form>
-
-        <br>
-        <table class="table table-hover shadow table-bordered align-middle">
-            <thead>
+    <br>
+    <form action="" role="form" method="post">
+        {{ form.csrf_token }}
+        <table>
             <tr>
-                <td class="text-bg-secondary" style="width:60px">id</td>
-                <td class="text-bg-secondary" style="width:150px">输入时间</td>
-                <td class="text-bg-secondary">备注</td>
-                <td class="text-bg-secondary" style="width:80px">状态</td>
-                <td class="text-bg-secondary" style="width:100px">发生额</td>
-                <td class="text-bg-secondary" style="width:100px">面积</td>
-                <td class="text-bg-secondary" style="width:120px">录入</td>
-                <td class="text-bg-secondary" style="width:120px">审核</td>
-                <td class="text-bg-secondary" style="width:100px">绩效ID</td>
-                <td class="text-bg-secondary" style="width:160px">发生日期</td>
+                <td>{{ form.status.label }}</td>
+                <td class="p-2">{{ form.status() }}</td>
+                <td class="p-2">{{ form.submit }}</td>
             </tr>
-            </thead>
-            <tbody>
-            {% if pagination.items %}
-                {% for item in pagination.items %}
-                    <tr>
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.create_datetime | short_time}}</td>
-                        <td>{{ item.notes }}</td>
-                        <td>{{ item.status }}</td>
-                        <td>{{ item.fee }}</td>
-                         <td>{{ item.area }}</td>
-                        <td>{{ item.iuser_id | replace_username }}</td>
-                        <td>{{ item.cuser_id | replace_username }}</td>
-                        <td>{{ item.fee5_id }}</td>
-                        <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <td colspan="10">{{ render_pagination(pagination,align='center') }}</td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="10">没有查到相关数据</td>
-                </tr>
-            {% endif %}
-            </tbody>
         </table>
-    </div>
+    </form>
+
+    <br>
+    <table class="table table-hover shadow table-bordered align-middle">
+        <thead>
+        <tr>
+            <td class="text-bg-secondary" style="width:60px">id</td>
+            <td class="text-bg-secondary" style="width:150px">输入时间</td>
+            <td class="text-bg-secondary">备注</td>
+            <td class="text-bg-secondary" style="width:80px">状态</td>
+            <td class="text-bg-secondary" style="width:100px">发生额</td>
+            <td class="text-bg-secondary" style="width:100px">面积</td>
+            <td class="text-bg-secondary" style="width:120px">录入</td>
+            <td class="text-bg-secondary" style="width:120px">审核</td>
+            <td class="text-bg-secondary" style="width:100px">绩效ID</td>
+            <td class="text-bg-secondary" style="width:160px">发生日期</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% if pagination.items %}
+        {% for item in pagination.items %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.create_datetime | short_time}}</td>
+            <td>{{ item.notes }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.fee }}</td>
+            <td>{{ item.area }}</td>
+            <td>{{ item.iuser_id | replace_username }}</td>
+            <td>{{ item.cuser_id | replace_username }}</td>
+            <td>{{ item.fee5_id }}</td>
+            <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="10">{{ render_pagination(pagination,align='center') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="10">没有查到相关数据</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
