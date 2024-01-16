@@ -36,13 +36,13 @@
             <td>最后处理时间：{{ order.update_datetime }}</td>
         </tr>
         <tr>
-            <td><a href="{{ url_for('fee345.fee3_show',oid=order.id) }}">己发字数：{{ order.wordcount }}</a></td>
-            <td><a href="{{ url_for('fee345.fee3_show',oid=order.id) }}">己发奖金：{{ order.Fee61 }}</a></td>
+            <td><a href="{{ url_for('words_admin.words_public_show',oid=order.id) }}">己发字数：{{ order.wordcount }}</a></td>
+            <td>己发奖金：{{ order.Fee61 }}</td>
             <td><a href="{{ url_for('fee345.fee3_show',oid=order.id) }}">发票金额：{{ order.Fee32 }}/{{ order.Fee31 }}</a></td>
             <td><a href="{{ url_for('fee5.fee5_show',oid=order.id) }}">己统计绩效：{{ order.Fee52 }}/{{ order.Fee51 }}</a></td>
         </tr>
         <tr>
-            <td>赠送字数：{{ order.wordnumber }}</td>
+            <td><a href="{{ url_for('words_admin.words_order_show',oid=order.id) }}">赠送字数：{{ order.wordnumber }}</a></td>
             <td><a href="{{ url_for('contract_admin.fee1_show',oid=order.id) }}">合同金额:{{ order.Fee11 }}</a></td>
 
             <td><a href="{{ url_for('fee2.fee2_show',oid=order.id) }}">刊登金额：{{ order.Fee22 }}/{{ order.Fee21 }}</a></td>

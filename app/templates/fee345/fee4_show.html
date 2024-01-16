@@ -6,7 +6,7 @@
             <li>合同管理</li>
             <li><a href="{{ url_for('contract_admin.order_admin') }}">合同查询</a></li>
             <li><a href="{{ url_for('contract_admin.order_show',oid=order.id) }}">合同详情</a></li>
-            <li class="active">刊登金额查询</li>
+            <li class="active">到帐金额查询</li>
         </ul>
 
     <table class="table table-hover shadow table-bordered align-middle">
@@ -67,11 +67,9 @@
                 <td class="text-bg-secondary" style="width:150px">输入时间</td>
                 <td class="text-bg-secondary">备注</td>
                 <td class="text-bg-secondary" style="width:80px">状态</td>
-                <td class="text-bg-secondary" style="width:100px">发生额</td>
-                <td class="text-bg-secondary" style="width:100px">面积</td>
+                <td class="text-bg-secondary" style="width:110px">到帐额</td>
                 <td class="text-bg-secondary" style="width:120px">录入</td>
                 <td class="text-bg-secondary" style="width:120px">审核</td>
-                <td class="text-bg-secondary" style="width:100px">绩效ID</td>
                 <td class="text-bg-secondary" style="width:160px">发生日期</td>
             </tr>
             </thead>
@@ -84,10 +82,8 @@
                         <td>{{ item.notes }}</td>
                         <td>{{ item.status }}</td>
                         <td>{{ item.fee }}</td>
-                         <td>{{ item.area }}</td>
                         <td>{{ item.iuser_id | replace_username }}</td>
                         <td>{{ item.cuser_id | replace_username }}</td>
-                        <td>{{ item.fee5_id }}</td>
                         <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
                     </tr>
                 {% endfor %}

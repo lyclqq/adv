@@ -338,7 +338,7 @@ def fee3_show(oid):
                                                                                                    per_page=pagerows)
     return render_template('fee345/fee3_show.html', order=order, pagination=pagination,page=page,form=form)
 
-# 刊登金额查看
+# 到帐金额查看
 @fee345View.route('/fee4_show/<int:oid>', methods=["GET", "POST"])
 @is_login
 def fee4_show(oid):
