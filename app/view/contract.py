@@ -392,20 +392,16 @@ def fee1_show(oid):
     if form.validate_on_submit():
         page=1
         session['fee1_status']=form.status.data
-        if form.status.data=='all':
-            pagination = Fee1.query.filter(Fee1.order_id == oid).order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
-        else:
-            pagination = Fee1.query.filter(Fee1.order_id == oid,Fee1.status==form.status.data).order_by(Fee1.id.desc()).paginate(page,
-                                                                                                   per_page=pagerows)
+        fee1_status=form.status.data
     else:
         page = request.args.get('page', 1, type=int)
         if session.get('fee1_status') is None:
             fee1_status='all'
         else:
             fee1_status = session.get('fee1_status')
-        if fee1_status=='all':
-            pagination = Fee1.query.filter(Fee1.order_id == oid).order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
-        else:
-            pagination = Fee1.query.filter(Fee1.order_id == oid,Fee1.status==fee1_status).order_by(Fee1.id.desc()).paginate(page,
+    if fee1_status=='all':
+        pagination = Fee1.query.filter(Fee1.order_id == oid).order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee1.query.filter(Fee1.order_id == oid,Fee1.status==fee1_status).order_by(Fee1.id.desc()).paginate(page,
                                                                                                    per_page=pagerows)
     return render_template('contract/fee1_show.html', order=order, pagination=pagination,page=page,form=form)

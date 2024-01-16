@@ -197,20 +197,16 @@ def fee5_show(oid):
     if form.validate_on_submit():
         page=1
         session['fee5_status']=form.status.data
-        if form.status.data=='all':
-            pagination = Fee5.query.filter(Fee5.order_id == oid).order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
-        else:
-            pagination = Fee5.query.filter(Fee5.order_id == oid,Fee5.status==form.status.data).order_by(Fee5.id.desc()).paginate(page,
-                                                                                                   per_page=pagerows)
+        fee_status=form.status.data
     else:
         page = request.args.get('page', 1, type=int)
         if session.get('fee5_status') is None:
             fee_status='all'
         else:
             fee_status = session.get('fee5_status')
-        if fee_status=='all':
-            pagination = Fee5.query.filter(Fee5.order_id == oid).order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
-        else:
-            pagination = Fee5.query.filter(Fee5.order_id == oid,Fee5.status==fee_status).order_by(Fee5.id.desc()).paginate(page,
+    if fee_status=='all':
+        pagination = Fee5.query.filter(Fee5.order_id == oid).order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee5.query.filter(Fee5.order_id == oid,Fee5.status==fee_status).order_by(Fee5.id.desc()).paginate(page,
                                                                                                    per_page=pagerows)
     return render_template('fee5/fee5_show.html', order=order, pagination=pagination,page=page,form=form)

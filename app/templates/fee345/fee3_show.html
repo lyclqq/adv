@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
-    <div class="m-2 p-3 ">
-        <ul class="breadcrumb top_row">
-            <li>合同管理</li>
-            <li><a href="{{ url_for('contract_admin.order_admin') }}">合同查询</a></li>
-            <li><a href="{{ url_for('contract_admin.order_show',oid=order.id) }}">合同详情</a></li>
-            <li class="active">发票金额查询</li>
-        </ul>
+<div class="m-2 p-3 ">
+    <ul class="breadcrumb top_row">
+        <li>合同管理</li>
+        <li><a href="{{ url_for('contract_admin.order_admin') }}">合同查询</a></li>
+        <li><a href="{{ url_for('contract_admin.order_show',oid=order.id) }}">合同详情</a></li>
+        <li class="active">发票金额查询</li>
+    </ul>
 
     <table class="table table-hover shadow table-bordered align-middle">
         <tbody>
- <tr>
+        <tr>
             <td style="width:240px;">合同名称</td>
             <td colspan="3">{{ order.title }}</td>
         </tr>
@@ -47,57 +47,59 @@
         </tbody>
     </table>
 
-        <br>
-                <form action="" role="form" method="post">
-            {{ form.csrf_token }}
-            <table>
-                <tr>
-                    <td>{{ form.status.label }}</td>
-                    <td class="p-2">{{ form.status() }}</td>
-                    <td class="p-2">{{ form.submit }}</td>
-                </tr>
-            </table>
-        </form>
-
-        <br>
-        <table class="table table-hover shadow table-bordered align-middle">
-            <thead>
+    <br>
+    <form action="" role="form" method="post">
+        {{ form.csrf_token }}
+        <table>
             <tr>
-                <td class="text-bg-secondary" style="width:60px">id</td>
-                <td class="text-bg-secondary" style="width:150px">输入时间</td>
-                <td class="text-bg-secondary">备注</td>
-                <td class="text-bg-secondary" style="width:80px">状态</td>
-                <td class="text-bg-secondary" style="width:110px">发票额</td>
-                <td class="text-bg-secondary" style="width:80px">附件</td>
-                <td class="text-bg-secondary" style="width:120px">录入</td>
-                <td class="text-bg-secondary" style="width:120px">审核</td>
-                <td class="text-bg-secondary" style="width:160px">发生日期</td>
+                <td>{{ form.status.label }}</td>
+                <td class="p-2">{{ form.status() }}</td>
+                <td class="p-2">{{ form.submit }}</td>
             </tr>
-            </thead>
-            <tbody>
-            {% if pagination.items %}
-                {% for item in pagination.items %}
-                    <tr>
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.create_datetime | short_time}}</td>
-                        <td>{{ item.notes }}</td>
-                        <td>{{ item.status }}</td>
-                        <td>{{ item.fee }}</td>
-                        <td>附件</td>
-                        <td>{{ item.iuser_id | replace_username }}</td>
-                        <td>{{ item.cuser_id | replace_username }}</td>
-                        <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <td colspan="10">{{ render_pagination(pagination,align='center') }}</td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="10">没有查到相关数据</td>
-                </tr>
-            {% endif %}
-            </tbody>
         </table>
-    </div>
+    </form>
+
+    <br>
+    <table class="table table-hover shadow table-bordered align-middle">
+        <thead>
+        <tr>
+            <td class="text-bg-secondary" style="width:60px">id</td>
+            <td class="text-bg-secondary" style="width:150px">输入时间</td>
+            <td class="text-bg-secondary">备注</td>
+            <td class="text-bg-secondary" style="width:80px">状态</td>
+            <td class="text-bg-secondary" style="width:110px">发票额</td>
+            <td class="text-bg-secondary" style="width:80px">附件</td>
+            <td class="text-bg-secondary" style="width:120px">录入</td>
+            <td class="text-bg-secondary" style="width:120px">审核</td>
+            <td class="text-bg-secondary" style="width:160px">发生日期</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% if pagination.items %}
+        {% for item in pagination.items %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.create_datetime | short_time}}</td>
+            <td>{{ item.notes }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.fee }}</td>
+            <td>{% if item.filename is none %} None {% else %} <a href="/files/{{ item.path }}{{ item.filename }}"
+                                                                  target="_blank">file</a> {% endif %}
+            </td>
+            <td>{{ item.iuser_id | replace_username }}</td>
+            <td>{{ item.cuser_id | replace_username }}</td>
+            <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="10">{{ render_pagination(pagination,align='center') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="10">没有查到相关数据</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

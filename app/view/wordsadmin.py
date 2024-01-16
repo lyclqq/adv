@@ -119,27 +119,21 @@ def words_public_show(oid):
     uid = session.get('user_id')
     form=FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if form.validate_on_submit():
         page=1
         session['words_status']=form.status.data
-        if form.status.data=='all':
-            pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid).order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
-        else:
-            pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.status==form.status.data).order_by(Wordnumbers.id.desc()).paginate(page,
-                                                                                                   per_page=pagerows)
     else:
         page = request.args.get('page', 1, type=int)
         if session.get('words_status') is None:
             fee_status='all'
         else:
             fee_status = session.get('words_status')
-        if fee_status=='all':
-            pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid).order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
-        else:
-            pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.status==fee_status).order_by(Wordnumbers.id.desc()).paginate(page,
-                                                                                                   per_page=pagerows)
+    if fee_status=='all':
+        pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='publish').order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='publish',Wordnumbers.status==fee_status).order_by(Wordnumbers.id.desc()).paginate(page,
+
     return render_template('wordsadmin/words_show.html', order=order, pagination=pagination,page=page,form=form)
 
 # 赠送字数详情查看
@@ -149,25 +143,19 @@ def words_order_show(oid):
     uid = session.get('user_id')
     form=FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if form.validate_on_submit():
         page=1
         session['words_status']=form.status.data
-        if form.status.data=='all':
-            pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid).order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
-        else:
-            pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.status==form.status.data).order_by(Wordnumbers.id.desc()).paginate(page,
-                                                                                                   per_page=pagerows)
     else:
         page = request.args.get('page', 1, type=int)
         if session.get('words_status') is None:
             fee_status='all'
         else:
             fee_status = session.get('words_status')
-        if fee_status=='all':
-            pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid).order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
-        else:
-            pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.status==fee_status).order_by(Wordnumbers.id.desc()).paginate(page,
+    if fee_status=='all':
+        pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='order').order_by(Wordnumbers.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Wordnumbers.query.filter(Wordnumbers.order_id == oid,Wordnumbers.type=='order',Wordnumbers.status==fee_status).order_by(Wordnumbers.id.desc()).paginate(page,
                                                                                                    per_page=pagerows)
     return render_template('wordsadmin/words_show.html', order=order, pagination=pagination,page=page,form=form)
