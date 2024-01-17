@@ -1,57 +1,70 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
-    <div class="m-2 p-3 ">
-        <ul class="breadcrumb top_row">
-            <li>合同金额审核</li>
-            <li class="active">合同金额查询</li>
-        </ul>
-        <br>
-        <table class="table table-hover shadow table-bordered align-middle">
-            <thead>
+<div class="m-2 p-3 ">
+    <ul class="breadcrumb top_row">
+        <li>合同金额审核</li>
+        <li class="active">合同金额查询</li>
+    </ul>
+    <br>
+    <form action="" role="form" method="post">
+        {{ form.csrf_token }}
+        <table>
             <tr>
-                <td class="text-bg-secondary" style="width:80px">id</td>
-                <td class="text-bg-secondary" style="width:150px">输入时间</td>
-                <td class="text-bg-secondary">合同名称</td>
-                <td class="text-bg-secondary" style="width:120px">合同金额</td>
-                <td class="text-bg-secondary" style="width:80px">状态</td>
-                <td class="text-bg-secondary" style="width:100px">录入</td>
-                <td class="text-bg-secondary" style="width:100px">审核</td>
-                <td class="text-bg-secondary" style="width:160px">发生日期</td>
-                <td class="text-bg-secondary" style="width:80px">审核</td>
+                <td>{{ form.status.label }}</td>
+                <td class="p-2">{{ form.status() }}</td>
+                <td class="p-2">{{ form.submit }}</td>
             </tr>
-            </thead>
-            <tbody>
-            {% if pagination.items %}
-                {% for item in pagination.items %}
-                    <tr title="{{ item.notes }}">
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.create_datetime|short_time }}</td>
-                        <td>{{ item.order_id | replace_ordername }}</td>
-                        <td>{{ item.fee }}</td>
-                        <td>{{ item.status }}</td>
-                        <td>{{ item.iuser_id | replace_username }}</td>
-                        <td>{{ item.cuser_id | replace_username }}</td>
-                        <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
-                        <td>
-                            {% if item.status=="stay"  %}
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.fee1_audit',oid=item.order_id) }}" >审核</a>
-                            {% else  %}
-                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">审核</button>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-
-            {% else %}
-                <tr>
-                    <td colspan="10">没有查到相关数据</td>
-                </tr>
-            {% endif %}
-            </tbody>
         </table>
-        <div class="row">
-            <div class="page-footer">{{ render_pagination(pagination,align='center') }}</div>
-        </div>
+    </form>
+
+    <br>
+    <table class="table table-hover shadow table-bordered align-middle">
+        <thead>
+        <tr>
+            <td class="text-bg-secondary" style="width:80px">id</td>
+            <td class="text-bg-secondary" style="width:150px">输入时间</td>
+            <td class="text-bg-secondary">合同名称</td>
+            <td class="text-bg-secondary" style="width:120px">合同金额</td>
+            <td class="text-bg-secondary" style="width:80px">状态</td>
+            <td class="text-bg-secondary" style="width:100px">录入</td>
+            <td class="text-bg-secondary" style="width:100px">审核</td>
+            <td class="text-bg-secondary" style="width:160px">发生日期</td>
+            <td class="text-bg-secondary" style="width:80px">审核</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% if pagination.items %}
+        {% for item in pagination.items %}
+        <tr title="{{ item.notes }}">
+            <td>{{ item.id }}</td>
+            <td>{{ item.create_datetime|short_time }}</td>
+            <td>{{ item.order_id | replace_ordername }}</td>
+            <td>{{ item.fee }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.iuser_id | replace_username }}</td>
+            <td>{{ item.cuser_id | replace_username }}</td>
+            <td>{{ item.feedate.strftime('%Y-%m-%d') }}</td>
+            <td>
+                {% if item.status=="stay" %}
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('order_audit.fee1_audit',oid=item.order_id) }}">审核</a>
+                {% else %}
+                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">审核</button>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+
+        {% else %}
+        <tr>
+            <td colspan="10">没有查到相关数据</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="page-footer">{{ render_pagination(pagination,align='center') }}</div>
     </div>
+</div>
 {% endblock %}

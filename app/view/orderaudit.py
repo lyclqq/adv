@@ -12,6 +12,7 @@ from app.models.other import Files
 from app.models.bill import Wordnumbers,Fee1
 from app.forms.customer import CustomerForm
 from app.forms.order import OrderForm,OrderSearchForm,OrderupfileForm
+from app.forms.fee import FeeSearchForm
 import datetime
 
 orderauditView=Blueprint('order_audit',__name__)
@@ -243,12 +244,26 @@ def fee1_audit_off(oid,fid):
     return redirect(url_for('order_audit.fee1_audit',oid=oid))
 
 #合同金额审核查询页
-@orderauditView.route('/fee1_search_audit')
+@orderauditView.route('/fee1_search_audit',methods=["GET","POST"])
 @is_login
 def fee1_search_audit():
     uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
+    form = FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-    pagination = Fee1.query.order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
-    return render_template('orderaudit/fee1_search_audit.html', pagination=pagination,page=page)
+    if form.validate_on_submit():
+        page = 1
+        session['fee1_status'] = form.status.data
+        fee_status = form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee1_status') is None:
+            fee_status = 'all'
+        else:
+            fee_status = session.get('fee1_status')
+            form.status.data = fee_status
+    if fee_status == 'all':
+        pagination = Fee1.query.order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee1.query.filter(Fee1.status == fee_status).order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('orderaudit/fee1_search_audit.html', pagination=pagination,page=page,form=form)
 
