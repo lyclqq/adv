@@ -72,6 +72,9 @@
 		}, {
 			"subname": "客户审核",
 			"sublink": "/orderaudit/customer_search"
+		}, {
+			"subname": "合同金额",
+			"sublink": "/orderaudit/fee1_search_audit"
 		}]
 	},
 	{

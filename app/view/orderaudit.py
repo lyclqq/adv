@@ -205,7 +205,11 @@ def fee1_audit_on(oid,fid):
         try:
             order.update_datetime=datetime.datetime.now()
             order.Fee11=total
-            order.Fee13=order.Fee13+fee1.fee
+            systemtoday = get_month()
+            if month_difference(systemtoday, order.contract_date) == 0:  # 当月
+                order.Fee12 = order.Fee12+order.Fee11
+            if systemtoday.year == order.contract_date.year:  # 当年
+                order.Fee13 = order.Fee13+order.Fee11
             db.session.add(order)
             fee1.status='on'
             fee1.cuser_id=uid
@@ -237,4 +241,14 @@ def fee1_audit_off(oid,fid):
     else:
         flash('不符合条件！')
     return redirect(url_for('order_audit.fee1_audit',oid=oid))
+
+#合同金额审核查询页
+@orderauditView.route('/fee1_search_audit')
+@is_login
+def fee1_search_audit():
+    uid = session.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    pagerows = current_app.config['PAGEROWS']
+    pagination = Fee1.query.order_by(Fee1.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('orderaudit/fee1_search_audit.html', pagination=pagination,page=page)
 
