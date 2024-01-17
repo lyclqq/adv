@@ -94,7 +94,7 @@ def fee2_search_admin():
         pagination = Fee2.query.filter(Fee2.status == fee_status).order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee2/fee2_search_admin.html', pagination=pagination,page=page,form=form)
 
-@fee2View.route('/fee2_search_audit')
+@fee2View.route('/fee2_search_audit',methods=["GET","POST"])
 @is_login
 def fee2_search_audit():
     uid = session.get('user_id')
@@ -115,7 +115,7 @@ def fee2_search_audit():
         pagination = Fee2.query.order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
     else:
         pagination = Fee2.query.filter(Fee2.status == fee_status).order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
-    return render_template('fee2/fee2_search_udit.html', pagination=pagination,page=page)
+    return render_template('fee2/fee2_search_udit.html', pagination=pagination,page=page,form=form)
 
 
 #刊登金额审核
