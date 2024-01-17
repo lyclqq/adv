@@ -154,40 +154,96 @@ def fee3_input(oid):
 @is_login
 def fee3_search_admin():
     uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
+    form = FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-    pagination = Fee3.query.order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
-    return render_template('fee345/fee3_search_admin.html', pagination=pagination,page=page)
+    if form.validate_on_submit():
+        page = 1
+        session['fee3_status'] = form.status.data
+        fee_status = form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee3_status') is None:
+            fee_status = 'all'
+        else:
+            fee_status = session.get('fee3_status')
+            form.status.data = fee_status
+    if fee_status == 'all':
+        pagination = Fee3.query.order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee3.query.filter(Fee3.status == fee_status).order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee345/fee3_search_admin.html', pagination=pagination,page=page,form=form)
 
 #到帐金额列表
 @fee345View.route('/fee4_search_admin')
 @is_login
 def fee4_search_admin():
     uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
+    form = FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-    pagination = Fee4.query.order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
-    return render_template('fee345/fee4_search_admin.html', pagination=pagination,page=page)
+    if form.validate_on_submit():
+        page = 1
+        session['fee4_status'] = form.status.data
+        fee_status = form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee4_status') is None:
+            fee_status = 'all'
+        else:
+            fee_status = session.get('fee4_status')
+            form.status.data = fee_status
+    if fee_status == 'all':
+        pagination = Fee4.query.order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee4.query.filter(Fee4.status == fee_status).order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee345/fee4_search_admin.html', pagination=pagination,page=page,form=form)
 
 #发票查询
 @fee345View.route('/fee3_search_audit')
 @is_login
 def fee3_search_audit():
     uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
+    form = FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-    pagination = Fee3.query.order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
-    return render_template('fee345/fee3_search_audit.html', pagination=pagination,page=page)
+    if form.validate_on_submit():
+        page = 1
+        session['fee3_status'] = form.status.data
+        fee_status = form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee3_status') is None:
+            fee_status = 'all'
+        else:
+            fee_status = session.get('fee3_status')
+            form.status.data = fee_status
+    if fee_status == 'all':
+        pagination = Fee3.query.order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee3.query.filter(Fee3.status == fee_status).order_by(Fee3.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee345/fee3_search_audit.html', pagination=pagination,page=page,form=form)
 
 #到帐金额查询
 @fee345View.route('/fee4_search_audit')
 @is_login
 def fee4_search_audit():
     uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
+    form = FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-    pagination = Fee4.query.order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
-    return render_template('fee345/fee4_search_audit.html', pagination=pagination,page=page)
+    if form.validate_on_submit():
+        page = 1
+        session['fee4_status'] = form.status.data
+        fee_status = form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee4_status') is None:
+            fee_status = 'all'
+        else:
+            fee_status = session.get('fee4_status')
+            form.status.data = fee_status
+    if fee_status == 'all':
+        pagination = Fee4.query.order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee4.query.filter(Fee4.status == fee_status).order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee345/fee4_search_audit.html', pagination=pagination,page=page,form=form)
 
 
 #发票审核页
