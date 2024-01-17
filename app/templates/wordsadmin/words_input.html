@@ -7,37 +7,30 @@
         <li><a href="{{ url_for('words_admin.order_search') }}">合同查询</a></li>
         <li class="active">字数输入</li>
     </ul>
-    <br>
 
-    <table class="table table-hover shadow table-bordered align-middle">
+
+ <table class="table table-hover shadow table-bordered align-middle">
         <tbody>
         <tr>
-            <td style="width:260px;">合同名称</td>
-            <td colspan="3">{{ order.title }}</td>
+            <td colspan="4">合同名称：{{ order.title }}</td>
         </tr>
         <tr>
-            <td>合同编号:{{ order.ordernumber }}</td>
-            <td style="width:260px;">签约日期:{{ order.contract_date }}</td>
-            <td style="width:260px;">经办人:{{ order.name }}</td>
-            <td>所属部门:{{ order.group.groupname }}</td>
+            <td style="width:330px;">录入员：{{ order.iuser_id | replace_username }}</td>
+            <td style="width:350px;">签约日期：{{ order.contract_date }}</td>
+            <td style="width:330px;">合同状态：{{ order.status }}</td>
+            <td>合同编号：{{ order.ordernumber }}</td>
         </tr>
         <tr>
-            <td>录入员:{{ order.iuser_id | replace_username }}</td>
-            <td>审核员:{{ order.cuser_id | replace_username }}</td>
-            <td>合同状态:{{ order.status }}</td>
-            <td>最后处理时间：{{ order.update_datetime }}</td>
-        </tr>
-        <tr>
-            <td>合同金额:{{ order.Fee11 }}</td>
-            <td>刊登金额：{{ order.Fee21 }}</td>
+            <td>己刊登面积：{{ order.area }}</td>
+            <td>合同金额：{{ order.Fee11 }}</td>
             <td>发票金额：{{ order.Fee31 }}</td>
-            <td>己发绩效：{{ order.Fee51 }}</td>
+            <td>己发放绩效刊登额：{{ order.Fee51 }}</td>
         </tr>
         <tr>
-            <td>合同字数：{{ order.wordnumber }}</td>
-            <td>己发字数：{{ order.wordcount }}</td>
-            <td>刊登面积：{{ order.area }}</td>
-            <td>己发奖金：{{ order.Fee61 }}</td>
+            <td>己发字数：{{ order.wordcount }}/赠送字数：{{ order.wordnumber }}</td>
+            <td>刊登金额：{{ order.Fee21 }}/{{ order.Fee11 }}</td>
+            <td>到帐金额：{{ order.Fee41 }}</td>
+            <td>己发放绩效额：{{ order.Fee61 }}</td>
         </tr>
         </tbody>
     </table>
