@@ -208,9 +208,9 @@ def fee1_audit_on(oid,fid):
             order.Fee11=total
             systemtoday = get_month()
             if month_difference(systemtoday, order.contract_date) == 0:  # 当月
-                order.Fee12 = order.Fee12+order.Fee11
+                order.Fee12 = order.Fee12+fee1.fee
             if systemtoday.year == order.contract_date.year:  # 当年
-                order.Fee13 = order.Fee13+order.Fee11
+                order.Fee13 = order.Fee13+fee1.fee
             db.session.add(order)
             fee1.status='on'
             fee1.cuser_id=uid
