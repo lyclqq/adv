@@ -71,22 +71,50 @@ def fee2_input(oid):
     pagination = Fee2.query.filter(Fee2.order_id==oid).order_by(Fee2.id.desc()).paginate(page, per_page=8)
     return render_template('fee2/fee2_input.html', form=form,order=order,pagination=pagination,page=page)
 
-@fee2View.route('/fee2_search_admin')
+@fee2View.route('/fee2_search_admin',methods=["GET","POST"])
 @is_login
 def fee2_search_admin():
     uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
+    form = FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-    pagination = Fee2.query.order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
-    return render_template('fee2/fee2_search_admin.html', pagination=pagination,page=page)
+    if form.validate_on_submit():
+        page = 1
+        session['fee2_status'] = form.status.data
+        fee_status = form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee2_status') is None:
+            fee_status = 'all'
+        else:
+            fee_status = session.get('fee2_status')
+            form.status.data = fee_status
+    if fee_status == 'all':
+        pagination = Fee2.query.order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee2.query.filter(Fee2.status == fee_status).order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
+    return render_template('fee2/fee2_search_admin.html', pagination=pagination,page=page,form=form)
 
 @fee2View.route('/fee2_search_audit')
 @is_login
 def fee2_search_audit():
     uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
+    form = FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-    pagination = Fee2.query.order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
+    if form.validate_on_submit():
+        page = 1
+        session['fee2_status'] = form.status.data
+        fee_status = form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee2_status') is None:
+            fee_status = 'all'
+        else:
+            fee_status = session.get('fee2_status')
+            form.status.data = fee_status
+    if fee_status == 'all':
+        pagination = Fee2.query.order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee2.query.filter(Fee2.status == fee_status).order_by(Fee2.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee2/fee2_search_udit.html', pagination=pagination,page=page)
 
 
