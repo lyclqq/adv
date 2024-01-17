@@ -11,7 +11,7 @@ from app.models.contract import Customers, Orders
 from app.models.system import Systeminfo
 from app.models.bill import Wordnumbers, Fee1, Fee2, Fee3, Fee4, Fee5
 from app.forms.customer import CustomerForm
-from app.forms.fee import Fee2Form, AuditForm, Fee3Form,FeeSearchForm
+from app.forms.fee import Fee2Form, AuditForm, Fee3Form,FeeSearchForm,Fee4Form
 from app.forms.order import OrderForm, OrderSearchForm, OrderupfileForm
 import datetime
 
@@ -47,7 +47,7 @@ def order_search_audit():
 def fee4_input(oid):
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
-    form = Fee3Form()
+    form = Fee4Form()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
     if order.status != '己审' and order.status!='完成':
         form.submit.render_kw={'class':'form-control','disabled':'true'}

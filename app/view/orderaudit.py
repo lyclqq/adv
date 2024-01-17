@@ -100,6 +100,7 @@ def order_audit(oid):
             flash('操作完成.', 'success')
             ins_logs(uid, '合同状态变更,id=' + str(oid), type='order_audit')
         except Exception as e:
+            db.session.rollback()
             current_app.logger.error(e)
             flash('审核失败')
     form.status.data = order.status

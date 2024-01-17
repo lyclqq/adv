@@ -46,7 +46,7 @@ class Fee3(db.Model,Basecls):
     status = db.Column(db.String(10))
     filename=db.Column(db.String(200))
     path=db.Column(db.String(20))
-
+    name=db.Column(db.String(50))
     order_id=db.Column(db.Integer, default=0)
     iuser_id=db.Column(db.Integer, default=0)
     cuser_id=db.Column(db.Integer, default=0)

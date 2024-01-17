@@ -51,7 +51,8 @@
                 <td class="text-bg-secondary" style="width:60px">id</td>
                 <td class="text-bg-secondary" style="width:150px">输入时间</td>
                 <td class="text-bg-secondary" style="width:120px">发生额</td>
-                <td class="text-bg-secondary">备注</td>
+                <td class="text-bg-secondary">发票号</td>
+                <td class="text-bg-secondary" style="width:180px">经办人</td>
                 <td class="text-bg-secondary" style="width:80px">状态</td>
                 <td class="text-bg-secondary" style="width:80px">附件</td>
                 <td class="text-bg-secondary" style="width:120px">录入</td>
@@ -67,6 +68,7 @@
                         <td>{{ item.create_datetime|short_time }}</td>
                         <td>{{ item.fee }}</td>
                         <td>{{ item.notes }}</td>
+                        <td>{{ item.name }}</td>
                         <td>{{ item.status }}</td>
                         <td>{% if item.filename is none %} None {% else %} <a href="/files/{{ item.path }}{{ item.filename }}"
                                                                               target="_blank">file</a> {% endif %}
@@ -77,11 +79,11 @@
                     </tr>
                 {% endfor %}
                 <tr>
-                    <td colspan="9">{{ render_pagination(pagination,align='center') }}</td>
+                    <td colspan="10">{{ render_pagination(pagination,align='center') }}</td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="9">没有查到相关数据</td>
+                    <td colspan="10">没有查到相关数据</td>
                 </tr>
             {% endif %}
             </tbody>
@@ -112,6 +114,10 @@
                 <div class="form-control">
                     {{ form.notes.label }}
                     {{ form.notes() }}
+                </div>
+                <div class="form-control">
+                    {{ form.name.label }}
+                    {{ form.name() }}
                 </div>
             </fieldset>
             {{ form.submit }}
