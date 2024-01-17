@@ -150,7 +150,7 @@ def fee3_input(oid):
 
 
 #发票金额列表
-@fee345View.route('/fee3_search_admin')
+@fee345View.route('/fee3_search_admin', methods=["GET", "POST"])
 @is_login
 def fee3_search_admin():
     uid = session.get('user_id')
@@ -174,7 +174,7 @@ def fee3_search_admin():
     return render_template('fee345/fee3_search_admin.html', pagination=pagination,page=page,form=form)
 
 #到帐金额列表
-@fee345View.route('/fee4_search_admin')
+@fee345View.route('/fee4_search_admin', methods=["GET", "POST"])
 @is_login
 def fee4_search_admin():
     uid = session.get('user_id')
@@ -198,7 +198,7 @@ def fee4_search_admin():
     return render_template('fee345/fee4_search_admin.html', pagination=pagination,page=page,form=form)
 
 #发票查询
-@fee345View.route('/fee3_search_audit')
+@fee345View.route('/fee3_search_audit', methods=["GET", "POST"])
 @is_login
 def fee3_search_audit():
     uid = session.get('user_id')
@@ -222,7 +222,7 @@ def fee3_search_audit():
     return render_template('fee345/fee3_search_audit.html', pagination=pagination,page=page,form=form)
 
 #到帐金额查询
-@fee345View.route('/fee4_search_audit')
+@fee345View.route('/fee4_search_audit', methods=["GET", "POST"])
 @is_login
 def fee4_search_audit():
     uid = session.get('user_id')
