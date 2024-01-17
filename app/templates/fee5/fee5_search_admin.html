@@ -7,7 +7,18 @@
             <li class="active">绩效金额查询</li>
         </ul>
         <br>
+    <form action="" role="form" method="post">
+        {{ form.csrf_token }}
+        <table>
+            <tr>
+                <td>{{ form.status.label }}</td>
+                <td class="p-2">{{ form.status() }}</td>
+                <td class="p-2">{{ form.submit }}</td>
+            </tr>
+        </table>
+    </form>
 
+    <br>
         <table class="table table-hover shadow table-bordered align-middle">
             <thead>
             <tr>

@@ -80,14 +80,29 @@ def fee5_input(oid):
     return render_template('fee5/fee5_input.html', form=form, order=order, result_fee2=result_fee2,result_fee5=result_fee5)
 
 #绩效金额列表
-@fee5View.route('/fee5_search_admin')
+@fee5View.route('/fee5_search_admin', methods=["GET", "POST"])
 @is_login
 def fee5_search_admin():
     uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
+    form = FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-    pagination = Fee5.query.order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
-    return render_template('fee5/fee5_search_admin.html', pagination=pagination,page=page)
+    if form.validate_on_submit():
+        page = 1
+        session['fee5_status'] = form.status.data
+        fee_status = form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee5_status') is None:
+            fee_status = 'all'
+        else:
+            fee_status = session.get('fee5_status')
+            form.status.data = fee_status
+    if fee_status == 'all':
+        pagination = Fee5.query.order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee5.query.filter(Fee5.status == fee_status).order_by(Fee5.id.desc()).paginate(page,
+                                                                                                    per_page=pagerows)
+    return render_template('fee5/fee5_search_admin.html', pagination=pagination,page=page,form=form)
 
 # 合同查询为审核
 @fee5View.route('/order_search_audit', methods=["GET", "POST"])
@@ -162,14 +177,29 @@ def fee5_audit_off(oid,fid):
     return redirect(url_for('fee5.fee5_audit_show',oid=oid,fid=fid))
 
 #到帐金额查询
-@fee5View.route('/fee5_search_audit')
+@fee5View.route('/fee5_search_audit', methods=["GET", "POST"])
 @is_login
 def fee5_search_audit():
     uid = session.get('user_id')
-    page = request.args.get('page', 1, type=int)
+    form = FeeSearchForm()
     pagerows = current_app.config['PAGEROWS']
-    pagination = Fee5.query.order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
-    return render_template('fee5/fee5_search_audit.html', pagination=pagination,page=page)
+    if form.validate_on_submit():
+        page = 1
+        session['fee5_status'] = form.status.data
+        fee_status = form.status.data
+    else:
+        page = request.args.get('page', 1, type=int)
+        if session.get('fee5_status') is None:
+            fee_status = 'all'
+        else:
+            fee_status = session.get('fee5_status')
+            form.status.data = fee_status
+    if fee_status == 'all':
+        pagination = Fee5.query.order_by(Fee5.id.desc()).paginate(page, per_page=pagerows)
+    else:
+        pagination = Fee5.query.filter( Fee5.status == fee_status).order_by(Fee5.id.desc()).paginate(page,
+                                     per_page=pagerows)
+    return render_template('fee5/fee5_search_audit.html', pagination=pagination,page=page,form=form)
 
 #绩效金额审核详情
 @fee5View.route('/fee5_audit_show/<int:oid>/<int:fid>')
