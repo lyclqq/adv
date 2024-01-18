@@ -1,76 +1,89 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
-    <div class="m-2 p-3 ">
+<div class="m-2 p-3 ">
 
-        <ul class="breadcrumb top_row">
-            <li>合同管理</li>
-            <li class="active">合同查询</li>
-        </ul>
+    <ul class="breadcrumb top_row">
+        <li>合同管理</li>
+        <li class="active">合同查询</li>
+    </ul>
 
-        <br>
+    <br>
 
-        <form action="" role="form" method="post">
-            {{ form.csrf_token }}
-            <table>
-                <tr>
-                    <td>{{ form.status.label }}</td>
-                    <td class="p-2">{{ form.status() }}</td>
-                    <td>{{ form.title.label }}</td>
-                    <td class="p-2">{{ form.title() }}</td>
-                    <td class="p-2">{{ form.submit }}</td>
-                </tr>
-            </table>
-        </form>
+    <form action="" role="form" method="post">
+        {{ form.csrf_token }}
+        <table>
+            <tr>
+                <td>{{ form.status.label }}</td>
+                <td class="p-2">{{ form.status() }}</td>
+                <td>{{ form.title.label }}</td>
+                <td class="p-2">{{ form.title() }}</td>
+                <td class="p-2">{{ form.submit }}</td>
+            </tr>
+        </table>
+    </form>
 
-        <br>
-        {% if pagination.items %}
-            <table class="table table-hover shadow table-bordered align-middle">
-                <thead>
-                <tr>
-                    <th class="text-bg-secondary" style="width:60px">ID</th>
-                    <th class="text-bg-secondary">合同名称</th>
-                    <th class="text-bg-secondary" style="width:150px">合同编号</th>
-                    <th class="text-bg-secondary" style="width:80px">状态</th>
-                    <th class="text-bg-secondary" style="width:90px">录入</th>
-                    <th class="text-bg-secondary" style="width:150px">处理时间</th>
-                    <th class="text-bg-secondary" style="width:350px">操作</th>
-                </tr>
-                </thead>
+    <br>
+    {% if pagination.items %}
+    <table class="table table-hover shadow table-bordered align-middle">
+        <thead>
+        <tr>
+            <th class="text-bg-secondary" style="width:60px">ID</th>
+            <th class="text-bg-secondary">合同名称</th>
+            <th class="text-bg-secondary" style="width:150px">合同编号</th>
+            <th class="text-bg-secondary" style="width:80px">状态</th>
+            <th class="text-bg-secondary" style="width:90px">录入</th>
+            <th class="text-bg-secondary" style="width:150px">处理时间</th>
+            <th class="text-bg-secondary" style="width:350px">操作</th>
+        </tr>
+        </thead>
 
-                {% for post in pagination.items %}
-                    <tr>
-                        <td>{{ post.id }}</td>
-                        <td><a  href="{{ url_for('contract_admin.order_show',oid=post.id) }}" target="_blank">{{ post.title }}</a></td>
-                        <td>{{ post.ordernumber }}</td>
-                        <td>{{ post.status }}</td>
-                        <td>{{ post.iuser_id | replace_username }}</td>
-                        <td>{{ post.update_datetime | short_time}}</td>
-                        <td>
-                            {% if post.iuser_id == session.get("user_id") or session.get("type")=="admin" %}
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">修改</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_notes',oid=post.id) }}">备注</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_upfiles',oid=post.id) }}">上传</a>
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.fee1_input',oid=post.id) }}">补录</a>
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('contract_admin.order_submit',oid=post.id) }}" onclick="return confirm('Are you sure?');">提交</a>
-                            {% else %}
-                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">修改</button>
-                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">查看</button>
-                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">上传</button>
-                                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">提交</button>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
+        {% for post in pagination.items %}
+        <tr>
+            <td>{{ post.id }}</td>
+            {% if post.iuser_id == session.get("user_id") or session.get("type")=="admin" %}
+            <td><a href="{{ url_for('contract_admin.order_show',oid=post.id) }}" target="_blank">{{ post.title }}</a>
+            </td>
+            {% else %}
+            <td>{{ post.title }}</a></td>
+            {% endif %}
+            <td>{{ post.ordernumber }}</td>
+            <td>{{ post.status }}</td>
+            <td>{{ post.iuser_id | replace_username }}</td>
+            <td>{{ post.update_datetime | short_time}}</td>
+            <td>
+                {% if post.iuser_id == session.get("user_id") or session.get("type")=="admin" %}
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('contract_admin.order_edit',oid=post.id) }}">修改</a>
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('contract_admin.order_notes',oid=post.id) }}">备注</a>
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('contract_admin.order_upfiles',oid=post.id) }}">上传</a>
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('contract_admin.fee1_input',oid=post.id) }}">补录</a>
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('contract_admin.order_submit',oid=post.id) }}"
+                   onclick="return confirm('Are you sure?');">提交</a>
+                {% else %}
+                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">修改</button>
+                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">备注</button>
+                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">上传</button>
+                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">补录</button>
 
-            <div class="row">
-                <div class="page-footer">{{ render_pagination(pagination,align='center') }}</div>
-            </div>
+                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">提交</button>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 
-        {% else %}
-            <div class="tip"><h5>没有数据.</h5></div>
-        {% endif %}
-
+    <div class="row">
+        <div class="page-footer">{{ render_pagination(pagination,align='center') }}</div>
     </div>
+
+    {% else %}
+    <div class="tip"><h5>没有数据.</h5></div>
+    {% endif %}
+
+</div>
 {% endblock %}

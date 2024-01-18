@@ -164,35 +164,49 @@ def setmonth():
         month=month_difference(form.today.data+'-01',form.fee_date.data)
         if month==1:
             try:
-                fee32=db.session.query(Orders).with_entities(func.sum(Orders.Fee32)).scalar()
+                fee12 = db.session.query(Orders).with_entities(func.sum(Orders.Fee12)).scalar()
                 fee22 = db.session.query(Orders).with_entities(func.sum(Orders.Fee22)).scalar()
+                fee23 = db.session.query(Orders).with_entities(func.sum(Orders.Fee23)).scalar()
+                fee32=db.session.query(Orders).with_entities(func.sum(Orders.Fee32)).scalar()
                 fee42=db.session.query(Orders).with_entities(func.sum(Orders.Fee42)).scalar()
                 fee52 = db.session.query(Orders).with_entities(func.sum(Orders.Fee52)).scalar()
                 history=History()
-                history.title=form.fee_date.data.strftime('%Y-%m')
+                history.title=form.today.data.strftime('%Y-%m')
+                history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
+                history.fee=fee12
+                history.type='Fee12'
+                db.session.add(history)
+                history=History()
+                history.title=form.today.data.strftime('%Y-%m')
                 history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
                 history.fee=fee22
                 history.type='Fee22'
                 db.session.add(history)
+                history = History()
+                history.title = form.today.data.strftime('%Y-%m')
+                history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
+                history.fee = fee23
+                history.type = 'Fee23'
+                db.session.add(history)
                 history=History()
-                history.title=form.fee_date.data.strftime('%Y-%m')
+                history.title=form.today.data.strftime('%Y-%m')
                 history.fee_date=form.fee_date.data.strftime('%Y-%m-%d')
                 history.fee=fee32
                 history.type='Fee32'
                 db.session.add(history)
                 history = History()
-                history.title=form.fee_date.data.strftime('%Y-%m')
+                history.title=form.today.data.strftime('%Y-%m')
                 history.fee_date=form.fee_date.data.strftime('%Y-%m-%d')
                 history.fee=fee42
                 history.type='Fee42'
                 db.session.add(history)
                 history = History()
-                history.title=form.fee_date.data.strftime('%Y-%m')
+                history.title=form.today.data.strftime('%Y-%m')
                 history.fee_date=form.fee_date.data.strftime('%Y-%m-%d')
                 history.fee=fee52
                 history.type='Fee52'
                 db.session.add(history)
-                Orders.query.update({'Fee22': 0,'Fee32':0,'Fee42':0,'Fee52':0,'Fee62':0})
+                Orders.query.update({'Fee12':0,'Fee22': 0,'Fee32':0,'Fee42':0,'Fee52':0,'Fee62':0})
                 if form.fee_date.data.year-systoday.year==1:
                     Orders.query.update({'Fee13':0,'Fee23': 0, 'Fee33': 0, 'Fee43': 0, 'Fee53': 0})
                 systeminfo.systemmonth= form.fee_date.data.strftime('%Y%m%d')
