@@ -85,7 +85,7 @@ def fee4_input(oid):
                     db.session.add(fee4)
                     db.session.commit()
                     flash('录入成功.', 'success')
-                    ins_logs(uid, '到帐金额录入,id=' + str(oid), type='fee345')
+                    ins_logs(uid, '到帐金额录入,orderid=' + str(oid), type='fee345')
                 else:
                     flash('余额不能小于0!')
         except Exception as e:
@@ -139,7 +139,7 @@ def fee3_input(oid):
                     db.session.add(fee3)
                     db.session.commit()
                     flash('录入成功.', 'success')
-                    ins_logs(uid, '发票金额录入,id=' + str(oid), type='fee345')
+                    ins_logs(uid, '发票金额录入,orderid=' + str(oid), type='fee345')
                 else:
                     flash('余额不能小于0!')
         except Exception as e:
