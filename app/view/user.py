@@ -164,44 +164,44 @@ def setmonth():
         month=month_difference(form.today.data+'-01',form.fee_date.data)
         if month==1:
             try:
-                fee12 = db.session.query(Orders).filter(or_(Orders.status=='己审', Orders.status=='完成')).with_entities(func.sum(Orders.Fee12)).scalar()
-                fee22 = db.session.query(Orders).with_entities(func.sum(Orders.Fee22)).scalar()
-                fee23 = db.session.query(Orders).with_entities(func.sum(Orders.Fee23)).scalar()
-                fee32=db.session.query(Orders).with_entities(func.sum(Orders.Fee32)).scalar()
-                fee42=db.session.query(Orders).with_entities(func.sum(Orders.Fee42)).scalar()
-                fee52 = db.session.query(Orders).with_entities(func.sum(Orders.Fee52)).scalar()
+                fee12 = db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee12)).scalar()
+                fee22 = db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee22)).scalar()
+                fee23 = db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee23)).scalar()
+                fee32=db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee32)).scalar()
+                fee42=db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee42)).scalar()
+                fee52 = db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee52)).scalar()
                 history=History()
-                history.title=form.today.data.strftime('%Y-%m')
+                history.title=form.today.data
                 history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
                 history.fee=fee12
                 history.type='Fee12'
                 db.session.add(history)
                 history=History()
-                history.title=form.today.data.strftime('%Y-%m')
+                history.title=form.today.data
                 history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
                 history.fee=fee22
                 history.type='Fee22'
                 db.session.add(history)
                 history = History()
-                history.title = form.today.data.strftime('%Y-%m')
+                history.title = form.today.data
                 history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
                 history.fee = fee23
                 history.type = 'Fee23'
                 db.session.add(history)
                 history=History()
-                history.title=form.today.data.strftime('%Y-%m')
+                history.title=form.today.data
                 history.fee_date=form.fee_date.data.strftime('%Y-%m-%d')
                 history.fee=fee32
                 history.type='Fee32'
                 db.session.add(history)
                 history = History()
-                history.title=form.today.data.strftime('%Y-%m')
+                history.title=form.today.data
                 history.fee_date=form.fee_date.data.strftime('%Y-%m-%d')
                 history.fee=fee42
                 history.type='Fee42'
                 db.session.add(history)
                 history = History()
-                history.title=form.today.data.strftime('%Y-%m')
+                history.title=form.today.data
                 history.fee_date=form.fee_date.data.strftime('%Y-%m-%d')
                 history.fee=fee52
                 history.type='Fee52'

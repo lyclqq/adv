@@ -37,7 +37,8 @@
             <tr>
                 <td class="text-bg-secondary" style="width:60px">id</td>
                 <td class="text-bg-secondary" style="width:150px">输入时间</td>
-                <td class="text-bg-secondary">备注</td>
+                <td class="text-bg-secondary">发票号</td>
+                <td class="text-bg-secondary" style="width:120px">经办人</td>
                 <td class="text-bg-secondary" style="width:120px">发生额</td>
                 <td class="text-bg-secondary" style="width:80px">状态</td>
                 <td class="text-bg-secondary" style="width:95px">录入</td>
@@ -54,6 +55,7 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.create_datetime|short_time }}</td>
                         <td>{{ item.notes }}</td>
+                        <td>{{ item.name }}</td>
                         <td>{{ item.fee }}</td>
                         <td>{{ item.status }}</td>
                         <td>{{ item.iuser_id | replace_username }}</td>
@@ -76,11 +78,11 @@
                     </tr>
                 {% endfor %}
                 <tr>
-                    <td colspan="10">{{ render_pagination(pagination,align='center') }}</td>
+                    <td colspan="11">{{ render_pagination(pagination,align='center') }}</td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="10">没有查到相关数据</td>
+                    <td colspan="11">没有查到相关数据</td>
                 </tr>
             {% endif %}
             </tbody>
