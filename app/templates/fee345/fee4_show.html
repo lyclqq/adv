@@ -10,45 +10,35 @@
     </ul>
 
     <table class="table table-hover shadow table-bordered align-middle">
-        <tbody>
+<tbody>
         <tr>
-            <td style="width:240px;">合同名称</td>
-            <td colspan="3">{{ order.title }}</td>
+            <td colspan="4">合同名称：{{ order.title }}</td>
         </tr>
         <tr>
-            <td>录入员:{{ order.iuser_id | replace_username }}</td>
-
-            <td style="width:280px;">签约日期:{{ order.contract_date }}</td>
-            <td style="width:330px;">合同编号:{{ order.ordernumber }}</td>
-            <td>所属部门:{{ order.group.groupname }}</td>
+            <td style="width:330px;">录入员：{{ order.iuser_id | replace_username }}</td>
+            <td style="width:330px;">签约日期：{{ order.contract_date }}</td>
+            <td style="width:330px;">经办人：{{ order.name }}</td>
+            <td>所属部门：{{ order.group.groupname }}</td>
         </tr>
         <tr>
-
-            <td>己刊登面积:{{ order.area }}</td>
-            <td>合同状态:{{ order.status }}</td>
-            <td>输入时间：{{ order.create_datetime }}</td>
-
-            <td>最后处理时间：{{ order.update_datetime }}</td>
+            <td>合同状态：{{ order.status }}</td>
+            <td>合同编号：{{ order.ordernumber }}</td>
+            <td>当月到帐金额：{{ order.Fee42 }}</td>
+            <td>当年到帐金额：{{ order.Fee43 }}</td>
+        </tr>
+        <tr>
+            <td>己刊登面积：{{ order.area }}</td>
+            <td><a href="{{ url_for('contract_admin.fee1_show',oid=order.id) }}">合同金额：{{ order.Fee11 }}</a></td>
+            <td><a href="{{ url_for('fee345.fee3_show',oid=order.id) }}">发票金额：{{ order.Fee31 }}</a></td>
+            <td><a href="{{ url_for('fee5.fee5_show',oid=order.id) }}">己发放绩效刊登额：{{ order.Fee51 }}</a></td>
         </tr>
         <tr>
             <td><a href="{{ url_for('words_admin.words_public_show',oid=order.id) }}">己发字数：{{ order.wordcount }}</a>
-            </td>
-            <td>己发奖金：{{ order.Fee61 }}</td>
-            <td><a href="{{ url_for('fee345.fee3_show',oid=order.id) }}">发票金额：{{ order.Fee32 }}/{{ order.Fee31
-                }}</a></td>
-            <td><a href="{{ url_for('fee5.fee5_show',oid=order.id) }}">己统计绩效：{{ order.Fee52 }}/{{ order.Fee51
-                }}</a></td>
-        </tr>
-        <tr>
-            <td><a href="{{ url_for('words_admin.words_order_show',oid=order.id) }}">赠送字数：{{ order.wordnumber }}</a>
-            </td>
-            <td><a href="{{ url_for('contract_admin.fee1_show',oid=order.id) }}">合同金额:{{ order.Fee11 }}</a></td>
-
-            <td><a href="{{ url_for('fee2.fee2_show',oid=order.id) }}">刊登金额：{{ order.Fee22 }}/{{ order.Fee21 }}</a>
-            </td>
-            <td><a href="{{ url_for('fee345.fee4_show',oid=order.id) }}">到帐金额：{{ order.Fee42 }}/{{ order.Fee41
-                }}</a></td>
-
+                /<a href="{{ url_for('words_admin.words_order_show',oid=order.id) }}">赠送字数：{{ order.wordnumber
+                    }}</a></td>
+            <td><a href="{{ url_for('fee2.fee2_show',oid=order.id) }}">刊登金额：{{ order.Fee21 }}</a></td>
+            <td><a href="{{ url_for('fee345.fee4_show',oid=order.id) }}">到帐金额：{{ order.Fee41 }}</a></td>
+            <td>己发放绩效额：{{ order.Fee61 }}</td>
         </tr>
         </tbody>
     </table>
