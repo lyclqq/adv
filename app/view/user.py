@@ -8,7 +8,7 @@ from app.models.system import Users, Groups,Systeminfo
 from app.models.contract import Orders
 from app.models.other import History
 from sqlalchemy.sql import func
-
+from sqlalchemy import or_,and_
 # 用户管理
 userView = Blueprint('user', __name__)
 pagesize = 10
@@ -164,7 +164,7 @@ def setmonth():
         month=month_difference(form.today.data+'-01',form.fee_date.data)
         if month==1:
             try:
-                fee12 = db.session.query(Orders).with_entities(func.sum(Orders.Fee12)).scalar()
+                fee12 = db.session.query(Orders).filter(or_(Orders.status=='己审', Orders.status=='完成')).with_entities(func.sum(Orders.Fee12)).scalar()
                 fee22 = db.session.query(Orders).with_entities(func.sum(Orders.Fee22)).scalar()
                 fee23 = db.session.query(Orders).with_entities(func.sum(Orders.Fee23)).scalar()
                 fee32=db.session.query(Orders).with_entities(func.sum(Orders.Fee32)).scalar()

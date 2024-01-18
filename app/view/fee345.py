@@ -119,6 +119,7 @@ def fee3_input(oid):
                 fee3.status = 'stay'
                 fee3.fee = form.fee.data
                 fee3.iuser_id = uid
+                fee3.name=form.name.data
                 total = order.Fee31 + form.fee.data
                 fee3.notes = form.notes.data
                 if total >= 0:
@@ -136,6 +137,7 @@ def fee3_input(oid):
                             f.save(os.path.join(path, newfilename + '.' + extension))
                             fee3.path=datetime.datetime.now().strftime("%Y") + os.sep
                             fee3.filename=newfilename+'.'+extension
+
                     db.session.add(fee3)
                     db.session.commit()
                     flash('录入成功.', 'success')
