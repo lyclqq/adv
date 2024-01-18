@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, url_for, redirect, make_response, session, request, flash, send_from_directory, g, current_app
-from app import create_app, db, getKey, getVerifyCode
 import datetime
 import os
 from io import BytesIO
-from app.common import is_login, getrolemenu
+from flask import render_template, url_for, redirect, make_response, session, request, send_from_directory, current_app
 from flask_ckeditor import upload_fail, upload_success
-from app.models.system import Users, Logs, Groups, Systeminfo
-from app.models.contract import Orders, Customers
+from sqlalchemy import and_
+from app import create_app, getKey, getVerifyCode
+from app.common import is_login, getrolemenu
 from app.forms.user import LoginForm
+from app.models.contract import Orders
+from app.models.system import Users
 
 app = create_app('develop')
 
@@ -162,7 +163,11 @@ def login():
 @app.route('/index', endpoint='index')
 @is_login
 def index():
-    return render_template('index24.html')
+    # 有欠款的
+    red = Orders.query.filter(and_(Orders.group_id == session["group_id"], Orders.Fee41 < Orders.Fee21)).order_by(Orders.contract_date)
+    # 已到账的
+    black = Orders.query.filter(and_(Orders.group_id == session["group_id"], Orders.Fee41 > Orders.Fee21)).order_by(Orders.contract_date)
+    return render_template('index24.html', red=red, black=black)
 
 
 if __name__ == '__main__':

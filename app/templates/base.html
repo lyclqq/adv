@@ -141,13 +141,13 @@
         </script>
         <!--modal-->
 
-        <div class="col" style="height: 960px;">
+        <div class="col" style="">
             <div class="row">
                 <ul class="nav justify-content-end shadow " style="height: 50px;">
                     <li class="nav-item">
                         <div class="btn-group dropdown w-100">
                             <a class="nav-link " aria-disabled="true" data-bs-toggle="dropdown" aria-expanded="false">
-                                管理员&nbsp;&nbsp;&nbsp;&nbsp;<img src="{{ url_for('static',filename='img/account.svg') }}" alt="" height="32"/>
+                                {{ session['username'] }}&nbsp;&nbsp;&nbsp;&nbsp;<img src="{{ url_for('static',filename='img/account.svg') }}" alt="" height="32"/>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editPwdModal"><img src="{{ url_for('static',filename='img/key.svg') }}" alt="" height="22"/>&nbsp;&nbsp;修改密码</a></li>

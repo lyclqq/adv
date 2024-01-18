@@ -1,73 +1,66 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="m-2 p-3 ">
-        <script src="{{ url_for('static',filename='js/echarts.min.js') }}"></script>
-        <br>
-        <div class="d-flex flex-row justify-content-evenly pt-2">
-            <div id="bar" style="width:600px; height:380px;"></div>
-            <script>
-                $(function () {
-                    let chart = echarts.init(document.getElementById('bar'), 'white', {renderer: 'canvas'});
-                    $.ajax({
-                        type: "GET",
-                        url: "/report/barChart",
-                        dataType: 'json',
-                        success: function (result) {
-                            chart.setOption(result);
-                        }
-                    });
-                })
-            </script>
 
-            <div id="bar2" style="width:600px; height:380px;"></div>
-            <script>
-                $(function () {
-                    let chart = echarts.init(document.getElementById('bar2'), 'white', {renderer: 'canvas'});
-                    $.ajax({
-                        type: "GET",
-                        url: "/report/line",
-                        dataType: 'json',
-                        success: function (result) {
-                            chart.setOption(result);
-                        }
-                    });
-                })
-            </script>
-        </div>
+        <p>有欠款的合同</p>
+        <table class="table table-hover shadow table-bordered">
+            <thead>
+            <tr>
+                <td class="text-bg-secondary">序号</td>
+                <td class="text-bg-secondary">合同号</td>
+                <td class="text-bg-secondary">合同金额</td>
+                <td class="text-bg-secondary">刊登金额</td>
+                <td class="text-bg-secondary">到账金额</td>
+                <td class="text-bg-secondary">未到账金额</td>
+                <td class="text-bg-secondary">经办人</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in red %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <a href="/contract/order_show/{{ order.id }}">{{ order.id }}</a>
+                    </td>
+                    <td>{{ order.Fee11 }}</td>
+                    <td>{{ order.Fee21 }}</td>
+                    <td>{{ order.Fee41 }}</td>
+                    <td class="text-danger">{{ (order.Fee21 - order.Fee41) | round(2) }}</td>
+                    <td>{{ order.name }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
         <br>
-
-        <div class="d-flex flex-row justify-content-evenly pt-2">
-            <div id="bar3" style="width:600px; height:380px;"></div>
-            <script>
-                $(function () {
-                    let chart = echarts.init(document.getElementById('bar3'), 'white', {renderer: 'canvas'});
-                    $.ajax({
-                        type: "GET",
-                        url: "/report/bar",
-                        dataType: 'json',
-                        success: function (result) {
-                            chart.setOption(result);
-                        }
-                    });
-                })
-            </script>
-
-            <div id="bar4" style="width:600px; height:380px;"></div>
-            <script>
-                $(function () {
-                    let chart = echarts.init(document.getElementById('bar4'), 'white', {renderer: 'canvas'});
-                    $.ajax({
-                        type: "GET",
-                        url: "/report/pie",
-                        dataType: 'json',
-                        success: function (result) {
-                            chart.setOption(result);
-                        }
-                    });
-                })
-            </script>
-        </div>
+        <br>
+        <p>已到账的合同</p>
+        <table class="table table-hover shadow table-bordered">
+            <thead>
+            <tr>
+                <td class="text-bg-secondary">序号</td>
+                <td class="text-bg-secondary">合同号</td>
+                <td class="text-bg-secondary">合同金额</td>
+                <td class="text-bg-secondary">刊登金额</td>
+                <td class="text-bg-secondary">到账金额</td>
+                <td class="text-bg-secondary">经办人</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in black %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <a href="/contract/order_show/{{ order.id }}">{{ order.id }}</a>
+                    </td>
+                    <td>{{ order.Fee11 }}</td>
+                    <td>{{ order.Fee21 }}</td>
+                    <td>{{ order.Fee41 }}</td>
+                    <td>{{ order.name }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
     </div>
 {% endblock %}
