@@ -147,7 +147,7 @@
                     <li class="nav-item">
                         <div class="btn-group dropdown w-100">
                             <a class="nav-link " aria-disabled="true" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ session['username'] }}&nbsp;&nbsp;&nbsp;&nbsp;<img src="{{ url_for('static',filename='img/account.svg') }}" alt="" height="32"/>
+                                {% if session['username'] %}欢迎您，{{ session['username'] }}{% endif %}&nbsp;&nbsp;&nbsp;&nbsp;<img src="{{ url_for('static',filename='img/account.svg') }}" alt="" height="32"/>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editPwdModal"><img src="{{ url_for('static',filename='img/key.svg') }}" alt="" height="22"/>&nbsp;&nbsp;修改密码</a></li>
