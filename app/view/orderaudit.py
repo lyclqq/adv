@@ -57,6 +57,7 @@ def order_audit(oid):
     orderfiles=Files.query.filter(Files.order_id==oid).all()
     if form.validate_on_submit():
         try:
+
             if order.status=='待审' and ( form.status.data=='作废' or form.status.data=='未审'):
                 order.status = form.status.data
                 order.update_datetime=datetime.datetime.now()
@@ -95,8 +96,9 @@ def order_audit(oid):
             elif order.status=='己审' and form.status.data=='完成':
                 order.status = form.status.data
                 order.update_datetime = datetime.datetime.now()
+                systemtoday = get_month(lastday=True)
+                order.end_date=systemtoday #完成日期为系统当月最后一天
                 db.session.add(order)
-
                 db.session.commit()
             flash('操作完成.', 'success')
             ins_logs(uid, '合同状态变更,id=' + str(oid), type='order_audit')

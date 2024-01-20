@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import calendar
+
 from flask import Blueprint,render_template,current_app,url_for,redirect,session,request,flash,g
 import json
 import os
@@ -72,10 +74,16 @@ def month_difference(date1, date2):
     diff = date2.year * 12 + date2.month - (date1.year * 12 + date1.month)
     return diff
 
-#获取系统当月
-def get_month():
+#获取系统当月日期
+def get_month(lastday=True):
     systeminfo=Systeminfo.query.filter(Systeminfo.id==1).first()
-    return systeminfo.systemmonth
+    systemtoday = systeminfo.systemmonth
+    if lastday==True:
+        days = calendar.monthrange(systemtoday.year,systemtoday.month)[1]#当月天数
+        lastday=datetime.date(year=systemtoday.year, month=systemtoday.month, day=days)
+        return lastday #当月最后一天
+    else:
+        return systemtoday #当月1号
 
 
 

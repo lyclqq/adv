@@ -7,10 +7,11 @@ from flask import render_template, url_for, redirect, make_response, session, re
 from flask_ckeditor import upload_fail, upload_success
 from sqlalchemy import and_
 from app import create_app, getKey, getVerifyCode
-from app.common import is_login, getrolemenu
+from app.common import is_login, getrolemenu,get_month
 from app.forms.user import LoginForm
 from app.models.contract import Orders
 from app.models.system import Users
+import calendar
 
 app = create_app('develop')
 
@@ -78,10 +79,14 @@ def logout():
 
 @app.route('/temp')
 def temp():
-    keywords = 'ab,bc,dsf,bb'
-    keys = keywords.split(',')
-    result = Orders.query.filter(Orders.name.in_(keys)).all()
-    print(result)
+
+    systemtoday = get_month()
+    print('systemtoday is '+str(systemtoday))
+    days = calendar.monthrange(systemtoday.year,systemtoday.month)[1]#当月天数
+
+    print('days is ' +str(days))
+    lastday=datetime.date(year=systemtoday.year, month=systemtoday.month, day=days)
+    print('lastday is '+str(lastday))
     return render_template('temp.html', temp='Hello')
 
 
