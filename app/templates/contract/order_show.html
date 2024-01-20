@@ -46,7 +46,7 @@
 
 
         <tr>
-            <td>合同状态：{{ order.status }}</td>
+            <td>合同状态：{{ order.status }}{% if order.status=="完成"%}({{ order.end_date }}){%endif%}</td>
             <td colspan="3">附件：{% for post in posts %}
                 <a href="/files/{{ post.path }}{{ post.filename }}" target="_blank">{{ post.notes }}</a>
                 {% endfor %}
