@@ -59,4 +59,38 @@
         </tbody>
     </table>
 </div>
+<script src="{{ url_for('static',filename='js/echarts.min.js') }}"></script>
+<div id="mychart" style="width: 700px;height:400px;"></div>
+    <script type="text/javascript">
+
+var chartDom = document.getElementById('mychart');
+var myChart = echarts.init(chartDom);
+var option;
+
+    option = {
+     title: {
+    text: '合同金额情况统计图'
+  },
+    xAxis: { type: 'value' },
+    yAxis: {
+        type: 'category',
+        data: ['合同金额', '刊登金额', '发票金额', '到帐金额', '己核算绩效']
+    },
+    series: [
+        {
+        data: {{ option | tojson }},
+      type: 'bar',
+
+      barWidth: '30',
+      label: {
+        show: true,
+        position: 'top', // 顶部显示
+        formatter: '{c}元' // 显示数据值
+      }
+    }
+  ]
+};
+
+option && myChart.setOption(option);
+    </script>
 {% endblock %}

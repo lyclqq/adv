@@ -277,8 +277,18 @@ def order_notes(oid):
 def order_show(oid):
     uid = session.get('user_id')
     order=Orders.query.filter(Orders.id==oid).first_or_404()
+    option = []
+
+    uid = session.get('user_id')
+    order=Orders.query.filter(Orders.id==oid).first_or_404()
+    billfee={'value': order.Fee11,'title': order.Fee11,'itemStyle': {'color': '#a90000'}}
+    option.append(billfee)
+    option.append(order.Fee21)
+    option.append(order.Fee31)
+    option.append(order.Fee41)
+    option.append(order.Fee51)
     orderfiles=Files.query.filter(Files.order_id==oid,Files.status!='off').all()
-    return render_template('contract/order_show.html', order=order,posts=orderfiles)
+    return render_template('contract/order_show.html', order=order,posts=orderfiles,option=option)
 
 
 #合同提交

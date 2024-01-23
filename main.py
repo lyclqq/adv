@@ -3,7 +3,7 @@
 import datetime
 import os
 from io import BytesIO
-from flask import render_template, url_for, redirect, make_response, session, request, send_from_directory, current_app
+from flask import render_template, url_for, redirect, make_response, session, request, send_from_directory, current_app,jsonify
 from flask_ckeditor import upload_fail, upload_success
 from sqlalchemy import and_
 from app import create_app, getKey, getVerifyCode
@@ -11,7 +11,7 @@ from app.common import is_login, getrolemenu,get_month
 from app.forms.user import LoginForm
 from app.models.contract import Orders
 from app.models.system import Users
-import calendar
+
 
 app = create_app('develop')
 
@@ -76,18 +76,68 @@ def logout():
     session.pop("usermenu")
     return redirect(url_for('login'))
 
-
 @app.route('/temp')
 def temp():
+    data = {
+        'title': {
+          'text': 'ECharts 入门示例'
+        },
+        'tooltip': {},
+        'legend': {
+          'data': ['销量1','销量2']
+        },
+        'xAxis': {
+          'data': ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+        },
+        'yAxis': {},
+        'series': [
+          {
+            'name': '销量1',
+            'type': 'bar',
+            'data': [5, 20, 36, 10, 10, 20]
+          },
+            {
+                'name': '销量2',
+                'type': 'bar',
+                'data': [8, 21, 30, 15, 15, 20]
+            }
+        ]
+      }
 
-    systemtoday = get_month()
-    print('systemtoday is '+str(systemtoday))
-    days = calendar.monthrange(systemtoday.year,systemtoday.month)[1]#当月天数
+    data['title']['text']='这是标题'
 
-    print('days is ' +str(days))
-    lastday=datetime.date(year=systemtoday.year, month=systemtoday.month, day=days)
-    print('lastday is '+str(lastday))
-    return render_template('temp.html', temp='Hello')
+    option = {
+        'title': [
+            {
+                'text': '广告合同款项统计图,合同金额为'
+            }
+        ],
+        'polar': {
+            'radius': [30, '80%']
+        },
+        'angleAxis': {
+            'max': 100,
+            'startAngle': 0
+        },
+        'radiusAxis': {
+            'type': 'category',
+            'data': ['刊登金额', '到帐金额', '发票金额']
+        },
+        'tooltip': {},
+        'series': {
+            'type': 'bar',
+            'data': [80, 70, 65],
+            'coordinateSystem': 'polar',
+            'label': {
+                'show': True,
+                'position': 'middle',
+                'formatter': '{b}: {c}'
+            }
+        }
+    };
+    #print('echarts is '+jsonify(mymap))
+    return render_template('temp.html', data=option)
+
 
 
 @app.route('/files/<int:dirname>/<filename>')
