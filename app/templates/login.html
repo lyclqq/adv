@@ -8,57 +8,56 @@
     <script type="text/javascript" src="{{ url_for('static',filename='js/jquery-3.7.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js') }}"></script>
 
-    <script  type="text/javascript" >
-         function f_refreshtype() {
-             let Image1 = document.getElementById("Image1");
-             if (Image1 != null) {
-                 Image1.src = Image1.src + "?";
-             }
-         }
+    <script type="text/javascript">
+        function f_refreshtype() {
+            let Image1 = document.getElementById("Image1");
+            if (Image1 != null) {
+                Image1.src = Image1.src + "?";
+            }
+        }
     </script>
 </head>
 <body>
 
- <div class="container">
-     <div class="row">
-         <div class="col-md-3"></div>
-         <div class="col-md-6">
-         <br>
-             <!-- role属性主要是为了方便残疾人使用web -->
-             <form action="" role="form" method="post">
-                    {{ form.csrf_token }}
-                    <!-- 添加filedset表单域  -->
-                    <fieldset>
-                        <!-- 添加表单标题，请使用表单专用标题，legend -->
-                        <legend>用户登陆</legend>
-                        <!-- 这个legend标题自带一个水平线 -->
-                        <div class="form-group">
-                            <label for="name">用户名称：</label>
-                            {{ form.username }}
-                            <p class="help-block">可以使用手机或者邮箱登陆</p>
-                        </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <br>
+            <!-- role属性主要是为了方便残疾人使用web -->
+            <form action="" role="form" method="post">
+                {{ form.csrf_token }}
+                <!-- 添加filedset表单域  -->
+                <fieldset>
+                    <!-- 添加表单标题，请使用表单专用标题，legend -->
+                    <legend>用户登陆</legend>
+                    <!-- 这个legend标题自带一个水平线 -->
+                    <div class="form-group">
+                        <label for="name">用户名称：</label>
+                        {{ form.username }}
+                        <p class="help-block">可以使用手机或者邮箱登陆</p>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="pw">用户密码：</label>
-                            {{ form.password }}
-                            <p class="help-block">不能少于6位</p>
-                        </div>
-						<div class="form-group">
-                            <label for="pw">验证码：</label>
-                                    {{ form.verify_code }}
-
-                            <p class="help-block"><img id="verify_code" class="verify_code" src="/imgCode" onclick="this.src='/imgCode?'+ Math.random()"></p>
-                        </div>
-                    </fieldset>
- 					 {{ form.submit }}
-                    {% if errmsg %}
-                        <div class="error_tip" style="display: block;">错误提示:{{ errmsg }}</div>
-                    {% endif %}
-                </form>
-         </div>
-         <div class="col-md-3"></div>
-     </div>
- </div>
+                    <div class="form-group">
+                        <label for="pw">用户密码：</label>
+                        {{ form.password }}
+                        <p class="help-block">不能少于6位</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="pw">验证码：</label>
+                        {{ form.verify_code }}
+                        <p class="help-block p-2"><img id="verify_code" class="verify_code" src="/imgCode" onclick="this.src='/imgCode?'+ Math.random()" alt="点击更新"/></p>
+                    </div>
+                </fieldset>
+                {{ form.submit }}
+                {% if errmsg %}
+                    <div class="error_tip" style="display: block;">错误提示:{{ errmsg }}</div>
+                {% endif %}
+            </form>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
 
 </body>
 </html>
