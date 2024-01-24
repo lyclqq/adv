@@ -2,13 +2,14 @@ import json
 import os
 from flask import Blueprint, render_template, session, flash, request, current_app
 from app import db
-from app.common import is_login, ins_logs,month_difference
-from app.forms.user import PwdForm,MonthForm
-from app.models.system import Users, Groups,Systeminfo
+from app.common import is_login, ins_logs, month_difference
+from app.forms.user import PwdForm, MonthForm
+from app.models.system import Users, Groups, Systeminfo
 from app.models.contract import Orders
 from app.models.other import History
 from sqlalchemy.sql import func
-from sqlalchemy import or_,and_
+from sqlalchemy import or_
+
 # 用户管理
 userView = Blueprint('user', __name__)
 pagesize = 10
@@ -152,35 +153,36 @@ def reset_pwd():
         re = '{"result":"wrong"}'
     return re
 
-#初始化
+
+# 初始化
 @userView.route('/setmonth', methods=["GET", "POST"])
 @is_login
 def setmonth():
     form = MonthForm()
     systeminfo = db.session.query(Systeminfo).filter(Systeminfo.id == 1).first()
-    systoday=systeminfo.systemmonth
-    form.today.data=systoday.strftime('%Y-%m')
+    systoday = systeminfo.systemmonth
+    form.today.data = systoday.strftime('%Y-%m')
     if form.validate_on_submit():
-        month=month_difference(form.today.data+'-01',form.fee_date.data)
-        if month==1:
+        month = month_difference(form.today.data + '-01', form.fee_date.data)
+        if month == 1:
             try:
-                fee12 = db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee12)).scalar()
-                fee22 = db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee22)).scalar()
-                fee23 = db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee23)).scalar()
-                fee32=db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee32)).scalar()
-                fee42=db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee42)).scalar()
-                fee52 = db.session.query(Orders).filter(or_(Orders.status=='己审',Orders.status=='完成')).with_entities(func.sum(Orders.Fee52)).scalar()
-                history=History()
-                history.title=form.today.data
+                fee12 = db.session.query(Orders).filter(or_(Orders.status == '己审', Orders.status == '完成')).with_entities(func.sum(Orders.Fee12)).scalar()
+                fee22 = db.session.query(Orders).filter(or_(Orders.status == '己审', Orders.status == '完成')).with_entities(func.sum(Orders.Fee22)).scalar()
+                fee23 = db.session.query(Orders).filter(or_(Orders.status == '己审', Orders.status == '完成')).with_entities(func.sum(Orders.Fee23)).scalar()
+                fee32 = db.session.query(Orders).filter(or_(Orders.status == '己审', Orders.status == '完成')).with_entities(func.sum(Orders.Fee32)).scalar()
+                fee42 = db.session.query(Orders).filter(or_(Orders.status == '己审', Orders.status == '完成')).with_entities(func.sum(Orders.Fee42)).scalar()
+                fee52 = db.session.query(Orders).filter(or_(Orders.status == '己审', Orders.status == '完成')).with_entities(func.sum(Orders.Fee52)).scalar()
+                history = History()
+                history.title = form.today.data
                 history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
-                history.fee=fee12
-                history.type='Fee12'
+                history.fee = fee12
+                history.type = 'Fee12'
                 db.session.add(history)
-                history=History()
-                history.title=form.today.data
+                history = History()
+                history.title = form.today.data
                 history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
-                history.fee=fee22
-                history.type='Fee22'
+                history.fee = fee22
+                history.type = 'Fee22'
                 db.session.add(history)
                 history = History()
                 history.title = form.today.data
@@ -188,28 +190,28 @@ def setmonth():
                 history.fee = fee23
                 history.type = 'Fee23'
                 db.session.add(history)
-                history=History()
-                history.title=form.today.data
-                history.fee_date=form.fee_date.data.strftime('%Y-%m-%d')
-                history.fee=fee32
-                history.type='Fee32'
+                history = History()
+                history.title = form.today.data
+                history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
+                history.fee = fee32
+                history.type = 'Fee32'
                 db.session.add(history)
                 history = History()
-                history.title=form.today.data
-                history.fee_date=form.fee_date.data.strftime('%Y-%m-%d')
-                history.fee=fee42
-                history.type='Fee42'
+                history.title = form.today.data
+                history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
+                history.fee = fee42
+                history.type = 'Fee42'
                 db.session.add(history)
                 history = History()
-                history.title=form.today.data
-                history.fee_date=form.fee_date.data.strftime('%Y-%m-%d')
-                history.fee=fee52
-                history.type='Fee52'
+                history.title = form.today.data
+                history.fee_date = form.fee_date.data.strftime('%Y-%m-%d')
+                history.fee = fee52
+                history.type = 'Fee52'
                 db.session.add(history)
-                Orders.query.update({'Fee12':0,'Fee22': 0,'Fee32':0,'Fee42':0,'Fee52':0,'Fee62':0})
-                if form.fee_date.data.year-systoday.year==1:
-                    Orders.query.update({'Fee13':0,'Fee23': 0, 'Fee33': 0, 'Fee43': 0, 'Fee53': 0})
-                systeminfo.systemmonth= form.fee_date.data.strftime('%Y%m%d')
+                Orders.query.update({'Fee12': 0, 'Fee22': 0, 'Fee32': 0, 'Fee42': 0, 'Fee52': 0, 'Fee62': 0})
+                if form.fee_date.data.year - systoday.year == 1:
+                    Orders.query.update({'Fee13': 0, 'Fee23': 0, 'Fee33': 0, 'Fee43': 0, 'Fee53': 0})
+                systeminfo.systemmonth = form.fee_date.data.strftime('%Y%m%d')
                 db.session.add(systeminfo)
                 db.session.commit()
                 flash('初使化成功!')

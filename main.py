@@ -3,15 +3,15 @@
 import datetime
 import os
 from io import BytesIO
-from flask import render_template, url_for, redirect, make_response, session, request, send_from_directory, current_app,jsonify
+from flask import render_template, url_for, redirect, make_response, session, request, send_from_directory, current_app
 from flask_ckeditor import upload_fail, upload_success
 from sqlalchemy import and_
 from app import create_app, getKey, getVerifyCode
-from app.common import is_login, getrolemenu,get_month
+from app.common import is_login, getrolemenu
 from app.forms.user import LoginForm
 from app.models.contract import Orders
 from app.models.system import Users
-
+from app import db
 
 app = create_app('develop')
 
@@ -54,15 +54,15 @@ app.add_template_filter(short_time)
 
 # 生成验证码
 @app.route('/imgCode')
-def imgcode():
-    imgKey = getKey()
-    image = getVerifyCode(imgKey)
+def img_code():
+    img_key = getKey()
+    image = getVerifyCode(img_key)
     buf = BytesIO()
     image.save(buf, 'jpeg')
     buf_str = buf.getvalue()
     response = make_response(buf_str)
     response.headers['Content-Type'] = 'image/gif'
-    session['imageCode'] = imgKey
+    session['imageCode'] = img_key
     return response
 
 
@@ -74,37 +74,40 @@ def logout():
     session.pop("group_id")
     session.pop("username")
     session.pop("usermenu")
+    session.pop("type")
+    session.pop("imageCode")
     return redirect(url_for('login'))
+
 
 @app.route('/temp')
 def temp():
     data = {
         'title': {
-          'text': 'ECharts 入门示例'
+            'text': 'ECharts 入门示例'
         },
         'tooltip': {},
         'legend': {
-          'data': ['销量1','销量2']
+            'data': ['销量1', '销量2']
         },
         'xAxis': {
-          'data': ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+            'data': ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
         },
         'yAxis': {},
         'series': [
-          {
-            'name': '销量1',
-            'type': 'bar',
-            'data': [5, 20, 36, 10, 10, 20]
-          },
+            {
+                'name': '销量1',
+                'type': 'bar',
+                'data': [5, 20, 36, 10, 10, 20]
+            },
             {
                 'name': '销量2',
                 'type': 'bar',
                 'data': [8, 21, 30, 15, 15, 20]
             }
         ]
-      }
+    }
 
-    data['title']['text']='这是标题'
+    data['title']['text'] = '这是标题'
 
     option = {
         'title': [
@@ -134,23 +137,20 @@ def temp():
                 'formatter': '{b}: {c}'
             }
         }
-    };
-    #print('echarts is '+jsonify(mymap))
+    }
     return render_template('temp.html', data=option)
-
 
 
 @app.route('/files/<int:dirname>/<filename>')
 @app.route('/Files/<int:dirname>/<filename>')
 def up_file(dirname, filename):
-    # print(str(dirname)+'filename='+filename)
     return send_from_directory(app.config['UPLOADED_PATH'], str(dirname) + '/' + filename)
 
 
 @app.route('/Files/<filename>')
 @app.route('/files/<filename>')
 def uploaded_files(filename):
-    path = os.path.join(app.config['UPLOADED_PATH'], datetime.datetime.now().strftime("%Y") + os.sep)
+    # path = os.path.join(app.config['UPLOADED_PATH'], datetime.datetime.now().strftime("%Y") + os.sep)
     return send_from_directory(app.config['UPLOADED_PATH'], filename)
 
 
@@ -166,7 +166,6 @@ def upload():
     path = os.path.join(app.config['UPLOADED_PATH'], datetime.datetime.now().strftime("%Y") + os.sep)
     if not os.path.exists(path):
         os.mkdir(path)
-    # print(os.path.join(path, newfilename+'.'+extension))
     f.save(os.path.join(path, newfilename + '.' + extension))
     url = url_for('uploaded_files', filename=datetime.datetime.now().strftime("%Y") + '/' + newfilename + '.' + extension)
     return upload_success(url=url)
@@ -193,23 +192,27 @@ def login():
         return render_template("login.html", errmsg="验证码不对" + captcha + "*", form=form)
     # 4.根据用户名取出管理员对象,判断管理员是否存在
     try:
-        admin = Users.query.filter(Users.username == username).first()
+        user = Users.query.filter(Users.username == username).first()
     except Exception as e:
         current_app.logger.error(e)
         return render_template("login.html", errmsg="用户查询失败", form=form)
-    if not admin:
-        return render_template("login.html", errmsg="管理员不存在", form=form)
+    if not user:
+        return render_template("login.html", errmsg="用户不存在", form=form)
 
     # 5.判断管理员的密码是否正确
-    if not admin.check_password(password):
+    if not user.check_password(password):
         return render_template("login.html", errmsg="密码错误", form=form)
 
     # 6.管理的session信息记录
-    session["user_id"] = admin.id
-    session["username"] = admin.username
-    session["usermenu"] = getrolemenu(admin.type)
-    session["group_id"] = admin.group_id
-    session["type"] = admin.type
+    session["user_id"] = user.id
+    session["username"] = user.username
+    session["usermenu"] = getrolemenu(user.type)
+    session["group_id"] = user.group_id
+    session["type"] = user.type
+    # 更新用户信息
+    user.updatetime = datetime.datetime.now()
+    db.session.add(user)
+    db.session.commit()
     # 7.重定向到首页展示
     return redirect("/index")
 

@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, url_for, redirect
 from app import db
-
 from app.models.system import Systeminfo
 
 system_info_bp = Blueprint('system_info', __name__)
@@ -28,5 +27,4 @@ def info_get():
     si = Systeminfo.query.first()
     m = si.systemmonth.strftime("%Y-%m")
     re = '{"result":"' + m + '"}'
-    print(re)
     return re
