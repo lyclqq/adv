@@ -38,6 +38,7 @@ def customer_admin():
 @contractView.route('/order_admin',methods=["GET","POST"])
 @is_login
 def order_admin():
+    print('menu is '+str(session.get('menu')))
     uid = session.get('user_id')
     page = request.args.get('page', 1, type=int)
     form=OrderSearchForm()

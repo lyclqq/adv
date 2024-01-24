@@ -7,7 +7,7 @@ from flask import render_template, url_for, redirect, make_response, session, re
 from flask_ckeditor import upload_fail, upload_success
 from sqlalchemy import and_
 from app import create_app, getKey, getVerifyCode
-from app.common import is_login, getrolemenu
+from app.common import is_login, getrolemenu,getmenu
 from app.forms.user import LoginForm
 from app.models.contract import Orders
 from app.models.system import Users
@@ -204,9 +204,11 @@ def login():
         return render_template("login.html", errmsg="密码错误", form=form)
 
     # 6.管理的session信息记录
+    menu_string=getrolemenu(user.type)#获取菜单字符串
     session["user_id"] = user.id
     session["username"] = user.username
-    session["usermenu"] = getrolemenu(user.type)
+    session["usermenu"] = menu_string
+    session['menu'] = getmenu(menu_string)
     session["group_id"] = user.group_id
     session["type"] = user.type
     # 更新用户信息

@@ -17,8 +17,8 @@ def is_login(view_func):
         if str(session.get('username')) != 'None':
             g.user_id = session.get("user_id")
             g.username = session.get('username')
-            g.menu=getmenu(session.get('usermenu'))
-            session['menu'] = getmenu(session.get('usermenu'))
+            #g.menu=getmenu(session.get('usermenu'))
+            #session['menu'] = getmenu(session.get('usermenu'))
         else:
             return redirect(url_for('login'))
         return view_func(*args,**kwargs)

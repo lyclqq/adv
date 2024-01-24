@@ -34,7 +34,7 @@
                     })
                 </script>
                 {% for m in session['menu'] %}
-                    {% if session['usermenu'][loop.index0]=='1' %}
+
                         <li class="nav-item">
                             <div class="btn-group dropend w-100">
                                 <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">
@@ -51,7 +51,7 @@
                                 {% endif %}
                             </div>
                         </li>
-                    {% endif %}
+
                 {% endfor %}
 
             </ul>

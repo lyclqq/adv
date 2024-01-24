@@ -4,3 +4,4 @@
 /app/static/ckeditor
 /logs/
 /app/static/files/
+config.py
