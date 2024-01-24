@@ -66,6 +66,7 @@ class Orders(db.Model,Basecls):
     contract_date=db.Column(db.Date)
     ordernumber=db.Column(db.String(200))
     update_datetime=db.Column(db.DateTime, default=func.now())
+    end_date = db.Column(db.Date)
 
     #分页查询，支持多关键字
     def search_orders(self,keywords,status='全部',page=1):
