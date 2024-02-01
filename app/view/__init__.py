@@ -19,7 +19,11 @@ def search_orders(searchform,page):
             searchform.title.data = title
         if status is not None:
             searchform.status.data = status
-    pagination=orders.search_orders(keywords=title,status=status,page=page)
+    if session.get('type')=='admin':
+        groupid=0
+    else:
+        groupid=session.get('group_id')
+    pagination=orders.search_orders(keywords=title,status=status,page=page,groupid=groupid)
     return pagination,page
 
 class echarts():

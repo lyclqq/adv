@@ -78,69 +78,6 @@ def logout():
     session.pop("imageCode")
     return redirect(url_for('login'))
 
-
-@app.route('/temp')
-def temp():
-    data = {
-        'title': {
-            'text': 'ECharts 入门示例'
-        },
-        'tooltip': {},
-        'legend': {
-            'data': ['销量1', '销量2']
-        },
-        'xAxis': {
-            'data': ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
-        },
-        'yAxis': {},
-        'series': [
-            {
-                'name': '销量1',
-                'type': 'bar',
-                'data': [5, 20, 36, 10, 10, 20]
-            },
-            {
-                'name': '销量2',
-                'type': 'bar',
-                'data': [8, 21, 30, 15, 15, 20]
-            }
-        ]
-    }
-
-    data['title']['text'] = '这是标题'
-
-    option = {
-        'title': [
-            {
-                'text': '广告合同款项统计图,合同金额为'
-            }
-        ],
-        'polar': {
-            'radius': [30, '80%']
-        },
-        'angleAxis': {
-            'max': 100,
-            'startAngle': 0
-        },
-        'radiusAxis': {
-            'type': 'category',
-            'data': ['刊登金额', '到帐金额', '发票金额']
-        },
-        'tooltip': {},
-        'series': {
-            'type': 'bar',
-            'data': [80, 70, 65],
-            'coordinateSystem': 'polar',
-            'label': {
-                'show': True,
-                'position': 'middle',
-                'formatter': '{b}: {c}'
-            }
-        }
-    }
-    return render_template('temp.html', data=option)
-
-
 @app.route('/files/<int:dirname>/<filename>')
 @app.route('/Files/<int:dirname>/<filename>')
 def up_file(dirname, filename):
@@ -170,9 +107,9 @@ def upload():
     url = url_for('uploaded_files', filename=datetime.datetime.now().strftime("%Y") + '/' + newfilename + '.' + extension)
     return upload_success(url=url)
 
-
 # 登陆
 @app.route('/login', methods=["GET", "POST"])
+@app.route('/', methods=["GET", "POST"])
 def login():
     form = LoginForm()
     # 1.判断请求方式,如果是GET,直接渲染页面

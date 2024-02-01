@@ -69,9 +69,8 @@ class Orders(db.Model,Basecls):
     end_date = db.Column(db.Date)
 
     #分页查询，支持多关键字
-    def search_orders(self,keywords,status='全部',page=1):
+    def search_orders(self,keywords,status='全部',page=1,groupid=0):
         pagerows=current_app.config['PAGEROWS']
-
         if keywords is None:
             if status =='全部':
                 pagination = Orders.query.order_by(Orders.id.desc()).paginate(page,per_page=pagerows)
@@ -80,7 +79,11 @@ class Orders(db.Model,Basecls):
                     Orders.id.desc()).paginate(page, per_page=pagerows)
             return pagination
         keys=keywords.split(',')
-        rule = and_(*[Orders.title.like('%'+w+'%') for w in keys])
+
+        if groupid>0:
+            rule = and_(*[Orders.title.like('%' + w + '%') for w in keys],Orders.group_id==groupid)
+        else:
+            rule = and_(*[Orders.title.like('%' + w + '%') for w in keys])
         if status =='全部':
             pagination = Orders.query.filter(rule).order_by(Orders.id.desc()).paginate(page,per_page=pagerows)
         else:
