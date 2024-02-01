@@ -19,7 +19,7 @@ def search_orders(searchform,page):
             searchform.title.data = title
         if status is not None:
             searchform.status.data = status
-    if session.get('type')=='admin':
+    if session.get('type')=='admin' or session.get('type')=='input1' or session.get('type')=='input2' or session.get('type')=='input3':
         groupid=0
     else:
         groupid=session.get('group_id')
