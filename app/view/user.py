@@ -45,6 +45,9 @@ def edit_pwd():
             db.session.add(user)
             db.session.commit()
             ins_logs(userid, '修改密码', 'user')
+            print("session get weak_pwd", session.get("weak_pwd"))
+            if session.get("weak_pwd"):
+                session.pop("weak_pwd")
         except Exception as e:
             current_app.logger.error(e)
         re = '{"result":"ok"}'

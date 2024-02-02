@@ -35,22 +35,22 @@
                 </script>
                 {% for m in session['menu'] %}
 
-                        <li class="nav-item">
-                            <div class="btn-group dropend w-100">
+                    <li class="nav-item">
+                        <div class="btn-group dropend w-100">
                                 <span class="bg-primary-subtle dropdown-toggle w-100 lh-lg" data-bs-toggle="dropdown" aria-expanded="false">
                                     <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
                                         {{ m.menuname }}
                                     </a>
                                 </span>
-                                {% if m.sublist %}
-                                    <ul class="dropdown-menu">
-                                        {% for l in m.sublist %}
-                                            <li><a class="dropdown-item" href="{{ l.sublink }}">{{ l.subname }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                        </li>
+                            {% if m.sublist %}
+                                <ul class="dropdown-menu">
+                                    {% for l in m.sublist %}
+                                        <li><a class="dropdown-item" href="{{ l.sublink }}">{{ l.subname }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </li>
 
                 {% endfor %}
 
@@ -102,6 +102,11 @@
                 }
             }
 
+            function to_edit_pwd() {
+                document.getElementById("async-info").innerText = ''
+                $("#editPwdModal").modal("show")
+            }
+
             function pwd_edit() {
                 const new_pwd = $("#new_pwd")
                 const new_pwd2 = $("#new_pwd2")
@@ -112,7 +117,7 @@
                     return
                 }
                 if (new_pwd2.val().length < 6) {
-                    document.getElementById("async-info").innerText = '密码长度不足8位'
+                    document.getElementById("async-info").innerText = '密码长度不足6位'
                     new_pwd2.val('')
                     return
                 }
@@ -141,7 +146,7 @@
         </script>
         <!--modal-->
 
-        <div class="col" style="">
+        <div class="col" style="height: 100vh">
             <div class="row">
                 <ul class="nav justify-content-end shadow " style="height: 50px;">
                     <li class="nav-item">
@@ -150,7 +155,7 @@
                                 {% if session['username'] %}欢迎您，{{ session['username'] }}{% endif %}&nbsp;&nbsp;&nbsp;&nbsp;<img src="{{ url_for('static',filename='img/account.svg') }}" alt="" height="32"/>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editPwdModal"><img src="{{ url_for('static',filename='img/key.svg') }}" alt="" height="22"/>&nbsp;&nbsp;修改密码</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="to_edit_pwd()"><img src="{{ url_for('static',filename='img/key.svg') }}" alt="" height="22"/>&nbsp;&nbsp;修改密码</a></li>
                                 <li><a class="dropdown-item" href="/log/list/1"><img src="{{ url_for('static',filename='img/log.svg') }}" alt="" height="20"/>&nbsp;&nbsp;日志查看</a></li>
                                 <li>
                                     <hr class="dropdown-divider">

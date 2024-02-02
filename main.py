@@ -7,7 +7,7 @@ from flask import render_template, url_for, redirect, make_response, session, re
 from flask_ckeditor import upload_fail, upload_success
 from sqlalchemy import and_
 from app import create_app, getKey, getVerifyCode
-from app.common import is_login, getrolemenu,getmenu
+from app.common import is_login, getrolemenu, getmenu
 from app.forms.user import LoginForm
 from app.models.contract import Orders
 from app.models.system import Users
@@ -78,6 +78,7 @@ def logout():
     session.pop("imageCode")
     return redirect(url_for('login'))
 
+
 @app.route('/files/<int:dirname>/<filename>')
 @app.route('/Files/<int:dirname>/<filename>')
 def up_file(dirname, filename):
@@ -106,6 +107,7 @@ def upload():
     f.save(os.path.join(path, newfilename + '.' + extension))
     url = url_for('uploaded_files', filename=datetime.datetime.now().strftime("%Y") + '/' + newfilename + '.' + extension)
     return upload_success(url=url)
+
 
 # 登陆
 @app.route('/login', methods=["GET", "POST"])
@@ -141,7 +143,7 @@ def login():
         return render_template("login.html", errmsg="密码错误", form=form)
 
     # 6.管理的session信息记录
-    menu_string=getrolemenu(user.type)#获取菜单字符串
+    menu_string = getrolemenu(user.type)  # 获取菜单字符串
     session["user_id"] = user.id
     session["username"] = user.username
     session["usermenu"] = menu_string
@@ -153,6 +155,10 @@ def login():
     db.session.add(user)
     db.session.commit()
     # 7.重定向到首页展示
+    weak_pwd = False
+    if password == '111111' or password == '11111111':
+        weak_pwd = True
+    session["weak_pwd"] = weak_pwd
     return redirect("/index")
 
 

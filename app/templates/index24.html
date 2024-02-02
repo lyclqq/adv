@@ -63,4 +63,19 @@
         </table>
 
     </div>
+    <input type="hidden" id="weak_pwd" value="{{ session.get("weak_pwd") }}">
+    <script>
+
+        function edit_weak_pwd() {
+            const wp = $('#weak_pwd')
+            if (wp.val() === 'True') {
+                $("#async-info").text('请勿使用原始密码')
+                $("#editPwdModal").modal("show")
+            } else {
+                console.log(222)
+            }
+        }
+
+        setTimeout(edit_weak_pwd, 3000)
+    </script>
 {% endblock %}
