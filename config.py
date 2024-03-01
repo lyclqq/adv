@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 import logging
 from datetime import timedelta
 import redis
-#from redis import StrictRedis
+from redis import StrictRedis
 
 class Config(object):
 

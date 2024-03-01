@@ -45,13 +45,13 @@ class Fee1Form(FlaskForm):
 
 class Fee3Form(FlaskForm):
 
-    fee =FloatField('发生金额',validators=[NumberRange(min=-9999999, max=9999999, message='金额只能为-9999999至9999999')],
+    fee =FloatField('发票金额',validators=[NumberRange(min=-9999999, max=9999999, message='金额只能为-9999999至9999999')],
                          render_kw={'class': 'form-control', 'placeholder': '金额只能为-9999999至9999999'},default=0)
     upfile = FileField(label='上传附件：', render_kw={'class': 'form-control'})
-    notes=TextAreaField(label='发票号:',
+    notes=TextAreaField(label='发票号码:',
         widget=widgets.TextInput(),
         render_kw={'class': 'form-control',
-                   "placeholder":"发票号"})
+                   "placeholder":"发票号码"})
     fee_date  = DateField('发生日期', format='%Y-%m-%d',validators=[DataRequired('日期不能为空')],
                             render_kw={'class': 'form-control','height':'60px'})
     name = StringField(label='经办人:',
@@ -63,14 +63,14 @@ class Fee3Form(FlaskForm):
 
 class Fee4Form(FlaskForm):
 
-    fee =FloatField('发生金额',validators=[NumberRange(min=-9999999, max=9999999, message='金额只能为-9999999至9999999')],
+    fee =FloatField('到款金额',validators=[NumberRange(min=-9999999, max=9999999, message='金额只能为-9999999至9999999')],
                          render_kw={'class': 'form-control', 'placeholder': '金额只能为-9999999至9999999'},default=0)
     upfile = FileField(label='上传附件：', render_kw={'class': 'form-control'})
     notes=TextAreaField(label='备注:',
         widget=widgets.TextInput(),
         render_kw={'class': 'form-control',
                    "placeholder":"备注"})
-    fee_date  = DateField('发生日期', format='%Y-%m-%d',validators=[DataRequired('日期不能为空')],
+    fee_date  = DateField('到款日期', format='%Y-%m-%d',validators=[DataRequired('日期不能为空')],
                             render_kw={'class': 'form-control','height':'60px'})
     submit = SubmitField('提交',render_kw={'class':'btn btn-block btn-info'})
 
