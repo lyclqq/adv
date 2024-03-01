@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template
 from app.common import is_login
 from app.models.system import Logs, Users
 
@@ -13,9 +13,6 @@ pagesize = 15
 @is_login
 def log_list(page):
     q = Logs.query
-    if session.get('user_id'):
-        userid = int(session.get('user_id'))
-        q = q.filter(Logs.user_id == userid)
     pagination = q.order_by(Logs.create_datetime.desc()).paginate(page=page, per_page=pagesize, error_out=False)
     return render_template('log/log_list.html', pagination=pagination)
 
