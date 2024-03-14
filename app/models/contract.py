@@ -85,7 +85,7 @@ class Orders(db.Model,Basecls):
         else:
             rule = and_(*[Orders.title.like('%' + w + '%') for w in keys])
         if status =='全部':
-            pagination = Orders.query.filter(rule).order_by(Orders.id.desc()).paginate(page,per_page=pagerows)
+            pagination = Orders.query.filter(rule,Orders.status!='作废').order_by(Orders.id.desc()).paginate(page,per_page=pagerows)
         else:
             pagination = Orders.query.filter(rule,Orders.status==status).order_by(Orders.id.desc()).paginate(page, per_page=pagerows)
 
