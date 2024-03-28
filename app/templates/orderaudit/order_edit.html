@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="m-2 p-3 ">
+
+        <ul class="breadcrumb top_row">
+            <li>合同审核</li>
+            <li><a href="{{ url_for('order_audit.order_search') }}">合同查询</a></li>
+            <li class="active">合同修改</li>
+        </ul>
+
+        <form action="" role="form" method="post">
+            {{ form.csrf_token }}
+            <fieldset>
+                <div class="form-control">
+                    {{ form.title.label }}
+                    {{ form.title() }}
+                    {% for message in form.title.errors %}
+                        <small class="error">{{ message }}</small>
+                    {% endfor %}
+                </div>
+                <div class="form-control">
+                    {{ form.name.label }}
+                    {{ form.name() }}
+                </div>
+                <div class="form-control">
+                    {{ form.ordernumber.label }}
+                    {{ form.ordernumber() }}
+                    {% for message in form.name.errors %}
+                        <small class="error">{{ message }}</small>
+                    {% endfor %}
+                </div>
+                <div class="form-control">
+                    {{ form.fee1.label }}
+                    {{ form.fee1() }}
+                    {% for message in form.name.errors %}
+                        <small class="error">{{ message }}</small>
+                    {% endfor %}
+                </div>
+                <div class="form-control">
+                    {{ form.words.label }}
+                    {{ form.words() }}
+                    {% for message in form.name.errors %}
+                        <small class="error">{{ message }}</small>
+                    {% endfor %}
+                </div>
+                <div class="form-control">
+                    {{ form.contract_date.label }}
+                    {{ form.contract_date() }}
+                </div>
+                <div class="form-control">
+                    {{ form.notes.label }}
+                    {{ form.notes() }}
+                </div>
+            </fieldset>
+            {{ form.submit }}
+        </form>
+    </div>
+{% endblock %}

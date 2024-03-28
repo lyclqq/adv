@@ -109,6 +109,48 @@ def order_audit(oid):
     form.status.data = order.status
     return render_template('orderaudit/order_audit.html', order=order,posts=orderfiles,form=form)
 
+#合同修改
+@orderauditView.route('/order_edit/<int:oid>',methods=["GET","POST"])
+@is_login
+def order_edit(oid):
+    uid = session.get('user_id')
+    order=Orders.query.filter(Orders.id==oid).first_or_404()
+    form=OrderForm()
+    form.customername.data = '1111'  # 只是为了验证加上
+    if form.validate_on_submit():
+        try:
+            if order.status=="己审":
+                order.title=form.title.data
+                order.ordernumber=form.ordernumber.data
+                order.update_datetime=datetime.datetime.now()
+                db.session.add(order)
+                db.session.commit()
+                ins_logs(uid, '修改合同，orderid='+str(oid), type='order_audit')
+                flash("修改成功")
+            else:
+                flash("不是己审状态，不能修改")
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('修改失败')
+    else:
+        form.notes.data=order.notes
+        form.notes.render_kw = {'class': 'form-control', 'readonly': True}
+        form.title.data=order.title
+        form.ordernumber.data=order.ordernumber
+        form.contract_date.data=order.contract_date
+        form.contract_date.render_kw = {'class': 'form-control', 'readonly': True}
+        form.name.data=order.name
+        form.name.render_kw = {'class': 'form-control', 'readonly': True}
+        form.fee1.data=order.Fee11
+        form.fee1.render_kw = {'class': 'form-control', 'readonly': True}
+        form.words.data=order.wordnumber
+        form.words.render_kw = {'class': 'form-control', 'readonly': True}
+        if order.status == "己审" :
+            form.submit.render_kw = {'class': 'form-control', 'disabled': False}
+        else:
+            form.submit.render_kw = {'class': 'form-control', 'disabled': True}
+    return render_template('contract/order_edit.html',form=form)
+
 #附件审核
 @orderauditView.route('/files_list/<int:oid>')
 @is_login

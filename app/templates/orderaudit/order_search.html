@@ -3,7 +3,7 @@
 {% block content %}
     <div class="m-2 p-3 ">
         <ul class="breadcrumb top_row">
-            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li>合同审核</li>
             <li class="active">合同查询</li>
         </ul>
 
@@ -48,6 +48,9 @@
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.order_audit',oid=post.id) }}" >合同审核</a>
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.files_list',oid=post.id) }}" >附件审核</a>
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.fee1_audit',oid=post.id) }}" >金额审核</a>
+
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('order_audit.order_edit',oid=post.id) }}" >修改</a>
+
                         </td>
                     </tr>
                 {% endfor %}
