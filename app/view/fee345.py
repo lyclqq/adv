@@ -270,34 +270,59 @@ def fee4_audit(oid):
     pagination = Fee4.query.filter(Fee4.order_id==oid).order_by(Fee4.id.desc()).paginate(page, per_page=pagerows)
     return render_template('fee345/fee4_audit.html', order=order,page=page,pagination=pagination)
 
-#发票金额审核同意
+#发票金额审核同意,内页
 @fee345View.route('/fee3_audit_on/<int:oid>/<int:fid>')
 @is_login
 def fee3_audit_on(oid,fid):
+    result=fee3_audit_ok(oid,fid)
+    if result.get("tf")==True:
+        flash("成功！")
+    else:
+        flash(result.get("info"))
+    return redirect(url_for('fee345.fee3_audit',oid=oid,fid=fid))
+
+#发票金额审核同意,外页
+@fee345View.route('/fee3_audit_on/<int:oid>/<int:fid>/<int:page>')
+@is_login
+def fee3_audit_out_on(oid,fid,page):
+    result=fee3_audit_ok(oid,fid)
+    if result.get("tf")==True:
+        flash("成功！")
+    else:
+        flash(result.get("info"))
+    return redirect(url_for('fee345.fee3_search_audit',page=page))
+
+#fee2审核同意
+def fee3_audit_ok(oid,fid):
+    result={}
     uid = session.get('user_id')
-    fee3=Fee3.query.filter(Fee3.id==fid).first_or_404()
+    fee3 = Fee3.query.filter(Fee3.id == fid).first_or_404()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
-    total=order.Fee31+fee3.fee
-    if fee3.status=='stay' and total>=0 and order.Fee11>=total:
+    total = order.Fee31 + fee3.fee
+    if fee3.status == 'stay' and total >= 0 and order.Fee11 >= total:
         try:
-            order.update_datetime=datetime.datetime.now()
-            systemtoday=get_month()
-            if month_difference(systemtoday,fee3.feedate)==0:#当月
-                order.Fee32=order.Fee32+fee3.fee
-            if systemtoday.year==fee3.feedate.year: #当年
+            order.update_datetime = datetime.datetime.now()
+            order.Fee31 = total
+            systemtoday = get_month()
+            if month_difference(systemtoday, fee3.feedate) == 0:  # 当月
+                order.Fee32 = order.Fee32 + fee3.fee
+            if systemtoday.year == fee3.feedate.year:  # 当年
                 order.Fee33 = order.Fee33 + fee3.fee
-            order.Fee31=total
             db.session.add(order)
-            fee3.status='on'
-            fee3.cuser_id=uid
+            fee3.status = 'on'
+            fee3.cuser_id = uid
             db.session.commit()
             ins_logs(uid, '审核发票金额同意，orderid=' + str(oid), type='fee345')
+            result.update({"tf":True})
         except Exception as e:
             current_app.logger.error(e)
-            flash('提交失败')
+            result.update({"tf": False})
+            result.update({"info":"提交失败"})
     else:
-        flash('不符合条件！')
-    return redirect(url_for('fee345.fee3_audit',oid=oid,fid=fid))
+        result.update({"info":"不符合条件！"})
+        result.update({"tf": False})
+    return result
+
 
 #发票金额审核拒绝
 @fee345View.route('/fee3_audit_off/<int:oid>/<int:fid>')
