@@ -292,7 +292,7 @@ def fee3_audit_out_on(oid,fid,page):
         flash(result.get("info"))
     return redirect(url_for('fee345.fee3_search_audit',page=page))
 
-#fee2审核同意
+#fee3审核同意
 def fee3_audit_ok(oid,fid):
     result={}
     uid = session.get('user_id')
@@ -324,6 +324,7 @@ def fee3_audit_ok(oid,fid):
     return result
 
 
+
 #发票金额审核拒绝
 @fee345View.route('/fee3_audit_off/<int:oid>/<int:fid>')
 @is_login
@@ -347,6 +348,28 @@ def fee3_audit_off(oid,fid):
 @fee345View.route('/fee4_audit_on/<int:oid>/<int:fid>')
 @is_login
 def fee4_audit_on(oid,fid):
+    result=fee4_audit_ok(oid,fid)
+    if result.get("tf")==True:
+        flash("成功！")
+    else:
+        flash(result.get("info"))
+    return redirect(url_for('fee345.fee4_audit',oid=oid,fid=fid))
+
+
+#到帐金额审核同意
+@fee345View.route('/fee4_audit_out_on/<int:oid>/<int:fid>/<int:page>')
+@is_login
+def fee4_audit_out_on(oid,fid,page):
+    result=fee4_audit_ok(oid,fid)
+    if result.get("tf")==True:
+        flash("成功！")
+    else:
+        flash(result.get("info"))
+    return redirect(url_for('fee345.fee4_search_audit',page=page))
+
+#fee4审核同意
+def fee4_audit_ok(oid,fid):
+    result={}
     uid = session.get('user_id')
     fee4=Fee4.query.filter(Fee4.id==fid).first_or_404()
     order = Orders.query.filter(Orders.id == oid).first_or_404()
@@ -365,12 +388,16 @@ def fee4_audit_on(oid,fid):
             fee4.cuser_id=uid
             db.session.commit()
             ins_logs(uid, '审核到帐金额同意，orderid=' + str(oid), type='fee345')
+            result.update({"tf": True})
         except Exception as e:
             current_app.logger.error(e)
-            flash('提交失败')
+            result.update({"tf": False})
+            result.update({"info": "提交失败"})
     else:
-        flash('不符合条件！')
-    return redirect(url_for('fee345.fee4_audit',oid=oid,fid=fid))
+        result.update({"info": "不符合条件！"})
+        result.update({"tf": False})
+    return result
+
 
 #到帐金额审核拒绝
 @fee345View.route('/fee4_audit_off/<int:oid>/<int:fid>')

@@ -23,15 +23,15 @@
         <thead>
         <tr>
             <td class="text-bg-secondary" style="width:70px">id</td>
-            <td class="text-bg-secondary" style="width:160px">填写时间</td>
+            <td class="text-bg-secondary" style="width:120px">填写时间</td>
             <td class="text-bg-secondary">合同名称</td>
             <td class="text-bg-secondary" style="width:280">备注</td>
             <td class="text-bg-secondary" style="width:120px">到款金额</td>
-            <td class="text-bg-secondary" style="width:70px">状态</td>
-            <td class="text-bg-secondary" style="width:130px">录入</td>
-            <td class="text-bg-secondary" style="width:130px">审核</td>
-            <td class="text-bg-secondary" style="width:160px">发生日期</td>
-            <td class="text-bg-secondary" style="width:80px">审核</td>
+            <td class="text-bg-secondary" style="width:60px">状态</td>
+            <td class="text-bg-secondary" style="width:120px">录入</td>
+            <td class="text-bg-secondary" style="width:120px">审核</td>
+            <td class="text-bg-secondary" style="width:120px">发生日期</td>
+            <td class="text-bg-secondary" style="width:120px">审核</td>
         </tr>
         </thead>
         <tbody>
@@ -51,8 +51,10 @@
                 {% if item.status=="stay" %}
                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee345.fee4_audit',oid=item.order_id) }}"
                    target="_blank">审核</a>
+                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fee345.fee4_audit_out_on',fid=item.id,oid=item.order_id,page=page) }}"  onclick="return confirm('Are you sure?');">同意</a>
                 {% else %}
                 <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">审核</button>
+                <button class="btn btn-sm btn-outline-secondary" href="#" disabled="">同意</button>
                 {% endif %}
             </td>
         </tr>
