@@ -103,4 +103,5 @@ class AuditForm(FlaskForm):
 class FeeSearchForm(FlaskForm):
     status=SelectField(label='状态：',render_kw={'class': 'form-control'},
                            choices=[('all','all'),('on','on' ), ('off','off' ),( 'stay','stay')])
-    submit = SubmitField('查询',render_kw={'class':'btn btn-block btn-info'})
+    submit = SubmitField('查询',render_kw={'class':'btn btn-block btn-info'},name="search")
+    okbut = SubmitField('批量审核同意', render_kw={'class': 'btn btn-block btn-info'},name="ok")

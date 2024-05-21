@@ -30,10 +30,11 @@
                     <th class="text-bg-secondary">合同名称</th>
                     <th class="text-bg-secondary" style="width:150px">合同编号</th>
                     <th class="text-bg-secondary" style="width:80px">状态</th>
+                    <th class="text-bg-secondary" style="width:110px">合同金额</th>
                     <th class="text-bg-secondary" style="width:110px">到帐金额</th>
                     <th class="text-bg-secondary" style="width:110px">发票金额</th>
-                    <th class="text-bg-secondary" style="width:150px">处理时间</th>
-                    <th class="text-bg-secondary" style="width:240px">操作</th>
+                    <th class="text-bg-secondary" style="width:140px">处理时间</th>
+                    <th class="text-bg-secondary" style="width:200px">操作</th>
                 </tr>
                 </thead>
 
@@ -43,6 +44,7 @@
                         <td>{{ post.title }}</td>
                         <td>{{ post.ordernumber }}</td>
                         <td>{{ post.status }}</td>
+                        <td>{{ post.Fee11 }}</td>
                         <td>{{ post.Fee41 }}</td>
                         <td>{{ post.Fee31 }}</td>
                         <td>{{ post.update_datetime | short_time }}</td>
