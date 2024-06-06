@@ -56,6 +56,7 @@ def order_audit(oid,add_id=0):
     form=OrderSearchForm()
     if  add_id>0:
         order = Orders.query.filter(Orders.id > oid,Orders.status=='待审').first_or_404()
+        oid=order.id
     else:
         order=Orders.query.filter(Orders.id==oid).first_or_404()
     orderfiles=Files.query.filter(Files.order_id==oid).all()
