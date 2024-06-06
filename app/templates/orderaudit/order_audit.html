@@ -67,7 +67,7 @@
                 {{ form.status() }}
             </div>
         </fieldset>
-        {{ form.submit }}<a href="{{ url_for('order_audit.order_audit',oid=order.id,add_id=1) }}" class="form-control" style="text-align:center;">下一页</a>
+        {{ form.submit }}<a href="{{ url_for('order_audit.order_audit',oid=order.id,add_id=1) }}" class="form-control" style="text-align:center;">下一份待审合同</a>
     </form>
 </div>
 {% endblock %}

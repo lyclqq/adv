@@ -52,10 +52,12 @@ def order_search():
 @orderauditView.route('/order_audit/<int:oid>',methods=["GET","POST"])
 @is_login
 def order_audit(oid,add_id=0):
-    oid=oid+add_id
     uid = session.get('user_id')
     form=OrderSearchForm()
-    order=Orders.query.filter(Orders.id==oid).first_or_404()
+    if  add_id>0:
+        order = Orders.query.filter(Orders.id > oid,Orders.status=='待审').first_or_404()
+    else:
+        order=Orders.query.filter(Orders.id==oid).first_or_404()
     orderfiles=Files.query.filter(Files.order_id==oid).all()
     if form.validate_on_submit():
         try:
