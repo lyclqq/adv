@@ -156,7 +156,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#" onclick="to_edit_pwd()"><img src="{{ url_for('static',filename='img/key.svg') }}" alt="" height="22"/>&nbsp;&nbsp;修改密码</a></li>
-                                <li><a class="dropdown-item" href="/log/list/1"><img src="{{ url_for('static',filename='img/log.svg') }}" alt="" height="20"/>&nbsp;&nbsp;日志查看</a></li>
+                                <li><a class="dropdown-item" href="/log/list/{{ session['username'] }}/1"><img src="{{ url_for('static',filename='img/log.svg') }}" alt="" height="20"/>&nbsp;&nbsp;日志查看</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
