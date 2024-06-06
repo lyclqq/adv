@@ -48,9 +48,11 @@ def order_search():
     return render_template('orderaudit/order_search.html', page=page, pagination=pagination, posts=result,form=form)
 
 #合同审核
+@orderauditView.route('/order_audit/<int:oid>/<int:add_id>',methods=["GET","POST"])
 @orderauditView.route('/order_audit/<int:oid>',methods=["GET","POST"])
 @is_login
-def order_audit(oid):
+def order_audit(oid,add_id=0):
+    oid=oid+add_id
     uid = session.get('user_id')
     form=OrderSearchForm()
     order=Orders.query.filter(Orders.id==oid).first_or_404()
